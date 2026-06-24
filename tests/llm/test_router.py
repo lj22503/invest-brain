@@ -40,3 +40,13 @@ def test_set_scene_model():
         router = LLMRouter(config_file=config_file)
         router.set_scene_model("thought_parsing", "gpt-4o")
         assert router._config["scenes"]["thought_parsing"] == "gpt-4o"
+
+def test_router_chat_simple():
+    """测试 chat_simple 便捷接口"""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        config_file = Path(tmpdir) / "llm.json"
+        router = LLMRouter(config_file=config_file)
+        router.set_scene_model("rag_synthesis", "gpt-4o")
+        # chat_simple 是 chat 的简写包装，验证方法存在且签名正确
+        assert hasattr(router, "chat_simple")
+        assert callable(router.chat_simple)

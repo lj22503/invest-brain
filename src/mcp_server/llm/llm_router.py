@@ -91,7 +91,7 @@ class LLMRouter:
         kwargs = {"model": model, "temperature": 0.5}
 
         if provider == "deepseek" and scene == "pattern_analysis":
-            kwargs["thinking"] = {"type": "enabled", "budget_tokens": 8192}
+            kwargs["extra_body"] = {"thinking": {"type": "enabled", "budget_tokens": 8192}}
 
         kwargs["messages"] = messages
         response = client.chat.completions.create(**kwargs)
