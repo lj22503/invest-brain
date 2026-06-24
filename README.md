@@ -37,8 +37,25 @@ pip install -r requirements.txt
 cp .env.example .env
 # 编辑 .env，填入 DEEPSEEK_API_KEY
 
-# 3. 启动 MCP Server
+# 3. 启动 REST API Server (LLM配置用)
+python api_server.py
+
+# 4. 启动 MCP Server (另一个终端)
 python server.py
+```
+
+## 前端
+
+```bash
+# 安装依赖
+cd frontend
+npm install
+
+# 开发模式
+npm run dev
+
+# 访问 http://localhost:3000 查看落地页
+# 访问 http://localhost:3000/settings 配置 LLM
 ```
 
 ---
@@ -64,7 +81,10 @@ src/
 │   ├── memory/            # 记忆存储
 │   ├── patterns/           # 行为模式挖掘
 │   └── llm/               # LLM 客户端
+│       ├── llm_router.py   # 通用 LLM 路由
+│       ├── providers.py    # Provider 配置
 │       └── deepseek_client.py
+│   └── api_server.py      # REST API (LLM 配置)
 ├── skills/
 │   └── investment_skill/   # Skill 包
 │       └── handlers/       # 6个 Handler
