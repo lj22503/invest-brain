@@ -15,7 +15,7 @@ PROVIDER_PRESETS = {
         name="DeepSeek",
         api_key="",
         base_url="https://api.deepseek.com",
-        default_model="deepseek-v4-flash",
+        default_model="deepseek-chat",
         supports_thinking=True,
     ),
     "openai": ProviderConfig(
@@ -45,11 +45,11 @@ SceneModelPreset = dict[str, dict[str, str]]  # provider -> {model, thinking_mod
 
 DEFAULT_SCENE_MODELS: SceneModelPreset = {
     "deepseek": {
-        "thought_parsing": "deepseek-v4-flash",
-        "rag_synthesis": "deepseek-v4-flash",
-        "pattern_analysis": "deepseek-v4-pro",
-        "roundtable_role": "deepseek-v4-flash",
-        "roundtable_judge": "deepseek-v4-pro",
+        "thought_parsing": "deepseek-chat",
+        "rag_synthesis": "deepseek-chat",
+        "pattern_analysis": "deepseek-reasoner",
+        "roundtable_role": "deepseek-chat",
+        "roundtable_judge": "deepseek-reasoner",
     },
     "openai": {
         "thought_parsing": "gpt-4o-mini",

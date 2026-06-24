@@ -13,15 +13,6 @@ from .providers import ProviderConfig, PROVIDER_PRESETS, DEFAULT_SCENE_MODELS
 
 LLM_CONFIG_FILE = Path(__file__).parent.parent.parent.parent / "data" / "config" / "llm.json"
 
-class LLMTask:
-    """LLM任务定义"""
-    def __init__(self, scene: str, system: Optional[str] = None, temperature: float = 0.5, thinking: bool = False, json_mode: bool = False):
-        self.scene = scene
-        self.system = system
-        self.temperature = temperature
-        self.thinking = thinking
-        self.json_mode = json_mode
-
 class LLMRouter:
     """通用LLM路由器"""
 
