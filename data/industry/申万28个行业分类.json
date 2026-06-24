@@ -1,0 +1,217 @@
+{
+  "description": "申万行业分类体系 - 28个一级行业",
+  "source": "申万行业分类标准",
+  "categories": [
+    {
+      "code": "SW01",
+      "name": "农林牧渔",
+      "sub_industries": ["种植业", "渔业", "林业", "饲料", "畜禽养殖", "动物保健", "农业综合"],
+      "representative_companies": ["牧原股份", "温氏股份", "海大集团", "新希望"],
+      "key_indicators": ["能繁母猪存栏量", "生猪价格", "饲料原料价格", "养殖周期"]
+    },
+    {
+      "code": "SW02",
+      "name": "采掘",
+      "sub_industries": ["煤炭开采", "石油开采", "金属采矿", "非金属采矿"],
+      "representative_companies": ["中国神华", "陕西煤业", "中煤能源"],
+      "key_indicators": ["煤炭价格指数", "原油价格", "铁矿石价格", "产量/产能"]
+    },
+    {
+      "code": "SW03",
+      "name": "化工",
+      "sub_industries": ["石油化工", "化学制品", "化学原料", "化学纤维", "塑料", "橡胶"],
+      "representative_companies": ["万华化学", "恒力石化", "荣盛石化", "扬农化工"],
+      "key_indicators": ["化工品价格指数", "开工率", "原材料成本", "毛利率"]
+    },
+    {
+      "code": "SW04",
+      "name": "钢铁",
+      "sub_industries": ["普钢", "特钢", "金属新材料"],
+      "representative_companies": ["宝钢股份", "中信特钢", "鞍钢股份"],
+      "key_indicators": ["螺纹钢价格", "铁矿石价格", "产能利用率", "吨钢利润"]
+    },
+    {
+      "code": "SW05",
+      "name": "有色金属",
+      "sub_industries": ["工业金属", "贵金属", "稀土", "金属新材料"],
+      "representative_companies": ["紫金矿业", "洛阳钼业", "赣锋锂业", "华友钴业"],
+      "key_indicators": ["铜价", "金价", "锂价", "钴价", "库存周期"]
+    },
+    {
+      "code": "SW06",
+      "name": "电子",
+      "sub_industries": ["半导体", "元件", "光学光电子", "消费电子", "其他电子"],
+      "representative_companies": ["韦尔股份", "中芯国际", "京东方A", "立讯精密"],
+      "key_indicators": ["半导体销售额", "面板价格", "智能手机出货量", "产能利用率"]
+    },
+    {
+      "code": "SW07",
+      "name": "汽车",
+      "sub_industries": ["汽车整车", "汽车零部件", "汽车服务", "摩托车"],
+      "representative_companies": ["比亚迪", "上汽集团", "长城汽车", "宁德时代"],
+      "key_indicators": ["销量同比", "新能源渗透率", "库存系数", "单车利润"]
+    },
+    {
+      "code": "SW08",
+      "name": "家用电器",
+      "sub_industries": ["白色家电", "黑色家电", "小家电", "厨卫电器"],
+      "representative_companies": ["美的集团", "格力电器", "海尔智家", "老板电器"],
+      "key_indicators": ["出货量", "库存", "原材料成本", "地产竣工面积"]
+    },
+    {
+      "code": "SW09",
+      "name": "食品饮料",
+      "sub_industries": ["白酒", "乳品", "调味发酵品", "食品综合", "肉制品", "啤酒", "葡萄酒"],
+      "representative_companies": ["贵州茅台", "五粮液", "伊利股份", "海天味业"],
+      "key_indicators": ["高端白酒批价", "原奶价格", "调味品销量", "消费升级指数"]
+    },
+    {
+      "code": "SW10",
+      "name": "纺织服装",
+      "sub_industries": ["纺织制造", "服装家纺", "饰品"],
+      "representative_companies": ["申洲国际", "波司登", "海澜之家"],
+      "key_indicators": ["出口金额", "零售额", "棉价", "库存周期"]
+    },
+    {
+      "code": "SW11",
+      "name": "轻工制造",
+      "sub_industries": ["造纸", "包装印刷", "家用轻工", "其他轻工"],
+      "representative_companies": ["太阳纸业", "裕同科技", "欧派家居"],
+      "key_indicators": ["纸价", "包装需求", "地产竣工", "消费信心"]
+    },
+    {
+      "code": "SW12",
+      "name": "医药生物",
+      "sub_industries": ["化学制药", "中药", "生物制品", "医疗器械", "医药商业", "医疗服务"],
+      "representative_companies": ["恒瑞医药", "迈瑞医疗", "药明康德", "爱尔眼科"],
+      "key_indicators": ["药监局审批", "医保谈判", "医院诊疗量", "研发投入"]
+    },
+    {
+      "code": "SW13",
+      "name": "公用事业",
+      "sub_industries": ["电力", "燃气", "水务", "环保"],
+      "representative_companies": ["长江电力", "华能国际", "深圳燃气"],
+      "key_indicators": ["利用小时数", "上网电价", "煤价联动", "装机容量"]
+    },
+    {
+      "code": "SW14",
+      "name": "交通运输",
+      "sub_industries": ["航空机场", "航运港口", "公路铁路", "物流"],
+      "representative_companies": ["顺丰控股", "上海机场", "中远海控", "京沪高铁"],
+      "key_indicators": ["旅客周转量", "货运量", "港口吞吐量", "油价联动"]
+    },
+    {
+      "code": "SW15",
+      "name": "房地产",
+      "sub_industries": ["房地产开发", "房地产服务"],
+      "representative_companies": ["万科A", "保利发展", "招商蛇口"],
+      "key_indicators": ["销售面积", "土地购置费", "融资成本", "政策变化"]
+    },
+    {
+      "code": "SW16",
+      "name": "商业贸易",
+      "sub_industries": ["一般零售", "专业连锁", "商业物业经营", "贸易"],
+      "representative_companies": ["永辉超市", "家家悦", "小商品城"],
+      "key_indicators": ["社零增速", "超市同店增速", "毛利率"]
+    },
+    {
+      "code": "SW17",
+      "name": "休闲服务",
+      "sub_industries": ["酒店餐饮", "旅游", "景点", "教育", "其他休闲服务"],
+      "representative_companies": ["中国中免", "宋城演艺", "锦江酒店"],
+      "key_indicators": ["旅游人次", "酒店入住率", "客单价", "政策影响"]
+    },
+    {
+      "code": "SW18",
+      "name": "银行",
+      "sub_industries": ["国有大型银行", "股份制银行", "城商行", "农商行"],
+      "representative_companies": ["招商银行", "宁波银行", "平安银行", "兴业银行"],
+      "key_indicators": ["净息差", "不良率", "拨备覆盖率", "资产规模"]
+    },
+    {
+      "code": "SW19",
+      "name": "非银金融",
+      "sub_industries": ["证券", "保险", "多元金融"],
+      "representative_companies": ["中信证券", "中国平安", "东方财富"],
+      "key_indicators": ["佣金率", "保费收入", "投资收益率", "政策变化"]
+    },
+    {
+      "code": "SW20",
+      "name": "建筑材料",
+      "sub_industries": ["水泥制造", "玻璃制造", "其他建材"],
+      "representative_companies": ["海螺水泥", "旗滨集团", "北新建材"],
+      "key_indicators": ["水泥价格", "玻璃价格", "地产新开工", "产能利用率"]
+    },
+    {
+      "code": "SW21",
+      "name": "建筑装饰",
+      "sub_industries": ["房屋建设", "装修装饰", "园林工程", "基础建设"],
+      "representative_companies": ["中国建筑", "金螳螂", "东方园林"],
+      "key_indicators": ["基建投资", "地产新开工", "订单增速", "现金流"]
+    },
+    {
+      "code": "SW22",
+      "name": "电气设备",
+      "sub_industries": ["电机", "电气自动化设备", "电源设备", "高低压设备"],
+      "representative_companies": ["国电南瑞", "隆基绿能", "通威股份", "阳光电源"],
+      "key_indicators": ["光伏装机量", "风电装机量", "招标量", "产能利用率"]
+    },
+    {
+      "code": "SW23",
+      "name": "机械设备",
+      "sub_industries": ["通用设备", "专用设备", "仪器仪表", "金属制品"],
+      "representative_companies": ["三一重工", "恒立液压", "汇川技术"],
+      "key_indicators": ["工业机器人产量", "挖掘机销量", "机床产量", "出口金额"]
+    },
+    {
+      "code": "SW24",
+      "name": "国防军工",
+      "sub_industries": ["航天装备", "航空装备", "地面兵装", "船舶制造"],
+      "representative_companies": ["中航沈飞", "中航光电", "航发动力"],
+      "key_indicators": ["军费预算", "型号定型", "订单节奏", "资产注入"]
+    },
+    {
+      "code": "SW25",
+      "name": "计算机",
+      "sub_industries": ["计算机设备", "软件开发", "IT服务", "互联网服务"],
+      "representative_companies": ["海康威视", "科大讯飞", "用友网络", "金山办公"],
+      "key_indicators": ["政府IT支出", "企业IT支出", "项目订单", "人员扩张"]
+    },
+    {
+      "code": "SW26",
+      "name": "传媒",
+      "sub_industries": ["影视院线", "游戏", "广告营销", "出版", "数字媒体"],
+      "representative_companies": ["分众传媒", "芒果超媒", "吉比特", "中南传媒"],
+      "key_indicators": ["票房", "游戏流水", "广告刊例费", "用户时长"]
+    },
+    {
+      "code": "SW27",
+      "name": "通信",
+      "sub_industries": ["通信设备", "通信服务", "通信运营"],
+      "representative_companies": ["中兴通讯", "中国联通", "中国移动", "中天科技"],
+      "key_indicators": ["运营商资本开支", "5G基站建设", "光缆招标量", "DOU"]
+    },
+    {
+      "code": "SW28",
+      "name": "综合",
+      "sub_industries": ["综合"],
+      "representative_companies": [],
+      "key_indicators": []
+    }
+  ],
+  "trigger_keywords": {
+    "农林牧渔": ["猪肉", "养殖", "饲料", "种植", "猪周期"],
+    "食品饮料": ["白酒", "茅台", "酱油", "牛奶", "食品", "饮料", "消费"],
+    "银行": ["银行", "净息差", "不良率", "息差"],
+    "非银金融": ["券商", "保险", "信托", "公募"],
+    "房地产": ["房地产", "万科", "保利", "房价", "地产"],
+    "医药生物": ["医药", "医疗", "创新药", "器械", "中药"],
+    "电子": ["电子", "半导体", "芯片", "面板", "消费电子"],
+    "计算机": ["计算机", "软件", "AI", "信息安全", "云计算"],
+    "通信": ["通信", "5G", "运营商", "光模块"],
+    "传媒": ["传媒", "游戏", "影视", "广告", "出版"],
+    "新能源汽车": ["新能源", "电动车", "电池", "锂电", "比亚迪", "宁德"],
+    "光伏": ["光伏", "硅料", "组件", "隆基", "通威"],
+    "风电": ["风电", "风机", "明阳", "金风"]
+  }
+}

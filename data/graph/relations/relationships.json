@@ -1,0 +1,124 @@
+{
+  "relationships": [
+    {
+      "source": "duanyongping",
+      "target": "buffett",
+      "type": "INHERITED_FROM",
+      "description": "段永平深受巴菲特影响，是其理念的中国实践者"
+    },
+    {
+      "source": "howard_marks",
+      "target": "buffett",
+      "type": "INHERITED_FROM",
+      "description": "马克斯多次公开表示受巴菲特启发，倡导价值投资理念"
+    },
+    {
+      "source": "li_lu",
+      "target": "buffett",
+      "type": "INHERITED_FROM",
+      "description": "李录受巴菲特和芒格影响，将价值投资引入中国"
+    },
+    {
+      "source": "li_lu",
+      "target": "munger",
+      "type": "INHERITED_FROM",
+      "description": "李录是芒格家族基金管理人，深得芒格真传"
+    },
+    {
+      "source": "value_investing",
+      "target": "trend_investing",
+      "type": "CONTRADICTS_WITH",
+      "description": "价值投资与趋势投资在核心理念上存在根本对立"
+    },
+    {
+      "source": "buffett",
+      "target": "加杠杆",
+      "type": "WARNS_ABOUT",
+      "description": "巴菲特警示不要加杠杆，这是其最重要的投资原则之一"
+    },
+    {
+      "source": "munger",
+      "target": "加杠杆",
+      "type": "WARNS_ABOUT",
+      "description": "芒格同样反对杠杆投资，强调避免愚蠢行为"
+    },
+    {
+      "source": "buffett",
+      "target": "护城河",
+      "type": "ADVOCATES",
+      "description": "巴菲特是护城河概念的提出者和倡导者"
+    },
+    {
+      "source": "buffett",
+      "target": "安全边际",
+      "type": "ADVOCATES",
+      "description": "巴菲特将安全边际作为投资决策的核心原则"
+    },
+    {
+      "source": "buffett",
+      "target": "能力圈",
+      "type": "ADVOCATES",
+      "description": "巴菲特强调只投资自己真正理解的公司"
+    },
+    {
+      "source": "munger",
+      "target": "多元思维模型",
+      "type": "ADVOCATES",
+      "description": "芒格倡导跨学科多元思维模型分析投资"
+    },
+    {
+      "source": "howard_marks",
+      "target": "第二层思维",
+      "type": "ADVOCATES",
+      "description": "马克斯系统阐述了第二层思维的重要性"
+    },
+    {
+      "source": "howard_marks",
+      "target": "周期",
+      "type": "ADVOCATES",
+      "description": "马克斯是周期理论的坚定倡导者和实践者"
+    },
+    {
+      "source": "duanyongping",
+      "target": "本分",
+      "type": "ADVOCATES",
+      "description": "段永平将本分作为投资的核心理念"
+    },
+    {
+      "source": "duanyongping",
+      "target": "不懂不投",
+      "type": "ADVOCATES",
+      "description": "段永平以不懂不投作为能力圈的严格边界"
+    },
+    {
+      "source": "buffett",
+      "target": "消费行业",
+      "type": "EXCELS_IN",
+      "description": "巴菲特最擅长消费股投资，如可口可乐"
+    },
+    {
+      "source": "buffett",
+      "target": "金融行业",
+      "type": "EXCELS_IN",
+      "description": "巴菲特对金融保险业有深刻理解"
+    },
+    {
+      "source": "munger",
+      "target": "好生意",
+      "type": "ADVOCATES",
+      "description": "芒格强调只投资极好的生意"
+    },
+    {
+      "source": "li_lu",
+      "target": "科技创新",
+      "type": "EXCELS_IN",
+      "description": "李录专注于科技创新和消费升级投资"
+    },
+    {
+      "source": "howard_marks",
+      "target": "高收益债券",
+      "type": "EXCELS_IN",
+      "description": "橡树资本专精高收益债券和不良资产"
+    }
+  ]
+}
