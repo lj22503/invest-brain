@@ -1,14 +1,11 @@
 """REST API server for LLM configuration"""
 from flask import Flask, request, jsonify
-from pathlib import Path
-import sys
+from flask_cors import CORS
 
-# Add parent dir to path so we can import llm_router
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-
-from src.mcp_server.llm.llm_router import get_router
+from .llm.llm_router import get_router
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/api/llm/config', methods=['GET'])
 def get_config():

@@ -1,22 +1,21 @@
 """DeepSeek LLM 客户端
 
 统一入口，按场景自动路由模型和温度。
-用户只需提供 DEEPSEEK_API_KEY。
+内部委托给 llm_router，支持多 Provider 配置。
+
+用户可通过以下方式配置：
+1. 环境变量 DEEPSEEK_API_KEY（向后兼容）
+2. 前端配置写入 data/config/llm.json
 """
 
 import os
-import json
-from typing import Optional, Literal
-from pathlib import Path
+from typing import Optional
 from dataclasses import dataclass
 
-try:
-    import openai
-except ImportError:
-    openai = None
+from .llm_router import get_router
 
 
-# ========== 场景定义 ==========
+# ========== 场景定义（保留接口，向后兼容）==========
 
 @dataclass
 class LLMConfig:
@@ -32,70 +31,57 @@ class LLMConfig:
             "temperature": self.temperature,
         }
         if self.thinking_effort:
-            kwargs["thinking"] = {"type": "enabled", "budget_tokens": self._effort_to_tokens()}
+            kwargs["extra_body"] = {"thinking": {"type": "enabled", "budget_tokens": self._effort_to_tokens()}}
         if self.json_mode:
             kwargs["response_format"] = {"type": "json_object"}
         return kwargs
 
     def _effort_to_tokens(self) -> int:
-        """将思考力度转换为 token 预算"""
         mapping = {"low": 512, "medium": 2048, "high": 8192}
         return mapping.get(self.thinking_effort, 2048)
 
 
-# 场景 → 模型配置
 SCENE_CONFIGS: dict[str, LLMConfig] = {
-    # 想法解析：实体提取，要求准确不随机，强制 JSON 输出
     "thought_parsing": LLMConfig(
-        model="deepseek-v4-flash",
+        model="deepseek-chat",
         temperature=0.3,
         thinking_effort=None,
         json_mode=True,
     ),
-    # RAG 合成：连贯 + 适度创造性
     "rag_synthesis": LLMConfig(
-        model="deepseek-v4-flash",
+        model="deepseek-chat",
         temperature=0.5,
         thinking_effort=None,
     ),
-    # 行为模式分析：深度推理
     "pattern_analysis": LLMConfig(
-        model="deepseek-v4-pro",
+        model="deepseek-reasoner",
         temperature=0.4,
         thinking_effort="high",
     ),
-    # 圆桌角色话术：风格鲜明
     "roundtable_role": LLMConfig(
-        model="deepseek-v4-flash",
+        model="deepseek-chat",
         temperature=0.7,
         thinking_effort=None,
     ),
-    # 圆桌综合裁判：推理但不极端
     "roundtable_judge": LLMConfig(
-        model="deepseek-v4-pro",
+        model="deepseek-reasoner",
         temperature=0.5,
         thinking_effort="high",
     ),
 }
 
 
-# ========== DeepSeek 客户端 ==========
+# ========== DeepSeek 客户端（委托给 llm_router）==========
 
 class DeepSeekClient:
-    """DeepSeek LLM 客户端"""
+    """DeepSeek LLM 客户端（内部委托给 llm_router）"""
 
     def __init__(self, api_key: str = None):
-        if openai is None:
-            raise ImportError("openai package required: pip install openai")
-
-        self.api_key = api_key or os.environ.get("DEEPSEEK_API_KEY")
-        if not self.api_key:
-            raise ValueError("DEEPSEEK_API_KEY not set")
-
-        self.client = openai.OpenAI(
-            api_key=self.api_key,
-            base_url="https://api.deepseek.com",
-        )
+        self._api_key = api_key
+        self._router = get_router()
+        # 如果传了 api_key，配置到 router
+        if api_key:
+            self._router.configure(provider="deepseek", api_key=api_key)
 
     def chat(
         self,
@@ -104,35 +90,12 @@ class DeepSeekClient:
         system: str = None,
         **kwargs,
     ) -> str:
-        """
-        统一 chat 接口，按 scene 路由模型和温度。
-
-        Args:
-            messages: 对话消息历史 [{"role": "user", "content": "..."}]
-            scene: 场景名，对应 SCENE_CONFIGS
-            system: 系统提示（可选，会拼接在 messages 前面）
-            **kwargs: 透传额外参数到 API
-
-        Returns:
-            模型生成的文本
-        """
-        config = SCENE_CONFIGS.get(scene)
-        if not config:
-            raise ValueError(f"Unknown scene: {scene}")
-
-        # 构建完整消息
+        """统一 chat 接口，按 scene 路由模型和温度。"""
         full_messages = []
         if system:
             full_messages.append({"role": "system", "content": system})
         full_messages.extend(messages)
-
-        # 构建 API 参数
-        api_kwargs = config.to_kwargs()
-        api_kwargs.update(kwargs)
-        api_kwargs["messages"] = full_messages
-
-        response = self.client.chat.completions.create(**api_kwargs)
-        return response.choices[0].message.content
+        return self._router.chat(full_messages, scene)
 
     def chat_simple(
         self,
@@ -140,22 +103,12 @@ class DeepSeekClient:
         scene: str,
         system: str = None,
     ) -> str:
-        """
-        简易接口，直接传 prompt。
-
-        Args:
-            prompt: 用户 prompt
-            scene: 场景名
-            system: 系统提示（可选）
-
-        Returns:
-            模型生成的文本
-        """
+        """简易接口，直接传 prompt。"""
         messages = [{"role": "user", "content": prompt}]
         return self.chat(messages, scene, system=system)
 
 
-# ========== 单例 ==========
+# ========== 单例（向后兼容）==========
 
 _client: Optional[DeepSeekClient] = None
 
@@ -165,14 +118,16 @@ def get_deepseek_client() -> DeepSeekClient:
     global _client
     if _client is None:
         api_key = os.environ.get("DEEPSEEK_API_KEY")
-        if api_key:
-            _client = DeepSeekClient(api_key)
+        _client = DeepSeekClient(api_key)
     return _client
 
 
 def is_llm_available() -> bool:
     """检查 LLM 是否可用（API Key 是否配置）"""
-    return bool(os.environ.get("DEEPSEEK_API_KEY"))
+    router = get_router()
+    config = router._config
+    api_key = config.get("api_key") or os.environ.get("DEEPSEEK_API_KEY")
+    return bool(api_key)
 
 
 # ========== 便捷函数 ==========
@@ -181,5 +136,5 @@ def llm_chat(prompt: str, scene: str, system: str = None) -> str:
     """便捷函数：直接用 prompt 调用"""
     client = get_deepseek_client()
     if client is None:
-        raise RuntimeError("DEEPSEEK_API_KEY not configured")
+        raise RuntimeError("DeepSeek client not initialized")
     return client.chat_simple(prompt, scene, system=system)
