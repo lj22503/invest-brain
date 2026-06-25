@@ -1,0 +1,41 @@
+# InvestBrain — Site Summary for AI Agents
+
+## Website Overview
+InvestBrain is an investment discipline tool ("投资第二大脑") for experienced investors. It helps users anchor their investment decisions, reflect on their behavior patterns, and execute their own rules automatically. It does NOT provide investment advice, does NOT execute trades, and stores all data locally.
+
+## Core Product Description
+- **Product Name**: InvestBrain
+- **Brand**: mangoFolio
+- **Website**: https://brain.mangofolio.com
+- **Type**: MCP Server + Skill package for AI agents
+- **Target User**: Experienced investors who want to build discipline and avoid being swayed by market noise
+
+## Core Capabilities (4 Features)
+1. **Thought Record (想法记录)** — thought_record: Users input investment ideas in natural language, AI parses ticker, price, indicators, generates structured cards
+2. **Master Thought Library (大师思想库)** — rag_ask_investment: 16 investment masters' philosophies (Buffett, Munger, Duan Yongping, Howard Marks, Peter Lynch, etc.) searchable via RAG
+3. **Behavior Pattern Report (行为模式报告)** — pattern_get_report: Auto-detects recurring investor biases (chasing highs, early stop-loss, panic selling)
+4. **Conditional Reminder (条件提醒)** — reminder_set: Price/time/condition-based triggers with Feishu (飞书) notification support
+
+## AI Model Support
+Multi-model router supporting: DeepSeek (deepseek-chat/deepseek-reasoner), OpenAI (GPT-4o/GPT-4o-mini), Anthropic (Claude Sonnet 4/Opus 4), and custom OpenAI-compatible providers.
+
+## Key Product Principles
+- No trade execution
+- No paid investment advisory
+- All data stored locally (SQLite)
+- Tool positioning: mirror + discipline anchor
+
+## Site Structure
+- **/** — Homepage: Hero, problem statement, investment anchor (3 things), comparison table, 4 features, differentiation, trust bar, CTA
+- **/about** — About: Problem origin, core positioning, product principles, supported AI models, 16 masters list
+- **/features** — Detailed feature explanations for all 4 capabilities
+- **/faq** — FAQ: How to use, security & privacy, best use cases, contact us
+
+## Technical Stack
+- Framework: Next.js 14 + Tailwind CSS
+- Backend: MCP Server (FastMCP) with SQLite local storage
+- Data sources: AKShare, Tushare
+- LLM: Multi-model router (DeepSeek / OpenAI / Anthropic)
+
+## Brand Keywords
+投资纪律, 投资锚点, 知行合一, 行为审计, 投资大师, 决策复盘, 本地存储
