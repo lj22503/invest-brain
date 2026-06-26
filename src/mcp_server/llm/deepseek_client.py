@@ -68,6 +68,18 @@ SCENE_CONFIGS: dict[str, LLMConfig] = {
         temperature=0.5,
         thinking_effort="high",
     ),
+    "coaching_simple": LLMConfig(
+        model="deepseek-chat",
+        temperature=0.5,
+    ),
+    "coaching_synthesis": LLMConfig(
+        model="deepseek-chat",
+        temperature=0.4,
+    ),
+    "coaching_archive": LLMConfig(
+        model="deepseek-chat",
+        temperature=0.3,
+    ),
 }
 
 
