@@ -1,6 +1,7 @@
 """Memory store client using SQLite"""
 
 import sqlite3
+import time
 from typing import Optional
 from pathlib import Path
 
@@ -62,6 +63,27 @@ class MemoryStore:
         """)
 
         conn.commit()
+
+        # Scenarios table for learning coaching
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS scenarios (
+                id TEXT PRIMARY KEY,
+                trigger_event TEXT NOT NULL,
+                variable_structure TEXT,
+                causal_chain TEXT,
+                predicted_outcome TEXT,
+                actual_outcome TEXT,
+                lesson TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
+        # Add scenario_id to thoughts table (for cross-reference with ideas)
+        result = cursor.execute(
+            "SELECT COUNT(*) FROM pragma_table_info('thoughts') WHERE name='scenario_id'"
+        ).fetchone()[0]
+        if result == 0:
+            cursor.execute("ALTER TABLE thoughts ADD COLUMN scenario_id TEXT REFERENCES scenarios(id)")
 
         # Behavior patterns table
         cursor.execute("""
@@ -137,7 +159,6 @@ class MemoryStore:
         """Add a decision record"""
         conn = self._get_conn()
         cursor = conn.cursor()
-        import time
         decision_id = f"dec_{int(time.time())}"
         cursor.execute(
             "INSERT INTO decisions (id, ticker, action, price, reason) VALUES (?, ?, ?, ?, ?)",
@@ -177,6 +198,97 @@ class MemoryStore:
         deleted = cursor.rowcount > 0
         conn.close()
         return deleted
+
+    def add_scenario(
+        self,
+        trigger_event: str,
+        variable_structure: str = None,
+        causal_chain: str = None,
+        predicted_outcome: str = None,
+        actual_outcome: str = None,
+        lesson: str = None,
+    ) -> str:
+        """Add a new scenario record"""
+        scenario_id = f"scenario_{int(time.time())}"
+        conn = self._get_conn()
+        cursor = conn.cursor()
+        cursor.execute(
+            """INSERT INTO scenarios
+               (id, trigger_event, variable_structure, causal_chain,
+                predicted_outcome, actual_outcome, lesson)
+               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+            (scenario_id, trigger_event, variable_structure,
+             causal_chain, predicted_outcome, actual_outcome, lesson),
+        )
+        conn.commit()
+        conn.close()
+        return scenario_id
+
+    def get_scenarios(self, limit: int = 50) -> list:
+        """Get recent scenarios"""
+        conn = self._get_conn()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT * FROM scenarios ORDER BY created_at DESC LIMIT ?",
+            (limit,)
+        )
+        rows = cursor.fetchall()
+        conn.close()
+        return [
+            {"id": r[0], "trigger_event": r[1], "variable_structure": r[2],
+             "causal_chain": r[3], "predicted_outcome": r[4],
+             "actual_outcome": r[5], "lesson": r[6], "created_at": r[7]}
+            for r in rows
+        ]
+
+    def update_scenario_result(
+        self,
+        scenario_id: str,
+        actual_outcome: str,
+        lesson: str = None,
+    ) -> bool:
+        """Update scenario with actual result after event unfolds"""
+        conn = self._get_conn()
+        cursor = conn.cursor()
+        cursor.execute(
+            """UPDATE scenarios
+               SET actual_outcome = ?, lesson = ?
+               WHERE id = ?""",
+            (actual_outcome, lesson, scenario_id),
+        )
+        conn.commit()
+        updated = cursor.rowcount > 0
+        conn.close()
+        return updated
+
+    def link_thought_to_scenario(self, thought_id: int, scenario_id: str) -> bool:
+        """Link a thought to a scenario"""
+        conn = self._get_conn()
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE thoughts SET scenario_id = ? WHERE id = ?",
+            (scenario_id, thought_id),
+        )
+        conn.commit()
+        updated = cursor.rowcount > 0
+        conn.close()
+        return updated
+
+    def get_scenario_thoughts(self, scenario_id: str) -> list:
+        """Get all thoughts linked to a scenario"""
+        conn = self._get_conn()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT * FROM thoughts WHERE scenario_id = ? ORDER BY created_at DESC",
+            (scenario_id,)
+        )
+        rows = cursor.fetchall()
+        conn.close()
+        return [
+            {"id": r[0], "text": r[1], "ticker": r[2], "price": r[3],
+             "indicator": r[4], "created_at": r[5], "scenario_id": r[6]}
+            for r in rows
+        ]
 
 
 # Singleton instance
