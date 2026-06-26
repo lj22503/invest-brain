@@ -14,6 +14,7 @@ from .rag_handler import RagHandler
 from .memory_handler import MemoryHandler
 from .reminder_handler import ReminderHandler
 from .master_handler import MasterAnalystHandler
+from .coaching_handler import CoachingHandler
 
 
 # 意图 → handler 实例 + 触发词
@@ -53,6 +54,17 @@ _INTENT_MAP = {
             "大师观点", "投资大师",
         ],
     },
+    "learning-coaching": {
+        "handler": CoachingHandler(),
+        "triggers": [
+            "怎么看.*趋势", "为什么.*涨", "为什么.*跌",
+            "为什么.*不一样", "对.*什么影响",
+            ".*觉得.*", ".*为什么",
+            # 宏观类
+            "宏观", "利率", "汇率", "黄金", "原油",
+            "美联储", "央行", "A股", "美股",
+        ],
+    },
 }
 
 
@@ -83,6 +95,8 @@ def _route_to_handler(intent: str, user_input: str, handler_info: Dict) -> Dict[
     elif intent_name == "reminder-scheduler":
         return h.handle(user_input)
     elif intent_name == "master-analyst":
+        return h.handle(user_input)
+    elif intent_name == "learning-coaching":
         return h.handle(user_input)
     else:
         return {"status": "error", "message": f"Unknown intent: {intent}"}
@@ -126,6 +140,9 @@ def _summarize_result(intent: str, result: Dict[str, Any]) -> str:
             topic = result.get("topic", "")
             return f"**{master}** 对 **{topic}** 的观点：\n{view}"
         return result.get("answer", "暂无相关信息")
+
+    elif intent == "learning-coaching":
+        return result.get("answer", "（辅导分析完成）")
 
     return str(result)
 

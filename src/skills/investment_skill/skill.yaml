@@ -100,6 +100,15 @@ intents:
       - "段永平说"
     route_to: master-analyst
 
+- type: learning-coaching
+  triggers:
+    - "怎么看.*趋势"
+    - "为什么.*涨"
+    - "为什么.*跌"
+    - "为什么.*不一样"
+    - "对.*什么影响"
+  route_to: learning-coaching
+
 data_storage:
   cards: data/cards/
   reminders: data/reminders/
