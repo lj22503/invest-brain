@@ -80,6 +80,10 @@ SCENE_CONFIGS: dict[str, LLMConfig] = {
         model="deepseek-chat",
         temperature=0.3,
     ),
+    "coaching_socratic": LLMConfig(
+        model="deepseek-chat",
+        temperature=0.4,
+    ),
 }
 
 
