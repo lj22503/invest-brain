@@ -3,7 +3,7 @@ export default function Home() {
     <main className="min-h-screen">
 
       {/* ========== Hero ========== */}
-      <section className="min-h-screen flex flex-col justify-center items-center text-center px-16 py-32 relative overflow-hidden">
+      <section className="min-h-screen flex flex-col justify-center items-center text-center px-6 md:px-16 py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(232,160,144,0.08)_0%,transparent_70%)] pointer-events-none" />
         <div className="absolute top-1/3 right-1/4 w-[300px] h-[400px] bg-[radial-gradient(ellipse_at_center,rgba(184,178,166,0.06)_0%,transparent_70%)] rotate-[-12deg] pointer-events-none" />
 
@@ -11,27 +11,27 @@ export default function Home() {
           <div className="text-vermillion text-xs tracking-[0.2em] uppercase mb-8 font-medium">
             by mangoFolio
           </div>
-          <h1 className="font-serif text-7xl font-black mb-6 leading-tight tracking-wide">
+          <h1 className="font-serif text-5xl md:text-7xl font-black mb-6 leading-tight tracking-wide">
             锚定<span className="relative inline-block">最重要的事
               <span className="absolute bottom-1 left-0 right-0 h-3 bg-vermillion/10 z-[-1]" />
             </span><br />不被市场吹走
           </h1>
           <p className="text-ink-light text-xl font-light mb-12 max-w-lg mx-auto">
-            市场每天都在变，茅台涨停、政策利好、央行放水——但这些都不是最重要的事。你的投资锚是什么？
+            不是投顾，不给建议。是一个让你「越用越聪明」的投资大脑 —— 通过 AI 帮你建立自己的投研纪律。
           </p>
-          <div className="flex gap-6 justify-center">
-            <a href="#features" className="bg-vermillion text-white px-10 py-4 rounded text-base font-medium hover:bg-[#A8322A] transition-all hover:-translate-y-px hover:shadow-md">
-              了解更多
+          <div className="flex gap-4 justify-center flex-wrap">
+            <a href="/openapi" className="bg-vermillion text-white px-8 py-4 rounded text-base font-medium hover:bg-[#A8322A] transition-all hover:-translate-y-px hover:shadow-md">
+              进入 Skill 市场
             </a>
-            <a href="#about" className="border border-border text-ink px-10 py-4 rounded text-base hover:border-ink transition-colors">
-              关于我们 →
+            <a href="#coaching" className="border border-border text-ink px-8 py-4 rounded text-base hover:border-ink transition-colors">
+              了解学习辅导
             </a>
           </div>
         </div>
       </section>
 
       {/* ========== Problem ========== */}
-      <section className="py-24 px-16 max-w-5xl mx-auto">
+      <section className="py-24 px-6 md:px-16 max-w-5xl mx-auto">
         <div className="text-center mb-12">
           <div className="text-vermillion text-xs tracking-[0.24em] font-medium mb-4">问题</div>
           <h2 className="font-serif text-4xl font-bold mb-4">每天市场都在喊你</h2>
@@ -40,7 +40,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="flex gap-6 flex-wrap mt-12">
+        <div className="grid grid-cols-2 md:flex md:flex-wrap gap-6 mt-12">
           {[
             { source: '消息推送', quote: '"茅台涨停了！快追！"' },
             { source: '朋友圈', quote: '"新能源政策重大利好！"' },
@@ -60,7 +60,7 @@ export default function Home() {
       </section>
 
       {/* ========== Solution: Investment Anchor ========== */}
-      <div className="bg-white py-24 px-16">
+      <div className="bg-white py-24 px-6 md:px-16">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-vermillion text-xs tracking-[0.24em] font-medium mb-4">解决方案</div>
@@ -70,7 +70,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-12 mt-12 text-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-12 text-center">
             {[
               { num: '01', title: '记下来', desc: '锚定你的计划。不是记大盘点位，而是记：「我觉得茅台可以买，理由是……」「我设置了这个提醒条件……」' },
               { num: '02', title: '映照', desc: '看见真实的自己。你说过「不追涨」，做到了吗？你说「长期持有」，每次跌了在想什么？' },
@@ -87,11 +87,11 @@ export default function Home() {
       </div>
 
       {/* ========== Core Positioning ========== */}
-      <section className="py-24 px-16 text-center">
+      <section className="py-24 px-6 md:px-16 text-center">
         <div className="max-w-2xl mx-auto">
           <div className="font-serif text-3xl font-bold leading-relaxed mb-6">
             不是投顾，不给建议<br />
-            是<span className="relative inline-block text-vermillion">镜子<span className="absolute bottom-0 left-0 right-0 h-2 bg-vermillion/8 z-[-1]" /></span> + <span className="relative inline-block text-vermillion">纪律锚点<span className="absolute bottom-0 left-0 right-0 h-2 bg-vermillion/8 z-[-1]" /></span>
+            是<span className="relative inline-block text-vermillion">镜子<span className="absolute bottom-0 left-0 right-0 h-2 bg-vermillion/10 z-[-1]" /></span> + <span className="relative inline-block text-vermillion">纪律锚点<span className="absolute bottom-0 left-0 right-0 h-2 bg-vermillion/10 z-[-1]" /></span>
           </div>
           <p className="text-ink-light text-lg">
             传统工具帮你交易，Brain 帮你思考——让你越用越聪明。
@@ -100,56 +100,64 @@ export default function Home() {
       </section>
 
       {/* ========== Features ========== */}
-      <section id="features" className="py-24 px-16 bg-white scroll-mt-16">
+      <section id="features" className="py-24 px-6 md:px-16 bg-white scroll-mt-16">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-vermillion text-xs tracking-[0.24em] font-medium mb-4">功能</div>
-            <h2 className="font-serif text-4xl font-bold">四大核心能力</h2>
+            <h2 className="font-serif text-4xl font-bold">五大核心 Skill</h2>
+            <p className="text-ink-light text-base mt-3">
+              每个 Skill 都可独立使用，复制 Prompt 给任何 AI 立即生效。
+              <a href="/openapi" className="text-vermillion hover:underline ml-1">浏览全部 →</a>
+            </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
             {[
               {
-                icon: '記',
-                title: '想法记录',
-                eng: 'thought_record',
-                desc: '一句话输入，AI 自动解析标的、价格、指标，关联历史决策，生成结构化卡片。锚定你的每一个投资判断。',
-              },
-              {
-                icon: '庫',
-                title: '大师思想库',
-                eng: 'rag_ask_investment',
-                desc: '巴菲特、芒格、段永平、霍华德·马克斯等 16 位大师的思想，随时对照。锚定理性的声音。',
-              },
-              {
-                icon: '教',
+                icon: '🎓',
                 title: '学习辅导',
                 eng: 'learning_coaching',
-                desc: '投研教练陪跑：10步标准框架（变量拆解→因果链→情景推演→失效条件）+ Socratic 多轮对话，逐步建立你自己的投资系统。',
+                desc: '投研教练陪跑：10步标准框架 + Socratic 多轮对话，逐步建立你自己的投资系统。每次辅导自动归档到情景库。',
                 highlight: true,
               },
               {
-                icon: '鏡',
+                icon: '📝',
+                title: '想法记录',
+                eng: 'idea_recorder',
+                desc: '一句话输入，AI 自动解析标的、价格、指标，关联历史决策，生成结构化卡片。锚定你的每一个投资判断。',
+              },
+              {
+                icon: '📚',
+                title: '大师思想库',
+                eng: 'knowledge_rag',
+                desc: '巴菲特、芒格、段永平、霍华德·马克斯等 16 位大师的思想，随时对照。锚定理性的声音。',
+              },
+              {
+                icon: '🪞',
                 title: '行为模式报告',
-                eng: 'pattern_get_report',
+                eng: 'pattern_detector',
                 desc: '自动发现你的重复行为模式：追高、止损过早、割在最低点——映照真实的自己。',
               },
               {
-                icon: '庫',
-                title: '情景案例库',
-                eng: 'scenario_archive',
-                desc: '每次辅导自动归档：触发事件、因果链、实际结果、经验教训。积累你的专属投研记忆。',
-              },
-              {
-                icon: '鈴',
+                icon: '🔔',
                 title: '条件提醒',
-                eng: 'reminder_set',
+                eng: 'reminder_scheduler',
                 desc: '价格到位才提醒，条件触发才检查。让纪律替你决策，不被每天的情绪牵着走。',
               },
+              {
+                icon: '🧠',
+                title: '记忆管理',
+                eng: 'memory_keeper',
+                desc: '持仓、决策、行为模式全存储，支持语义检索和模式发现。',
+              },
             ].map((f) => (
-              <div key={f.eng} className={`${f.highlight ? 'border-vermillion border-2 bg-vermillion/[0.02]' : 'bg-paper border border-border'} rounded-lg p-8 hover:shadow-md hover:-translate-y-1 hover:border-vermillion-light transition-all`}>
+              <a
+                key={f.eng}
+                href="/openapi"
+                className={`block ${f.highlight ? 'border-vermillion border-2 bg-vermillion/[0.02]' : 'bg-paper border border-border'} rounded-lg p-8 hover:shadow-md hover:-translate-y-1 hover:border-vermillion-light transition-all`}
+              >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="font-serif text-3xl opacity-30">{f.icon}</div>
+                  <div className="text-3xl">{f.icon}</div>
                   {f.highlight && (
                     <span className="bg-vermillion text-white text-xs px-2 py-1 rounded font-medium">NEW</span>
                   )}
@@ -157,14 +165,14 @@ export default function Home() {
                 <h3 className="font-serif text-xl font-bold mb-1">{f.title}</h3>
                 <div className="text-ink-faint text-xs font-mono tracking-wide mb-3">{f.eng}</div>
                 <p className="text-ink-light text-sm leading-relaxed">{f.desc}</p>
-              </div>
+              </a>
             ))}
           </div>
         </div>
       </section>
 
       {/* ========== Learning Coaching Showcase ========== */}
-      <section className="py-24 px-16 bg-gradient-to-b from-paper to-white">
+      <section id="coaching" className="py-24 px-6 md:px-16 bg-gradient-to-b from-paper to-white scroll-mt-16">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-vermillion text-xs tracking-[0.24em] font-medium mb-4">学习辅导</div>
@@ -174,7 +182,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-12 mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12">
             <div>
               <h3 className="font-serif text-2xl font-bold mb-6">10 步标准框架</h3>
               <ol className="space-y-2 text-sm text-ink-light">
@@ -220,11 +228,17 @@ export default function Home() {
               </div>
             </div>
           </div>
+
+          <div className="text-center mt-12">
+            <a href="/openapi" className="inline-block bg-vermillion text-white px-10 py-3 rounded text-base font-medium hover:bg-[#A8322A] transition-colors">
+              查看学习辅导 Skill →
+            </a>
+          </div>
         </div>
       </section>
 
       {/* ========== About ========== */}
-      <section id="about" className="py-24 px-16 scroll-mt-16">
+      <section id="about" className="py-24 px-6 md:px-16 scroll-mt-16">
         <div className="max-w-3xl mx-auto">
 
           {/* Problem Origin */}
@@ -257,7 +271,7 @@ export default function Home() {
           </div>
 
           {/* AI Models + 16 Masters side by side */}
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <h3 className="font-serif font-bold text-lg mb-3">支持的 AI</h3>
               <div className="space-y-2 text-sm text-ink-light">
@@ -283,7 +297,7 @@ export default function Home() {
       </section>
 
       {/* ========== FAQ ========== */}
-      <section id="faq" className="py-24 px-16 bg-white scroll-mt-16">
+      <section id="faq" className="py-24 px-6 md:px-16 bg-white scroll-mt-16">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-vermillion text-xs tracking-[0.24em] font-medium mb-4">FAQ</div>
@@ -294,19 +308,19 @@ export default function Home() {
             {[
               {
                 q: '如何使用？',
-                a: '安装后运行 MCP Server，通过自然语言交互：记录想法「茅台可以买，等跌到1800」、查询大师「巴菲特怎么看科技股」、设置提醒「茅台跌到1800时提醒我」、查看行为报告「生成我的行为模式报告」。',
+                a: '两种方式：\n1. 进入 Skill 市场，复制任意 Skill 的 Prompt 给你的 AI（Claude / ChatGPT / DeepSeek 等）即可立即使用。\n2. 通过 MCP 协议本地部署 InvestBrain，数据完全在你的电脑上运行。',
               },
               {
                 q: '数据安全吗？',
                 a: '完全本地存储。SQLite 数据库保存在本地，不上传任何云端服务器，不经我们访问。InvestBrain 不执行任何交易，不连接券商账户。',
               },
               {
-                q: '典型使用场景？',
-                a: '决策前记录想法并结构化；市场波动时打开大师思想库对照当初判断逻辑；每月查看行为报告发现自己是否总在追高/止损过早/割在最低点。',
+                q: '学习辅导是什么？',
+                a: '投研教练模式。简单问题（如「茅台怎么看」）直接生成 10 步标准分析；复杂主题（如「黄金为什么一直涨」）进入 Socratic 多轮对话，逐步引导你暴露认知盲点。每次辅导自动归档到你的专属情景库。',
               },
               {
                 q: '想提需求或反馈，怎么联系？',
-                a: 'GitHub Issues: https://github.com/mangofolio/investbrain\n邮件: brain@mangofolio.com',
+                a: 'GitHub: https://github.com/lj22503/invest-brain\n邮件: brain@mangofolio.com',
               },
             ].map((item) => (
               <div key={item.q}>
@@ -319,9 +333,10 @@ export default function Home() {
       </section>
 
       {/* ========== Trust Bar ========== */}
-      <div className="py-16 px-16 text-center border-t border-b border-border">
-        <div className="flex justify-center gap-20">
+      <div className="py-16 px-6 md:px-16 text-center border-t border-b border-border">
+        <div className="flex justify-center gap-12 md:gap-20 flex-wrap">
           {[
+            { num: '5', label: '个核心 Skill' },
             { num: '16', label: '位投资大师' },
             { num: '多模型', label: 'AI 引擎' },
             { num: '本地', label: '数据存储' },
@@ -335,7 +350,7 @@ export default function Home() {
       </div>
 
       {/* ========== CTA ========== */}
-      <section id="cta" className="py-24 px-16 text-center relative overflow-hidden">
+      <section id="cta" className="py-24 px-6 md:px-16 text-center relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(196,58,49,0.04)_0%,transparent_70%)] pointer-events-none" />
         <div className="w-10 h-px bg-vermillion opacity-30 mx-auto mb-8" />
         <div className="relative z-10">
@@ -344,10 +359,10 @@ export default function Home() {
           </h2>
           <p className="text-ink-light text-lg mb-10">市场每天都在变，你的锚是什么？</p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <a href="/openapi" className="inline-block bg-vermillion text-white px-12 py-4 rounded text-lg font-medium hover:bg-[#A8322A] transition-colors">
+            <a href="/openapi" className="inline-block bg-vermillion text-white px-10 py-4 rounded text-lg font-medium hover:bg-[#A8322A] transition-colors">
               浏览 Skill 市场
             </a>
-            <a href="https://github.com/lj22503/invest-brain" className="inline-block border border-border text-ink px-12 py-4 rounded text-lg hover:border-ink transition-colors">
+            <a href="https://github.com/lj22503/invest-brain" className="inline-block border border-border text-ink px-10 py-4 rounded text-lg hover:border-ink transition-colors">
               GitHub 部署
             </a>
           </div>
