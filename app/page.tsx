@@ -122,10 +122,23 @@ export default function Home() {
                 desc: '巴菲特、芒格、段永平、霍华德·马克斯等 16 位大师的思想，随时对照。锚定理性的声音。',
               },
               {
+                icon: '教',
+                title: '学习辅导',
+                eng: 'learning_coaching',
+                desc: '投研教练陪跑：10步标准框架（变量拆解→因果链→情景推演→失效条件）+ Socratic 多轮对话，逐步建立你自己的投资系统。',
+                highlight: true,
+              },
+              {
                 icon: '鏡',
                 title: '行为模式报告',
                 eng: 'pattern_get_report',
                 desc: '自动发现你的重复行为模式：追高、止损过早、割在最低点——映照真实的自己。',
+              },
+              {
+                icon: '庫',
+                title: '情景案例库',
+                eng: 'scenario_archive',
+                desc: '每次辅导自动归档：触发事件、因果链、实际结果、经验教训。积累你的专属投研记忆。',
               },
               {
                 icon: '鈴',
@@ -134,13 +147,78 @@ export default function Home() {
                 desc: '价格到位才提醒，条件触发才检查。让纪律替你决策，不被每天的情绪牵着走。',
               },
             ].map((f) => (
-              <div key={f.eng} className="bg-paper border border-border rounded-lg p-8 hover:shadow-md hover:-translate-y-1 hover:border-vermillion-light transition-all">
-                <div className="font-serif text-3xl opacity-30 mb-4">{f.icon}</div>
+              <div key={f.eng} className={`${f.highlight ? 'border-vermillion border-2 bg-vermillion/[0.02]' : 'bg-paper border border-border'} rounded-lg p-8 hover:shadow-md hover:-translate-y-1 hover:border-vermillion-light transition-all`}>
+                <div className="flex items-start justify-between mb-4">
+                  <div className="font-serif text-3xl opacity-30">{f.icon}</div>
+                  {f.highlight && (
+                    <span className="bg-vermillion text-white text-xs px-2 py-1 rounded font-medium">NEW</span>
+                  )}
+                </div>
                 <h3 className="font-serif text-xl font-bold mb-1">{f.title}</h3>
                 <div className="text-ink-faint text-xs font-mono tracking-wide mb-3">{f.eng}</div>
                 <p className="text-ink-light text-sm leading-relaxed">{f.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ========== Learning Coaching Showcase ========== */}
+      <section className="py-24 px-16 bg-gradient-to-b from-paper to-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="text-vermillion text-xs tracking-[0.24em] font-medium mb-4">学习辅导</div>
+            <h2 className="font-serif text-4xl font-bold mb-4">投研教练陪跑，建立你自己的投资系统</h2>
+            <p className="text-ink-light text-lg max-w-2xl mx-auto">
+              不是给答案，是陪你想清楚。简单问题直接 10 步框架输出；复杂主题进入 Socratic 多轮对话，逐步暴露认知 gap。
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-12 mt-12">
+            <div>
+              <h3 className="font-serif text-2xl font-bold mb-6">10 步标准框架</h3>
+              <ol className="space-y-2 text-sm text-ink-light">
+                {[
+                  '变量拆解（按重要性排序）',
+                  '因果链（带箭头）',
+                  '资产影响（利率/汇率/股/商品）',
+                  '历史相似情景',
+                  '情景推演（变量背离）',
+                  '市场隐含逻辑识别',
+                  '可落地的交易方案',
+                  '反向校验（漏洞在哪）',
+                  '失效条件（何时必须离场）',
+                  '3 句话归档',
+                ].map((step, i) => (
+                  <li key={i} className="flex gap-3">
+                    <span className="text-vermillion font-mono font-bold">{String(i + 1).padStart(2, '0')}</span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div>
+              <h3 className="font-serif text-2xl font-bold mb-6">Socratic 多轮对话</h3>
+              <div className="space-y-3 text-sm">
+                <div className="bg-white border border-border rounded-lg p-4">
+                  <div className="text-ink-faint text-xs mb-1">步骤 1/10</div>
+                  <div className="text-ink mb-3">黄金的核心驱动变量是什么？</div>
+                  <div className="text-ink-light text-xs leading-relaxed">
+                    A. 实际利率与美元<br/>
+                    B. 中国黄金需求<br/>
+                    C. 美联储降息预期
+                  </div>
+                </div>
+                <div className="bg-paper-warm border border-vermillion/20 rounded-lg p-4">
+                  <div className="text-vermillion text-xs mb-1">用户选 A → 继续追问</div>
+                  <div className="text-ink">实际利率上行的传导路径是什么？</div>
+                </div>
+                <p className="text-ink-faint text-xs leading-relaxed pt-2">
+                  不告诉答案，只引导思考。每次辅导自动写入情景库，下次类似事件可对比历史。
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
