@@ -98,3 +98,34 @@ def run_archive(
         lesson=lesson,
     )
     return f"✅ 已存入情景库 [{scenario_id}]\n\n{result}"
+
+
+def coaching_chat_messages(
+    messages: list,
+    scene: str = "coaching_socratic",
+    need_sources: bool = False,
+    sources: list = None,
+) -> str:
+    """
+    Multi-turn dialogue LLM call.
+
+    Args:
+        messages: list of {"role": "system/user/assistant", "content": "..."}
+        scene: LLM scene config to use
+        need_sources: whether to append source citations
+        sources: list of source dicts for citation
+    """
+    from ..llm import get_deepseek_client, is_llm_available
+
+    if not is_llm_available():
+        return "（当前 AI 不可用，请在配置 DEEPSEEK_API_KEY 后使用辅导功能）"
+
+    client = get_deepseek_client()
+    try:
+        result = client.chat(messages, scene=scene)
+        if need_sources and sources:
+            result = _build_sourceCitation(result, sources)
+        result = _add_disclaimer(result)
+        return result
+    except Exception as e:
+        return f"（分析生成失败：{e}，请稍后重试）"
