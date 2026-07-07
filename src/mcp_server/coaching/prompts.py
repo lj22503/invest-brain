@@ -116,3 +116,61 @@ SOCRATIC_STEP_PROMPT = """当前步骤：{step_description}
 请选择：
 {options}
 """
+
+SOCRATIC_GENERATE_QUESTION = """你是投资投研教练。基于当前步骤的分析主题，生成一个聚焦的 Socratic 问题，引导用户自己思考该步骤的核心认知点。
+
+【分析主题】：{topic}
+【当前步骤】：{step_index}/10 - {step_description}
+【对话历史】：{history}
+
+要求：
+1. 严格返回 JSON 格式（无任何其他文字）：
+{{
+  "question": "聚焦的提问内容（中文，1-2句话）",
+  "options": [
+    {{"key": "A", "label": "选项A内容", "hint": "选了A后会追问什么"}},
+    {{"key": "B", "label": "选项B内容", "hint": "选了B后会追问什么"}},
+    {{"key": "C", "label": "选项C内容", "hint": "选了C后会追问什么"}}
+  ],
+  "focus": "这一步要帮助用户建立的核心认知点（1句话）"
+}}
+
+2. 提供 2-4 个选项（A/B/C，可选 D），覆盖该步骤的主要思考方向
+3. 每个选项 label 是完整短语（不是单字）
+4. 不要给答案、不要暗示哪个选项"正确"
+5. JSON 必须是合法格式，可被 json.loads() 解析
+"""
+
+SOCRATIC_HANDLE_CHOICE = """用户选择了：{choice_label}（{choice_key}）
+
+【上一步问题】：{question}
+【选项 A】：{option_a}
+【选项 B】：{option_b}
+【选项 C】：{option_c}
+
+用户的回答（可能不是标准选项）：{user_input}
+
+请你：
+1. 确认理解用户的选择（如果用户回答模糊，先复述再推进）
+2. 针对这个选择，补充一句简短的反馈（30字内）
+3. 不直接给答案，继续推进到下一步
+
+严格返回 JSON 格式：
+{{
+  "acknowledgement": "确认理解用户选择的话（1-2句）",
+  "feedback": "针对选择的简短反馈",
+  "advance_to_next": true_or_false
+}}
+"""
+
+SOCRATIC_FINAL_SUMMARY = """基于完整的 Socratic 多轮对话，生成最终投研结论。
+
+【分析主题】：{topic}
+【对话历史】：
+{history}
+
+请用 3 句话总结：
+1. 第一句：当前市场核心结构
+2. 第二句：核心驱动变量
+3. 第三句：交易方向
+"""
