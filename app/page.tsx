@@ -343,9 +343,17 @@ export default function Home() {
             回到你的投资纪律<br />不忘，不慌，不飘
           </h2>
           <p className="text-ink-light text-lg mb-10">市场每天都在变，你的锚是什么？</p>
-          <a href="https://github.com/mangofolio/investbrain" className="inline-block bg-vermillion text-white px-12 py-4 rounded text-lg font-medium hover:bg-[#A8322A] transition-colors">
-            免费开始
-          </a>
+          <div className="flex gap-4 justify-center flex-wrap">
+            <a href="/openapi" className="inline-block bg-vermillion text-white px-12 py-4 rounded text-lg font-medium hover:bg-[#A8322A] transition-colors">
+              浏览 Skill 市场
+            </a>
+            <a href="https://github.com/lj22503/invest-brain" className="inline-block border border-border text-ink px-12 py-4 rounded text-lg hover:border-ink transition-colors">
+              GitHub 部署
+            </a>
+          </div>
+          <p className="text-ink-faint text-xs mt-6">
+            Skill 市场：复制 Prompt 给任意 AI 立即使用 ·  GitHub 部署：本地运行，数据完全在你电脑上
+          </p>
         </div>
       </section>
 

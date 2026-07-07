@@ -52,14 +52,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </a>
           <ul className="flex gap-10 list-none text-sm text-ink-light">
             <li><a href="/#features" className="hover:text-ink transition-colors">功能</a></li>
+            <li><a href="/#coaching" className="hover:text-ink transition-colors">学习辅导</a></li>
             <li><a href="/#about" className="hover:text-ink transition-colors">关于</a></li>
             <li><a href="/#faq" className="hover:text-ink transition-colors">FAQ</a></li>
+            <li><a href="/openapi" className="hover:text-ink transition-colors font-medium text-vermillion">Skill 市场</a></li>
           </ul>
           <a
-            href="/#cta"
+            href="/openapi"
             className="bg-vermillion text-white text-sm px-6 py-2 rounded hover:bg-[#A8322A] transition-colors"
           >
-            免费开始
+            浏览 Skills
           </a>
         </nav>
 
@@ -70,9 +72,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer className="px-16 py-12 border-t border-border flex justify-between items-center text-xs text-ink-faint">
           <div>Brain by <a href="https://mangofolio.com" className="hover:text-ink transition-colors">mangoFolio</a></div>
           <div className="flex gap-8">
-            <a href="https://brain.mangofolio.com" className="hover:text-ink transition-colors">brain.mangofolio.com</a>
-            <a href="/about" className="hover:text-ink transition-colors">关于</a>
-            <a href="/faq" className="hover:text-ink transition-colors">FAQ</a>
+            <a href="/openapi" className="hover:text-ink transition-colors">Skill 市场</a>
+            <a href="/openapi/schema.json" className="hover:text-ink transition-colors">JSON Schema</a>
+            <a href="https://github.com/lj22503/invest-brain" className="hover:text-ink transition-colors">GitHub</a>
           </div>
         </footer>
       </body>
