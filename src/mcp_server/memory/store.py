@@ -109,6 +109,24 @@ class MemoryStore:
             )
         """)
 
+        # Dialogue sessions for Socratic multi-turn coaching
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS dialogue_sessions (
+                id TEXT PRIMARY KEY,
+                scenario_id TEXT,
+                user_input TEXT NOT NULL,
+                current_step INTEGER DEFAULT 1,
+                mode TEXT DEFAULT 'complex',
+                status TEXT DEFAULT 'active',
+                dialogue_history TEXT,
+                pending_question TEXT,
+                pending_options TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (scenario_id) REFERENCES scenarios(id)
+            )
+        """)
+
         conn.commit()
         conn.close()
 
@@ -289,6 +307,93 @@ class MemoryStore:
              "indicator": r[4], "created_at": r[5], "scenario_id": r[6]}
             for r in rows
         ]
+
+    def create_dialogue_session(self, user_input: str) -> str:
+        """Create a new dialogue session"""
+        import time
+        session_id = f"session_{int(time.time() * 1000)}"
+        conn = self._get_conn()
+        cursor = conn.cursor()
+        cursor.execute(
+            """INSERT INTO dialogue_sessions (id, user_input) VALUES (?, ?)""",
+            (session_id, user_input),
+        )
+        conn.commit()
+        conn.close()
+        return session_id
+
+    def get_dialogue_session(self, session_id: str) -> dict | None:
+        """Get dialogue session by id"""
+        conn = self._get_conn()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT * FROM dialogue_sessions WHERE id = ?",
+            (session_id,),
+        )
+        row = cursor.fetchone()
+        conn.close()
+        if not row:
+            return None
+        return {
+            "id": row[0], "scenario_id": row[1], "user_input": row[2],
+            "current_step": row[3], "mode": row[4], "status": row[5],
+            "dialogue_history": row[6], "pending_question": row[7],
+            "pending_options": row[8], "created_at": row[9], "updated_at": row[10],
+        }
+
+    def update_dialogue_session(self, session_id: str, **fields) -> bool:
+        """Update dialogue session fields"""
+        allowed = {"scenario_id", "current_step", "mode", "status",
+                   "dialogue_history", "pending_question", "pending_options", "updated_at"}
+        set_parts = []
+        values = []
+        for k, v in fields.items():
+            if k in allowed:
+                set_parts.append(f"{k} = ?")
+                values.append(v)
+        if not set_parts:
+            return False
+        set_parts.append("updated_at = CURRENT_TIMESTAMP")
+        values.append(session_id)
+        conn = self._get_conn()
+        cursor = conn.cursor()
+        cursor.execute(
+            f"UPDATE dialogue_sessions SET {', '.join(set_parts)} WHERE id = ?",
+            values,
+        )
+        conn.commit()
+        updated = cursor.rowcount > 0
+        conn.close()
+        return updated
+
+    def append_dialogue_turn(self, session_id: str, turn: dict) -> bool:
+        """Append a turn to dialogue_history (JSON array)"""
+        import json
+        session = self.get_dialogue_session(session_id)
+        if not session:
+            return False
+        history = json.loads(session["dialogue_history"]) if session["dialogue_history"] else []
+        history.append(turn)
+        return self.update_dialogue_session(session_id, dialogue_history=json.dumps(history, ensure_ascii=False))
+
+    def find_active_session_for(self, user_input: str) -> dict | None:
+        """Find an active session matching the user_input (for resume after restart)"""
+        conn = self._get_conn()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT * FROM dialogue_sessions WHERE user_input = ? AND status = 'active' ORDER BY updated_at DESC LIMIT 1",
+            (user_input,),
+        )
+        row = cursor.fetchone()
+        conn.close()
+        if not row:
+            return None
+        return {
+            "id": row[0], "scenario_id": row[1], "user_input": row[2],
+            "current_step": row[3], "mode": row[4], "status": row[5],
+            "dialogue_history": row[6], "pending_question": row[7],
+            "pending_options": row[8], "created_at": row[9], "updated_at": row[10],
+        }
 
 
 # Singleton instance
