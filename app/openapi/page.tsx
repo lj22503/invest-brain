@@ -3,6 +3,43 @@
 import { useState } from "react";
 import Link from "next/link";
 
+// ===== Reusable Code Block =====
+function CodeBlock({ code }: { code: string }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(code).then(
+        () => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1500);
+        },
+        () => {
+          // fallback for old browsers
+          const ta = document.createElement("textarea");
+          ta.value = code;
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand("copy"); } catch (_) {}
+          document.body.removeChild(ta);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1500);
+        }
+      );
+    }
+  };
+  return (
+    <div className="relative bg-[#1c1c1c] text-[#e8e3d8] rounded-lg p-4 font-mono text-xs overflow-x-auto">
+      <button
+        onClick={handleCopy}
+        className="absolute top-2 right-2 text-[#e8e3d8]/60 hover:text-vermillion-light text-[10px] tracking-wide px-2 py-1 border border-[#e8e3d8]/20 rounded transition-colors"
+      >
+        {copied ? "✓ 已复制" : "复制"}
+      </button>
+      <pre className="whitespace-pre leading-relaxed">{code}</pre>
+    </div>
+  );
+}
+
 // ===== Skill Catalog =====
 // Sourced from skill.yaml + src/mcp_server/tools/*.py
 
@@ -346,6 +383,110 @@ export default function OpenApiPage() {
           </button>
         </div>
       </section>
+
+      {/* ===== Tab A: for Human ===== */}
+      {tab === "human" && (
+        <section className="px-8 max-w-6xl mx-auto mb-16">
+          <h2 className="font-serif text-3xl font-bold mb-2">5 步把 Brain 装到你的 AI 上</h2>
+          <p className="text-ink-light text-sm mb-10">Linux / macOS 终端操作，预计 10 分钟</p>
+
+          <div className="space-y-8">
+            {/* Step 01 */}
+            <div className="bg-white border border-border rounded-xl p-6">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="font-serif text-2xl font-black text-vermillion opacity-30 leading-none">01</div>
+                <div>
+                  <h3 className="font-serif text-xl font-bold mb-1">准备环境</h3>
+                  <p className="text-ink-light text-sm">需要这两样东西</p>
+                </div>
+              </div>
+              <div className="ml-12 space-y-1 text-sm text-ink-light">
+                <p>· Python 3.10+</p>
+                <p>· DeepSeek API Key（其它 LLM 也可，详见 settings）</p>
+              </div>
+            </div>
+
+            {/* Step 02 */}
+            <div className="bg-white border border-border rounded-xl p-6">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="font-serif text-2xl font-black text-vermillion opacity-30 leading-none">02</div>
+                <div>
+                  <h3 className="font-serif text-xl font-bold mb-1">克隆仓库</h3>
+                  <p className="text-ink-light text-sm">把 Brain 源码拉到本地</p>
+                </div>
+              </div>
+              <CodeBlock code={`git clone https://github.com/lj22503/invest-brain
+cd invest-brain`} />
+            </div>
+
+            {/* Step 03 */}
+            <div className="bg-white border border-border rounded-xl p-6">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="font-serif text-2xl font-black text-vermillion opacity-30 leading-none">03</div>
+                <div>
+                  <h3 className="font-serif text-xl font-bold mb-1">安装依赖</h3>
+                  <p className="text-ink-light text-sm">进入 MCP Server 目录装 Python 包</p>
+                </div>
+              </div>
+              <CodeBlock code={`cd src/mcp_server
+pip install -r requirements.txt`} />
+            </div>
+
+            {/* Step 04 */}
+            <div className="bg-white border border-border rounded-xl p-6">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="font-serif text-2xl font-black text-vermillion opacity-30 leading-none">04</div>
+                <div>
+                  <h3 className="font-serif text-xl font-bold mb-1">配置环境变量</h3>
+                  <p className="text-ink-light text-sm">填入 LLM API Key</p>
+                </div>
+              </div>
+              <CodeBlock code={`cp .env.example .env
+# 编辑 .env，填入：
+# DEEPSEEK_API_KEY=sk-xxxxxxxxxxxxxxxx`} />
+            </div>
+
+            {/* Step 05 */}
+            <div className="bg-white border border-border rounded-xl p-6">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="font-serif text-2xl font-black text-vermillion opacity-30 leading-none">05</div>
+                <div>
+                  <h3 className="font-serif text-xl font-bold mb-1">启动 + 连接 Claude Desktop</h3>
+                  <p className="text-ink-light text-sm">先启动 MCP Server，再让 Claude Desktop 找到它</p>
+                </div>
+              </div>
+              <div className="ml-12 space-y-4">
+                <div>
+                  <div className="text-ink-faint text-xs mb-2">5.1 启动 MCP Server</div>
+                  <CodeBlock code={`python server.py`} />
+                </div>
+                <div>
+                  <div className="text-ink-faint text-xs mb-2">5.2 编辑 Claude Desktop 配置文件</div>
+                  <p className="text-ink-light text-xs mb-2">
+                    macOS: ~/Library/Application Support/Claude/claude_desktop_config.json<br />
+                    Linux: ~/.config/claude_desktop_config.json<br />
+                    Windows: %APPDATA%\Claude\claude_desktop_config.json
+                  </p>
+                  <CodeBlock code={`{
+  "mcpServers": {
+    "investbrain": {
+      "command": "python",
+      "args": ["/你的绝对路径/invest-brain/src/mcp_server/server.py"]
+    }
+  }
+}`} />
+                </div>
+                <div>
+                  <div className="text-ink-faint text-xs mb-2">5.3 重启 Claude Desktop</div>
+                  <p className="text-ink-light text-sm">
+                    Brain 的 35 个工具即出现在 AI 可用工具列表。试试在 Claude 里说「用 investbrain 工具记录我的投资想法」。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ===== Filter ===== */}
       <section className="px-8 max-w-6xl mx-auto mb-8">
