@@ -114,38 +114,38 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
             {[
               {
-                icon: '🎓',
+                iconChar: '導',
                 title: '学习辅导',
                 eng: 'learning_coaching',
                 desc: '投研教练陪跑：10步标准框架 + Socratic 多轮对话，逐步建立你自己的投资系统。每次辅导自动归档到情景库。',
                 highlight: true,
               },
               {
-                icon: '📝',
+                iconChar: '記',
                 title: '想法记录',
                 eng: 'idea_recorder',
                 desc: '一句话输入，AI 自动解析标的、价格、指标，关联历史决策，生成结构化卡片。锚定你的每一个投资判断。',
               },
               {
-                icon: '📚',
+                iconChar: '庫',
                 title: '大师思想库',
                 eng: 'knowledge_rag',
                 desc: '巴菲特、芒格、段永平、霍华德·马克斯等 16 位大师的思想，随时对照。锚定理性的声音。',
               },
               {
-                icon: '🪞',
+                iconChar: '鏡',
                 title: '行为模式报告',
                 eng: 'pattern_detector',
                 desc: '自动发现你的重复行为模式：追高、止损过早、割在最低点——映照真实的自己。',
               },
               {
-                icon: '🔔',
+                iconChar: '鈴',
                 title: '条件提醒',
                 eng: 'reminder_scheduler',
                 desc: '价格到位才提醒，条件触发才检查。让纪律替你决策，不被每天的情绪牵着走。',
               },
               {
-                icon: '🧠',
+                iconChar: '藏',
                 title: '记忆管理',
                 eng: 'memory_keeper',
                 desc: '持仓、决策、行为模式全存储，支持语义检索和模式发现。',
@@ -157,7 +157,7 @@ export default function Home() {
                 className={`block ${f.highlight ? 'border-vermillion border-2 bg-vermillion/[0.02]' : 'bg-paper border border-border'} rounded-lg p-8 hover:shadow-md hover:-translate-y-1 hover:border-vermillion-light transition-all`}
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="text-3xl">{f.icon}</div>
+                  <div className="font-serif text-4xl text-vermillion opacity-40 leading-none">{f.iconChar}</div>
                   {f.highlight && (
                     <span className="bg-vermillion text-white text-xs px-2 py-1 rounded font-medium">NEW</span>
                   )}
