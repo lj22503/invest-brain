@@ -5,39 +5,69 @@ import Link from "next/link";
 
 // ===== Reusable Code Block =====
 function CodeBlock({ code }: { code: string }) {
-  const [copied, setCopied] = useState(false);
+  const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
   const handleCopy = () => {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       navigator.clipboard.writeText(code).then(
         () => {
-          setCopied(true);
-          setTimeout(() => setCopied(false), 1500);
+          setStatus("copied");
+          setTimeout(() => setStatus("idle"), 1500);
         },
         () => {
           // fallback for old browsers
-          const ta = document.createElement("textarea");
-          ta.value = code;
-          document.body.appendChild(ta);
-          ta.select();
-          try { document.execCommand("copy"); } catch (_) {}
-          document.body.removeChild(ta);
-          setCopied(true);
-          setTimeout(() => setCopied(false), 1500);
+          const ok = legacyCopy(code);
+          if (ok) {
+            setStatus("copied");
+            setTimeout(() => setStatus("idle"), 1500);
+          } else {
+            setStatus("failed");
+            setTimeout(() => setStatus("idle"), 2500);
+          }
         }
       );
+    } else {
+      const ok = legacyCopy(code);
+      if (ok) {
+        setStatus("copied");
+        setTimeout(() => setStatus("idle"), 1500);
+      } else {
+        setStatus("failed");
+        setTimeout(() => setStatus("idle"), 2500);
+      }
     }
   };
   return (
     <div className="relative bg-[#1c1c1c] text-[#e8e3d8] rounded-lg p-4 font-mono text-xs overflow-x-auto">
       <button
         onClick={handleCopy}
-        className="absolute top-2 right-2 text-[#e8e3d8]/60 hover:text-vermillion-light text-[10px] tracking-wide px-2 py-1 border border-[#e8e3d8]/20 rounded transition-colors"
+        className={`absolute top-2 right-2 text-[10px] tracking-wide px-2 py-1 border rounded transition-colors ${
+          status === "failed"
+            ? "text-vermillion border-vermillion"
+            : "text-[#e8e3d8]/60 hover:text-vermillion-light border-[#e8e3d8]/20"
+        }`}
       >
-        {copied ? "✓ 已复制" : "复制"}
+        {status === "copied" ? "✓ 已复制" : status === "failed" ? "复制失败" : "复制"}
       </button>
       <pre className="whitespace-pre leading-relaxed">{code}</pre>
     </div>
   );
+}
+
+function legacyCopy(text: string): boolean {
+  try {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "absolute";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(ta);
+    return ok;
+  } catch {
+    return false;
+  }
 }
 
 // ===== Skill Catalog =====
