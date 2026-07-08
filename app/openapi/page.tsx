@@ -55,7 +55,7 @@ type Skill = {
   id: string;
   cn: string;
   eng: string;
-  emoji: string;
+  iconChar: string;
   category: string;
   shortDesc: string;
   description: string;
@@ -74,7 +74,7 @@ const SKILLS: Skill[] = [
     id: "idea-recorder",
     cn: "想法记录",
     eng: "idea-recorder",
-    emoji: "📝",
+    iconChar: "記",
     category: "记录",
     shortDesc: "一句话记录，自动解析标的、价格、指标",
     description:
@@ -110,7 +110,7 @@ const SKILLS: Skill[] = [
     id: "learning-coaching",
     cn: "学习辅导",
     eng: "learning-coaching",
-    emoji: "🎓",
+    iconChar: "導",
     category: "辅导",
     shortDesc: "投研教练陪跑，10步框架 + Socratic 多轮对话",
     description:
@@ -168,7 +168,7 @@ const SKILLS: Skill[] = [
     id: "knowledge-rag",
     cn: "投资问答",
     eng: "knowledge-rag",
-    emoji: "📚",
+    iconChar: "庫",
     category: "检索",
     shortDesc: "16 位大师思想库，RAG 即时检索",
     description:
@@ -204,7 +204,7 @@ const SKILLS: Skill[] = [
     id: "master-analyst",
     cn: "大师视角",
     eng: "master-analyst",
-    emoji: "🧙",
+    iconChar: "鏡",
     category: "检索",
     shortDesc: "用某位大师的视角分析标的",
     description:
@@ -227,7 +227,7 @@ const SKILLS: Skill[] = [
     id: "reminder-scheduler",
     cn: "条件提醒",
     eng: "reminder-scheduler",
-    emoji: "🔔",
+    iconChar: "鈴",
     category: "提醒",
     shortDesc: "价格到位才提醒，条件触发才检查",
     description:
@@ -263,7 +263,7 @@ const SKILLS: Skill[] = [
     id: "memory-keeper",
     cn: "记忆管理",
     eng: "memory-keeper",
-    emoji: "🧠",
+    iconChar: "藏",
     category: "记录",
     shortDesc: "持仓、决策、行为模式全存储",
     description:
@@ -298,7 +298,7 @@ const SKILLS: Skill[] = [
     id: "pattern-detector",
     cn: "行为模式",
     eng: "pattern-detector",
-    emoji: "🪞",
+    iconChar: "析",
     category: "分析",
     shortDesc: "自动识别追高/止损过早等行为偏差",
     description:
@@ -669,7 +669,7 @@ pip install -r requirements.txt`} />
             >
               {/* Icon + title */}
               <div className="flex items-start justify-between mb-3">
-                <div className="text-4xl">{skill.emoji}</div>
+                <div className="font-serif text-4xl text-vermillion opacity-40 leading-none">{skill.iconChar}</div>
                 <span className="text-ink-faint text-[10px] font-mono tracking-wide bg-paper-warm px-2 py-1 rounded">
                   {skill.category}
                 </span>
@@ -746,45 +746,61 @@ pip install -r requirements.txt`} />
         </div>
       </section>
 
-      {/* ===== How to use ===== */}
+      {/* ===== Two Paths ===== */}
       <section className="px-8 py-16 max-w-6xl mx-auto mt-8">
         <div className="bg-paper border border-border rounded-xl p-8">
-          <h2 className="font-serif text-2xl font-bold mb-4">如何使用</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-            <div>
-              <div className="text-vermillion font-mono font-bold mb-2">01</div>
-              <div className="font-medium mb-1">选 Skill</div>
+          <h2 className="font-serif text-2xl font-bold mb-4">两条路径</h2>
+          <p className="text-ink-light text-sm mb-6">选一条适合你的</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <button
+              onClick={() => {
+                setTab("human");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="text-left bg-white border border-border rounded-lg p-6 hover:border-vermission transition-colors"
+            >
+              <div className="font-mono text-vermillion text-xs font-bold mb-2">A.</div>
+              <div className="font-serif text-lg font-bold mb-2">给人类 · 5 步完整部署</div>
               <p className="text-ink-light text-xs leading-relaxed">
-                找到需要的 Skill，点「复制 Prompt」按钮。
+                克隆仓库 → pip install → 配置 .env → 启动 MCP Server → 连接 Claude Desktop
               </p>
-            </div>
-            <div>
-              <div className="text-vermillion font-mono font-bold mb-2">02</div>
-              <div className="font-medium mb-1">给 AI</div>
+              <div className="text-vermillion text-xs mt-3">点击上方 for Human Tab →</div>
+            </button>
+            <button
+              onClick={() => {
+                setTab("agent");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="text-left bg-white border border-border rounded-lg p-6 hover:border-vermillion transition-colors"
+            >
+              <div className="font-mono text-vermillion text-xs font-bold mb-2">B.</div>
+              <div className="font-serif text-lg font-bold mb-2">给 AI Agent · MCP 协议</div>
               <p className="text-ink-light text-xs leading-relaxed">
-                把 Prompt 发给你的 AI（Claude、ChatGPT、DeepSeek 等），AI 立即获得该能力。
+                Agent 读取 schema.json → 通过 MCP stdio/HTTP 调用 35 个 tool → 立即获得投资纪律能力
               </p>
-            </div>
-            <div>
-              <div className="text-vermillion font-mono font-bold mb-2">03</div>
-              <div className="font-medium mb-1">本地部署</div>
-              <p className="text-ink-light text-xs leading-relaxed">
-                想完整跑？通过 MCP 协议本地部署 InvestBrain，数据完全在你的电脑上。
-              </p>
-            </div>
+              <div className="text-vermillion text-xs mt-3">点击上方 for Agent Tab →</div>
+            </button>
           </div>
-          <div className="mt-6 flex gap-3">
+
+          <div className="mt-6 pt-6 border-t border-border flex gap-3 flex-wrap">
             <Link
               href="/openapi/schema.json"
               className="bg-vermillion text-white text-sm px-5 py-2.5 rounded hover:bg-[#A8322A] transition-colors font-medium"
             >
-              📄 下载 JSON Schema
+              下载 JSON Schema
             </Link>
             <Link
               href="/llms.txt"
               className="border border-border text-ink text-sm px-5 py-2.5 rounded hover:border-ink transition-colors"
             >
               llms.txt
+            </Link>
+            <Link
+              href="https://github.com/lj22503/invest-brain"
+              className="border border-border text-ink text-sm px-5 py-2.5 rounded hover:border-ink transition-colors"
+            >
+              GitHub 仓库
             </Link>
           </div>
         </div>
