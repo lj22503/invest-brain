@@ -8,6 +8,10 @@ export default function Home() {
         <div className="absolute top-1/3 right-1/4 w-[300px] h-[400px] bg-[radial-gradient(ellipse_at_center,rgba(184,178,166,0.06)_0%,transparent_70%)] rotate-[-12deg] pointer-events-none" />
 
         <div className="relative z-10 max-w-3xl">
+          <div className="text-ink-light text-xs tracking-wide mb-4 max-w-lg mx-auto leading-relaxed">
+            Brain 不是 App — 是给 AI 用的 <span className="text-vermillion font-medium">35 个投资纪律 Skill 库</span><br />
+            通过 MCP 协议接入 Claude / Cursor / 任意 AI，立即获得「镜子 + 纪律锚点」能力
+          </div>
           <div className="text-vermillion text-xs tracking-[0.2em] uppercase mb-8 font-medium">
             by mangoFolio
           </div>
@@ -88,14 +92,61 @@ export default function Home() {
 
       {/* ========== Core Positioning ========== */}
       <section className="py-24 px-6 md:px-16 text-center">
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           <div className="font-serif text-3xl font-bold leading-relaxed mb-6">
             不是投顾，不给建议<br />
             是<span className="relative inline-block text-vermillion">镜子<span className="absolute bottom-0 left-0 right-0 h-2 bg-vermillion/10 z-[-1]" /></span> + <span className="relative inline-block text-vermillion">纪律锚点<span className="absolute bottom-0 left-0 right-0 h-2 bg-vermillion/10 z-[-1]" /></span>
           </div>
-          <p className="text-ink-light text-lg">
+          <p className="text-ink-light text-lg mb-10">
             传统工具帮你交易，Brain 帮你思考——让你越用越聪明。
           </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+            <div className="border border-border rounded-lg p-6 bg-white">
+              <div className="text-ink-faint text-xs tracking-wide mb-2">传统工具</div>
+              <div className="text-ink-light text-sm leading-relaxed">
+                帮你交易 · 让你多操作 · 给建议<br />
+                数据 + 交易执行 · 通用知识管理
+              </div>
+            </div>
+            <div className="border border-vermillion-light rounded-lg p-6 bg-vermillion/[0.02]">
+              <div className="text-vermillion text-xs tracking-wide font-medium mb-2">Brain</div>
+              <div className="text-ink-light text-sm leading-relaxed">
+                帮你思考 · 让你少操作但操作对 · 给「拷问」<br />
+                认知迭代 + 决策复盘 · 投资纪律 + 行为审计
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========== Architecture ========== */}
+      <section className="py-24 px-6 md:px-16 bg-paper-warm">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="text-vermillion text-xs tracking-[0.24em] font-medium mb-4">架构</div>
+            <h2 className="font-serif text-4xl font-bold">4 层关系</h2>
+            <p className="text-ink-light text-base mt-3">从你到 Brain，每一层做什么</p>
+          </div>
+
+          <div className="space-y-4">
+            {[
+              { n: '01', label: '你', desc: '普通用户 / 投资者 · 跟你的 AI 说话' },
+              { n: '02', label: 'AI Agent', desc: 'Claude / Cursor / 任意支持 MCP 的 AI 客户端' },
+              { n: '03', label: 'MCP 协议', desc: 'Model Context Protocol · AI 调用 Brain 的标准通道' },
+              { n: '04', label: 'Brain', desc: '本地 MCP Server · 35 个 Skill Tools · SQLite 本地存储 · 16 位大师知识库' },
+            ].map((row) => (
+              <div key={row.n} className="bg-white border border-border rounded-lg p-5 flex items-start gap-5">
+                <div className="font-serif text-2xl font-black text-vermillion opacity-30 leading-none w-12 flex-shrink-0">
+                  {row.n}
+                </div>
+                <div className="flex-1">
+                  <div className="font-serif text-lg font-bold mb-1">{row.label}</div>
+                  <div className="text-ink-light text-sm leading-relaxed">{row.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
