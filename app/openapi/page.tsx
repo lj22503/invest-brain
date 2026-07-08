@@ -295,6 +295,7 @@ export default function OpenApiPage() {
   const [filter, setFilter] = useState("全部");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [tab, setTab] = useState<"human" | "agent">("human");
 
   const filtered = filter === "全部" ? SKILLS : SKILLS.filter((s) => s.category === filter);
 
@@ -309,14 +310,41 @@ export default function OpenApiPage() {
     <main className="min-h-screen pt-[72px] pb-24">
       {/* ===== Hero ===== */}
       <section className="px-8 py-16 max-w-6xl mx-auto">
-        <div className="text-vermillion text-xs tracking-[0.24em] font-medium mb-3">SKILL MARKET</div>
+        <div className="text-vermillion text-xs tracking-[0.24em] font-medium mb-3">INSTALL BRAIN</div>
         <h1 className="font-serif text-5xl md:text-6xl font-black mb-4 leading-tight tracking-wide">
-          投资大脑 · Skill 市场
+          安装 Brain · 让你的 AI 获得投资纪律
         </h1>
         <p className="text-ink-light text-lg max-w-2xl leading-relaxed">
-          InvestBrain 提供的全部 Skills —— 复制 Prompt 给你的 AI，立即获得「镜子 + 纪律锚点」能力。
-          所有 Skill 本地运行，数据不出你的电脑。
+          Brain 是一个本地运行的 MCP Server，提供 35 个 Skill 工具。
+          通过两种方式接入：<span className="text-vermillion font-medium">给人类</span>完整部署 · <span className="text-vermillion font-medium">给 AI Agent</span>MCP 协议。
+          所有数据本地存储，不上传云端。
         </p>
+      </section>
+
+      {/* ===== Install Tabs ===== */}
+      <section className="px-8 max-w-6xl mx-auto mb-12">
+        <div className="flex gap-2 border-b border-border">
+          <button
+            onClick={() => setTab("human")}
+            className={`px-6 py-3 text-sm font-medium transition-all border-b-2 -mb-px ${
+              tab === "human"
+                ? "border-vermillion text-vermillion"
+                : "border-transparent text-ink-light hover:text-ink"
+            }`}
+          >
+            <span className="font-mono mr-2">A.</span>for Human · 完整部署
+          </button>
+          <button
+            onClick={() => setTab("agent")}
+            className={`px-6 py-3 text-sm font-medium transition-all border-b-2 -mb-px ${
+              tab === "agent"
+                ? "border-vermillion text-vermillion"
+                : "border-transparent text-ink-light hover:text-ink"
+            }`}
+          >
+            <span className="font-mono mr-2">B.</span>for Agent · MCP 协议
+          </button>
+        </div>
       </section>
 
       {/* ===== Filter ===== */}
