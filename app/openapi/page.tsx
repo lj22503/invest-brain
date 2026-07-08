@@ -758,7 +758,7 @@ pip install -r requirements.txt`} />
                 setTab("human");
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }}
-              className="text-left bg-white border border-border rounded-lg p-6 hover:border-vermission transition-colors"
+              className="text-left bg-white border border-border rounded-lg p-6 hover:border-vermillion transition-colors"
             >
               <div className="font-mono text-vermillion text-xs font-bold mb-2">A.</div>
               <div className="font-serif text-lg font-bold mb-2">给人类 · 5 步完整部署</div>
