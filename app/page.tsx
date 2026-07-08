@@ -411,7 +411,7 @@ export default function Home() {
           <p className="text-ink-light text-lg mb-10">市场每天都在变，你的锚是什么？</p>
           <div className="flex gap-4 justify-center flex-wrap">
             <a href="/openapi" className="inline-block bg-vermillion text-white px-10 py-4 rounded text-lg font-medium hover:bg-[#A8322A] transition-colors">
-              浏览 Skill 市场
+              查看安装方法
             </a>
             <a href="https://github.com/lj22503/invest-brain" className="inline-block border border-border text-ink px-10 py-4 rounded text-lg hover:border-ink transition-colors">
               GitHub 部署
