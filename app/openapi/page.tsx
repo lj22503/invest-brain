@@ -670,111 +670,116 @@ pip install -r requirements.txt`} />
         </section>
       )}
 
-      {/* ===== Filter ===== */}
-      <section className="px-8 max-w-6xl mx-auto mb-8">
-        <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setFilter(cat)}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
-                filter === cat
-                  ? "bg-vermillion text-white"
-                  : "bg-white border border-border text-ink-light hover:border-vermillion hover:text-ink"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* ===== Skill Grid ===== */}
-      <section className="px-8 max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((skill) => (
-            <div
-              key={skill.id}
-              className="bg-white border border-border rounded-xl p-6 hover:shadow-lg hover:-translate-y-1 hover:border-vermillion-light transition-all flex flex-col"
-            >
-              {/* Icon + title */}
-              <div className="flex items-start justify-between mb-3">
-                <div className="font-serif text-4xl text-vermillion opacity-40 leading-none">{skill.iconChar}</div>
-                <span className="text-ink-faint text-[10px] font-mono tracking-wide bg-paper-warm px-2 py-1 rounded">
-                  {skill.category}
-                </span>
-              </div>
-
-              <h3 className="font-serif text-2xl font-bold mb-1">{skill.cn}</h3>
-              <div className="text-ink-faint text-xs font-mono tracking-wide mb-3">{skill.eng}</div>
-
-              <p className="text-ink-light text-sm leading-relaxed mb-4 flex-1">
-                {skill.shortDesc}
-              </p>
-
-              {/* Triggers preview */}
-              <div className="mb-4">
-                <div className="text-ink-faint text-[10px] tracking-wide mb-1.5">触发词</div>
-                <div className="flex flex-wrap gap-1">
-                  {skill.triggers.slice(0, 3).map((t) => (
-                    <span key={t} className="bg-paper-warm text-ink-light text-[11px] px-2 py-0.5 rounded">
-                      {t}
-                    </span>
-                  ))}
-                  {skill.triggers.length > 3 && (
-                    <span className="text-ink-faint text-[11px]">+{skill.triggers.length - 3}</span>
-                  )}
-                </div>
-              </div>
-
-              {/* Actions */}
-              <div className="flex gap-2 pt-3 border-t border-border">
-                {skill.prompt && (
-                  <button
-                    onClick={() => copyPrompt(skill)}
-                    className="flex-1 bg-vermillion text-white text-xs px-3 py-2 rounded hover:bg-[#A8322A] transition-colors font-medium"
-                  >
-                    {copiedId === skill.id ? "✓ 已复制" : "📋 复制 Prompt"}
-                  </button>
-                )}
+      {/* ===== Filter + Skill Grid (only in Agent tab) ===== */}
+      {tab === "agent" && (
+        <>
+          {/* ===== Filter ===== */}
+          <section className="px-8 max-w-6xl mx-auto mb-8">
+            <div className="flex flex-wrap gap-2">
+              {CATEGORIES.map((cat) => (
                 <button
-                  onClick={() => setExpandedId(expandedId === skill.id ? null : skill.id)}
-                  className="border border-border text-ink-light text-xs px-3 py-2 rounded hover:border-vermillion hover:text-ink transition-colors"
+                  key={cat}
+                  onClick={() => setFilter(cat)}
+                  className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
+                    filter === cat
+                      ? "bg-vermillion text-white"
+                      : "bg-white border border-border text-ink-light hover:border-vermillion hover:text-ink"
+                  }`}
                 >
-                  {expandedId === skill.id ? "收起" : "详情"}
+                  {cat}
                 </button>
-              </div>
+              ))}
+            </div>
+          </section>
 
-              {/* Expanded details */}
-              {expandedId === skill.id && (
-                <div className="mt-4 pt-4 border-t border-border space-y-3 text-xs">
-                  <p className="text-ink-light leading-relaxed">{skill.description}</p>
+          {/* ===== Skill Grid ===== */}
+          <section className="px-8 max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filtered.map((skill) => (
+                <div
+                  key={skill.id}
+                  className="bg-white border border-border rounded-xl p-6 hover:shadow-lg hover:-translate-y-1 hover:border-vermillion-light transition-all flex flex-col"
+                >
+                  {/* Icon + title */}
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="font-serif text-4xl text-vermillion opacity-40 leading-none">{skill.iconChar}</div>
+                    <span className="text-ink-faint text-[10px] font-mono tracking-wide bg-paper-warm px-2 py-1 rounded">
+                      {skill.category}
+                    </span>
+                  </div>
 
-                  {skill.highlights && (
-                    <div className="bg-vermillion/[0.04] border border-vermillion/20 rounded p-3 space-y-1.5">
-                      <div className="text-vermillion text-[10px] tracking-wide font-medium">CORE</div>
-                      <div><strong className="text-ink">框架:</strong> <span className="text-ink-light">{skill.highlights.framework}</span></div>
-                      <div><strong className="text-ink">安全:</strong> <span className="text-ink-light">{skill.highlights.safeguards}</span></div>
-                      <div><strong className="text-ink">归档:</strong> <span className="text-ink-light">{skill.highlights.archive}</span></div>
-                    </div>
-                  )}
+                  <h3 className="font-serif text-2xl font-bold mb-1">{skill.cn}</h3>
+                  <div className="text-ink-faint text-xs font-mono tracking-wide mb-3">{skill.eng}</div>
 
-                  <div>
-                    <div className="text-ink-faint text-[10px] tracking-wide mb-1.5">TOOLS ({skill.tools.length})</div>
-                    <div className="space-y-1">
-                      {skill.tools.map((t) => (
-                        <div key={t.name} className="bg-paper-warm px-2 py-1 rounded font-mono text-[11px] text-ink">
-                          {t.name}
-                        </div>
+                  <p className="text-ink-light text-sm leading-relaxed mb-4 flex-1">
+                    {skill.shortDesc}
+                  </p>
+
+                  {/* Triggers preview */}
+                  <div className="mb-4">
+                    <div className="text-ink-faint text-[10px] tracking-wide mb-1.5">触发词</div>
+                    <div className="flex flex-wrap gap-1">
+                      {skill.triggers.slice(0, 3).map((t) => (
+                        <span key={t} className="bg-paper-warm text-ink-light text-[11px] px-2 py-0.5 rounded">
+                          {t}
+                        </span>
                       ))}
+                      {skill.triggers.length > 3 && (
+                        <span className="text-ink-faint text-[11px]">+{skill.triggers.length - 3}</span>
+                      )}
                     </div>
                   </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-2 pt-3 border-t border-border">
+                    {skill.prompt && (
+                      <button
+                        onClick={() => copyPrompt(skill)}
+                        className="flex-1 bg-vermillion text-white text-xs px-3 py-2 rounded hover:bg-[#A8322A] transition-colors font-medium"
+                      >
+                        {copiedId === skill.id ? "✓ 已复制" : "📋 复制 Prompt"}
+                      </button>
+                    )}
+                    <button
+                      onClick={() => setExpandedId(expandedId === skill.id ? null : skill.id)}
+                      className="border border-border text-ink-light text-xs px-3 py-2 rounded hover:border-vermillion hover:text-ink transition-colors"
+                    >
+                      {expandedId === skill.id ? "收起" : "详情"}
+                    </button>
+                  </div>
+
+                  {/* Expanded details */}
+                  {expandedId === skill.id && (
+                    <div className="mt-4 pt-4 border-t border-border space-y-3 text-xs">
+                      <p className="text-ink-light leading-relaxed">{skill.description}</p>
+
+                      {skill.highlights && (
+                        <div className="bg-vermillion/[0.04] border border-vermillion/20 rounded p-3 space-y-1.5">
+                          <div className="text-vermillion text-[10px] tracking-wide font-medium">CORE</div>
+                          <div><strong className="text-ink">框架:</strong> <span className="text-ink-light">{skill.highlights.framework}</span></div>
+                          <div><strong className="text-ink">安全:</strong> <span className="text-ink-light">{skill.highlights.safeguards}</span></div>
+                          <div><strong className="text-ink">归档:</strong> <span className="text-ink-light">{skill.highlights.archive}</span></div>
+                        </div>
+                      )}
+
+                      <div>
+                        <div className="text-ink-faint text-[10px] tracking-wide mb-1.5">TOOLS ({skill.tools.length})</div>
+                        <div className="space-y-1">
+                          {skill.tools.map((t) => (
+                            <div key={t.name} className="bg-paper-warm px-2 py-1 rounded font-mono text-[11px] text-ink">
+                              {t.name}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
+              ))}
             </div>
-          ))}
-        </div>
-      </section>
+          </section>
+        </>
+      )}
 
       {/* ===== Two Paths ===== */}
       <section className="px-8 py-16 max-w-6xl mx-auto mt-8">
