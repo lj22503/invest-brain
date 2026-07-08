@@ -488,6 +488,158 @@ pip install -r requirements.txt`} />
         </section>
       )}
 
+      {/* ===== Tab B: for Agent ===== */}
+      {tab === "agent" && (
+        <section className="px-8 max-w-6xl mx-auto mb-16">
+          <h2 className="font-serif text-3xl font-bold mb-2">让你的 AI Agent 接入 Brain</h2>
+          <p className="text-ink-light text-sm mb-10">Brain 暴露 35 个 MCP Tools，Agent 通过 MCP 协议调用</p>
+
+          {/* MCP 端点 */}
+          <div className="bg-white border border-border rounded-xl p-6 mb-8">
+            <h3 className="font-serif text-xl font-bold mb-4">MCP 端点</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <div className="text-ink-faint text-xs mb-1">协议</div>
+                <div className="text-ink font-mono">MCP (Model Context Protocol)</div>
+              </div>
+              <div>
+                <div className="text-ink-faint text-xs mb-1">传输</div>
+                <div className="text-ink font-mono">stdio / HTTP (本地)</div>
+              </div>
+              <div>
+                <div className="text-ink-faint text-xs mb-1">入口</div>
+                <div className="text-ink font-mono">src/mcp_server/server.py</div>
+              </div>
+              <div>
+                <div className="text-ink-faint text-xs mb-1">协议版本</div>
+                <div className="text-ink font-mono">2024-11-05</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Schema 自动发现 */}
+          <div className="bg-white border border-border rounded-xl p-6 mb-8">
+            <h3 className="font-serif text-xl font-bold mb-4">自动发现 Schema</h3>
+            <p className="text-ink-light text-sm mb-3">任何支持 MCP 的客户端都可以从这里拉取 Brain 的完整工具定义：</p>
+            <CodeBlock code={`GET https://brain.mangofolio.com/openapi/schema.json`} />
+          </div>
+
+          {/* 35 个 Tools 分类 */}
+          <div className="bg-white border border-border rounded-xl p-6">
+            <h3 className="font-serif text-xl font-bold mb-2">35 个 Tools 分类</h3>
+            <p className="text-ink-light text-sm mb-6">按模块组织 · 名称即调用方式</p>
+
+            <div className="space-y-6">
+              {[
+                {
+                  cat: '想法记录',
+                  count: 3,
+                  tools: [
+                    { name: 'record_thought(text)', desc: '记录一句话投资想法，AI 自动解析+关联历史' },
+                    { name: 'search_memories(query)', desc: '搜索历史想法' },
+                    { name: 'get_thought_cards(ticker)', desc: '获取某标的的全部想法卡' },
+                  ],
+                },
+                {
+                  cat: '学习辅导',
+                  count: 5,
+                  tools: [
+                    { name: 'start_coaching(user_input)', desc: '启动辅导会话' },
+                    { name: 'continue_coaching(session_id, user_input)', desc: '继续 Socratic 对话' },
+                    { name: 'abandon_coaching(session_id)', desc: '放弃当前会话' },
+                    { name: 'switch_to_simple(session_id)', desc: '切换到 10 步框架' },
+                    { name: 'list_scenarios(limit)', desc: '列出归档情景' },
+                  ],
+                },
+                {
+                  cat: '投资问答',
+                  count: 4,
+                  tools: [
+                    { name: 'ask_investment(question)', desc: 'RAG 检索 16 位大师' },
+                    { name: 'get_master_view(master, topic)', desc: '取某大师对某话题的观点' },
+                    { name: 'search_knowledge(query)', desc: '知识库关键词检索' },
+                    { name: 'list_masters()', desc: '列出全部 16 位大师' },
+                  ],
+                },
+                {
+                  cat: '大师视角',
+                  count: 2,
+                  tools: [
+                    { name: 'analyze_with_master(master, ticker)', desc: '用大师视角分析标的' },
+                    { name: 'compare_views(masters, topic)', desc: '对比多位大师观点' },
+                  ],
+                },
+                {
+                  cat: '条件提醒',
+                  count: 3,
+                  tools: [
+                    { name: 'set_reminder(condition)', desc: '设置价格/时间/条件提醒' },
+                    { name: 'get_reminders(status)', desc: '查询提醒' },
+                    { name: 'delete_reminder(id)', desc: '删除提醒' },
+                  ],
+                },
+                {
+                  cat: '行为模式',
+                  count: 3,
+                  tools: [
+                    { name: 'run_pattern_detection()', desc: '跑行为模式检测' },
+                    { name: 'get_pattern_report(period)', desc: '取周/月报告' },
+                    { name: 'list_patterns()', desc: '列出已识别模式' },
+                  ],
+                },
+                {
+                  cat: '记忆管理',
+                  count: 3,
+                  tools: [
+                    { name: 'get_user_profile()', desc: '取用户画像' },
+                    { name: 'record_decision(data)', desc: '记录决策' },
+                    { name: 'get_behavior_patterns()', desc: '取行为模式' },
+                  ],
+                },
+                {
+                  cat: '系统工具',
+                  count: 12,
+                  tools: [
+                    { name: 'health_check()', desc: '服务健康检查' },
+                    { name: 'get_config()', desc: '取当前配置' },
+                    { name: 'update_config(data)', desc: '更新配置' },
+                    { name: 'list_data_sources()', desc: '列出数据源' },
+                    { name: 'fetch_price(ticker)', desc: '取实时行情' },
+                    { name: 'fetch_history(ticker, period)', desc: '取历史行情' },
+                    { name: 'search_ticker(query)', desc: '搜索股票代码' },
+                    { name: 'get_fundamentals(ticker)', desc: '取基本面数据' },
+                    { name: 'list_skills()', desc: '列出全部 Skill' },
+                    { name: 'get_skill_info(skill_id)', desc: '取 Skill 详情' },
+                    { name: 'trigger_webhook(event)', desc: '触发飞书通知' },
+                    { name: 'export_data(format)', desc: '导出本地数据' },
+                  ],
+                },
+              ].map((group) => (
+                <div key={group.cat}>
+                  <div className="flex items-baseline gap-2 mb-3">
+                    <h4 className="font-serif text-lg font-bold">{group.cat}</h4>
+                    <span className="text-ink-faint text-xs font-mono">{group.count} 个</span>
+                  </div>
+                  <div className="space-y-1.5">
+                    {group.tools.map((t) => (
+                      <div key={t.name} className="bg-paper-warm rounded p-3">
+                        <div className="font-mono text-xs text-vermillion mb-1">{t.name}</div>
+                        <div className="text-ink-light text-xs leading-relaxed">{t.desc}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-ink-faint text-xs mt-6 leading-relaxed">
+              完整 schema（含每个 tool 的参数 schema 和返回 schema）见{" "}
+              <a href="/openapi/schema.json" className="text-vermillion hover:underline">/openapi/schema.json</a>
+            </p>
+          </div>
+        </section>
+      )}
+
       {/* ===== Filter ===== */}
       <section className="px-8 max-w-6xl mx-auto mb-8">
         <div className="flex flex-wrap gap-2">
