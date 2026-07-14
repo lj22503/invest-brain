@@ -92,6 +92,44 @@ def _analyze_behavior_patterns(decisions: list) -> list:
     return patterns
 
 
+# Warning messages per pattern type (threshold: ≥3 occurrences)
+_PATTERN_MESSAGES = {
+    "追高": "检测到追高行为：在连续上涨后买入，建议设置价格冷静期",
+    "过早卖出": "检测到过早卖出：盈利未充分增长就离场，建议制定最低持有期",
+    "情绪化交易": "检测到情绪化交易：决策受市场情绪影响较大，建议记录触发词",
+    "原则违反": "检测到原则违反：操作与自身投资原则不一致，建议重新审视",
+    "能力圈外": "检测到能力圈外操作：参与了不熟悉的标的，建议先研究再决策",
+}
+
+_WARNING_THRESHOLD = 3
+
+
+def _build_pattern_warnings(old_counts: dict, new_counts: dict) -> list:
+    """Compare old vs new pattern counts and build actionable warnings.
+
+    Rules:
+      - Only warn when count >= WARNING_THRESHOLD
+      - Only warn if count increased (no repeated warnings for same level)
+      - New pattern types always warn on first detection
+    """
+    warnings = []
+    for ptype, new_cnt in new_counts.items():
+        old_cnt = old_counts.get(ptype, 0)
+        is_new = ptype not in old_counts
+        if new_cnt < _WARNING_THRESHOLD:
+            continue
+        if not is_new and new_cnt <= old_cnt:
+            continue
+        msg = _PATTERN_MESSAGES.get(ptype, f"检测到行为模式「{ptype}」：累计 {new_cnt} 次")
+        warnings.append({
+            "type": ptype,
+            "count": new_cnt,
+            "message": msg,
+            "is_new": is_new,
+        })
+    return warnings
+
+
 @memory_tools.tool()
 def get_user_profile() -> dict:
     """
@@ -124,6 +162,10 @@ def record_decision(data: dict) -> dict:
     reason = data.get("reason", "")
 
     store = get_memory_store()
+
+    # Snapshot existing pattern counts before this decision
+    old_counts = store.get_pattern_counts()
+
     decision_id = store.add_decision(
         ticker=ticker,
         action=action,
@@ -141,10 +183,17 @@ def record_decision(data: dict) -> dict:
     except Exception:
         pass  # Detection failures should not block decision recording
 
+    # Compare old vs new counts to generate warnings
+    new_counts = store.get_pattern_counts()
+    warnings = _build_pattern_warnings(old_counts, new_counts)
+
     return {
         "decision_id": decision_id,
         "recorded": True,
         "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "pattern_warnings": warnings,
+        "pattern_alert": len(warnings) > 0,
+        "new_pattern": any(pt for pt in new_counts if pt not in old_counts),
     }
 
 

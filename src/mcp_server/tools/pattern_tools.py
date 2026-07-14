@@ -55,10 +55,42 @@ def get_pattern_summary() -> dict:
     Get cumulative summary of all detected behavior patterns.
 
     Returns:
-        dict: Pattern type -> {count, last_seen} mapping
+        dict: Pattern type -> {count, last_seen}, plus prompt_hint for
+              the agent to decide whether to proactively engage the user
     """
     detector = PatternDetector()
-    return detector.get_pattern_summary()
+    summary = detector.get_pattern_summary()
+
+    # Build prompt_hint for agent-side proactive engagement
+    hint = _build_prompt_hint(summary)
+
+    return {
+        "patterns": summary,
+        "prompt_hint": hint,
+    }
+
+
+def _build_prompt_hint(patterns: dict) -> str:
+    """Build a natural-language hint for the agent to decide on proactive nudging."""
+    if not patterns:
+        return ""
+
+    # High-severity: patterns with >=5 occurrences
+    high = [(t, d["count"]) for t, d in patterns.items() if d["count"] >= 5]
+    if high:
+        top = max(high, key=lambda x: x[1])
+        return (
+            f"检测到累计{top[1]}次「{top[0]}」行为模式，"
+            "建议在对话中主动提醒用户查看行为分析报告"
+        )
+
+    # Medium: patterns with >=3 occurrences
+    mid = [(t, d["count"]) for t, d in patterns.items() if d["count"] >= 3]
+    if mid:
+        names = "、".join(f"「{t}」({c}次)" for t, c in mid[:2])
+        return f"检测到{names}等行为模式，可在用户进行下次交易前提醒"
+
+    return ""
 
 
 @pattern_tools.tool()

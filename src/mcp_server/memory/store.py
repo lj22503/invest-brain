@@ -186,6 +186,17 @@ class MemoryStore:
         conn.close()
         return decision_id
 
+    def get_pattern_counts(self) -> dict:
+        """Get current pattern counts keyed by pattern_type."""
+        conn = self._get_conn()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT pattern_type, COUNT(*) as cnt FROM behavior_patterns GROUP BY pattern_type"
+        )
+        rows = cursor.fetchall()
+        conn.close()
+        return {r[0]: r[1] for r in rows}
+
     def add_reminder(self, reminder_id: str, reminder_type: str, condition: str) -> bool:
         """Add a reminder"""
         conn = self._get_conn()

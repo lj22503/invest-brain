@@ -7,6 +7,7 @@ from .tools.rag_tools import rag_tools
 from .tools.memory_tools import memory_tools
 from .tools.reminder_tools import reminder_tools
 from .tools.pattern_tools import pattern_tools
+from .tools.report_tools import report_tools
 from .datasources.akshare_datasource import akshare_tools
 from .datasources.tushare_datasource import tushare_tools
 from .price_checker import check_price_conditions
@@ -34,6 +35,7 @@ _tool_groups = [
     ("memory", memory_tools),
     ("reminder", reminder_tools),
     ("pattern", pattern_tools),
+    ("report", report_tools),
     ("market", akshare_tools),
     ("tushare", tushare_tools),
 ]
