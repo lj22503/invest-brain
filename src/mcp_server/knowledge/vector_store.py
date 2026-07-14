@@ -44,6 +44,9 @@ class VectorStore:
         self._collection_framework = self._client.get_or_create_collection(
             name="frameworks", metadata={"description": "投资分析框架"}
         )
+        self._collection_memories = self._client.get_or_create_collection(
+            name="memories", metadata={"description": "用户投资想法记忆"}
+        )
 
     def _textify_master(self, master_id: str) -> tuple[str, dict]:
         """Load a master JSON and extract text + metadata."""
@@ -320,6 +323,45 @@ class VectorStore:
             documents=[content],
             metadatas=[meta],
         )
+
+    def add_memory(self, memory_id: str, text: str, metadata: dict = None):
+        """Add a thought/memory to the memories collection."""
+        meta = {
+            "type": "thought",
+            "id": memory_id,
+            **(metadata or {}),
+        }
+        self._collection_memories.upsert(
+            ids=[memory_id],
+            documents=[text],
+            metadatas=[meta],
+        )
+
+    def search_memories(self, query: str, top_k: int = 10) -> list[dict]:
+        """
+        Semantic search over user memories/thoughts.
+
+        Args:
+            query: Search query string.
+            top_k: Number of results.
+
+        Returns:
+            List of dicts: {id, text, metadata, distance}
+        """
+        count = self._collection_memories.count()
+        if count == 0:
+            return []
+        n = min(top_k, count)
+        results = self._collection_memories.query(query_texts=[query], n_results=n)
+        out = []
+        for i in range(len(results["ids"][0])):
+            out.append({
+                "id": results["ids"][0][i],
+                "text": results["documents"][0][i],
+                "metadata": results["metadatas"][0][i],
+                "distance": results["distances"][0][i],
+            })
+        return out
 
     def rebuild_index(self):
         """Rebuild the index from all existing sources."""

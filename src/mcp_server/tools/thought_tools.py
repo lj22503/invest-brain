@@ -203,6 +203,23 @@ def record_thought(text: str) -> dict:
         indicator=parsed.get("indicator")
     )
 
+    # Also vectorize for semantic search
+    try:
+        from ..knowledge.vector_store import get_vector_store
+        vs = get_vector_store()
+        vs.add_memory(
+            memory_id=str(card_id),
+            text=text,
+            metadata={
+                "ticker": parsed.get("ticker") or "",
+                "price": str(parsed.get("price")) if parsed.get("price") else "",
+                "indicator": parsed.get("indicator") or "",
+                "master_alignment": parsed.get("master_alignment") or "",
+            },
+        )
+    except Exception:
+        pass  # Vector store may not be available
+
     return {
         "card_id": f"thought_{card_id}",
         "original_text": text,
@@ -241,31 +258,68 @@ def _fallback_parse(text: str) -> dict:
 @thought_tools.tool()
 def search_memories(query: str) -> list:
     """
-    Search user's historical thoughts and memories.
+    Search user's historical thoughts and memories using semantic search.
 
     Args:
         query: Search query (e.g., "茅台", "上次关于苹果的想法")
 
     Returns:
-        list: Matching thought cards
+        list: Matching thought cards, sorted by relevance
     """
-    # Semantic search stub - for now do simple substring match
     store = get_memory_store()
-    all_thoughts = store.get_thoughts(limit=100)
 
+    # Try semantic search via Chroma vector store first
+    semantic_results = {}
+    try:
+        from ..knowledge.vector_store import get_vector_store
+        vs = get_vector_store()
+        hits = vs.search_memories(query, top_k=10)
+        for h in hits:
+            memory_id = h["id"]
+            semantic_results[memory_id] = {
+                "card_id": f"thought_{memory_id}",
+                "original_text": h["text"],
+                "ticker": h["metadata"].get("ticker"),
+                "price": h["metadata"].get("price"),
+                "indicator": h["metadata"].get("indicator"),
+                "distance": h["distance"],
+                "match_type": "semantic",
+            }
+    except Exception:
+        pass  # Fall back to substring
+
+    # Substring fallback / supplement
+    all_thoughts = store.get_thoughts(limit=100)
     query_lower = query.lower()
-    matched = []
+    substring_results = {}
     for thought in all_thoughts:
+        tid = str(thought["id"])
         if query_lower in thought.get("text", "").lower():
-            matched.append({
+            substring_results[tid] = {
                 "card_id": f"thought_{thought['id']}",
                 "original_text": thought["text"],
                 "ticker": thought.get("ticker"),
                 "price": thought.get("price"),
                 "indicator": thought.get("indicator"),
                 "created_at": thought.get("created_at"),
-            })
-    return matched
+                "match_type": "substring",
+            }
+
+    # Merge: semantic first, then substring (dedup by id)
+    merged = []
+    seen = set()
+    # Sort semantic results by distance
+    sorted_semantic = sorted(semantic_results.values(), key=lambda x: x.get("distance", 999))
+    for r in sorted_semantic:
+        if r["card_id"] not in seen:
+            merged.append(r)
+            seen.add(r["card_id"])
+    for r in substring_results.values():
+        if r["card_id"] not in seen:
+            merged.append(r)
+            seen.add(r["card_id"])
+
+    return merged
 
 
 @thought_tools.tool()
