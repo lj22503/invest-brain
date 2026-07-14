@@ -1,35 +1,46 @@
+'use client';
+import HeroDemo from './components/HeroDemo';
+
 export default function Home() {
   return (
     <main className="min-h-screen">
 
       {/* ========== Hero ========== */}
-      <section className="min-h-screen flex flex-col justify-center items-center text-center px-6 md:px-16 py-24 relative overflow-hidden">
+      <section className="min-h-[90vh] flex items-center px-6 md:px-12 lg:px-20 py-12 md:py-20 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(232,160,144,0.08)_0%,transparent_70%)] pointer-events-none" />
-        <div className="absolute top-1/3 right-1/4 w-[300px] h-[400px] bg-[radial-gradient(ellipse_at_center,rgba(184,178,166,0.06)_0%,transparent_70%)] rotate-[-12deg] pointer-events-none" />
+        <div className="absolute top-1/3 right-[35%] w-[300px] h-[400px] bg-[radial-gradient(ellipse_at_center,rgba(184,178,166,0.06)_0%,transparent_70%)] rotate-[-12deg] pointer-events-none" />
 
-        <div className="relative z-10 max-w-3xl">
-          <div className="text-ink-light text-xs tracking-wide mb-4 max-w-lg mx-auto leading-relaxed">
-            Brain 不是 App — 是给 AI 用的 <span className="text-vermillion font-medium">35 个投资纪律 Skill 库</span><br />
-            通过 MCP 协议接入 Claude / Cursor / 任意 AI，立即获得「镜子 + 纪律锚点」能力
+        <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+          {/* Left: 文案 */}
+          <div className="flex-1 text-center lg:text-left">
+            <div className="text-ink-light text-xs tracking-wide mb-4 max-w-lg lg:max-w-none leading-relaxed">
+              Brain 不是 App — 是给 AI 用的 <span className="text-vermillion font-medium">35 个投资纪律 Skill 库</span><br />
+              通过 MCP 协议接入 Claude / Cursor / 任意 AI，立即获得「镜子 + 纪律锚点」能力
+            </div>
+            <div className="text-vermillion text-xs tracking-[0.2em] uppercase mb-8 font-medium">
+              by mangoFolio
+            </div>
+            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-black mb-6 leading-tight tracking-wide">
+              锚定<span className="relative inline-block">最重要的事
+                <span className="absolute bottom-1 left-0 right-0 h-3 bg-vermillion/10 z-[-1]" />
+              </span><br />不被市场吹走
+            </h1>
+            <p className="text-ink-light text-lg md:text-xl font-light mb-10 max-w-lg lg:max-w-none">
+              不是投顾，不给建议。是一个让你「越用越聪明」的投资大脑 —— 通过 AI 帮你建立自己的投研纪律。
+            </p>
+            <div className="flex gap-4 justify-center lg:justify-start flex-wrap">
+              <a href="/openapi" className="bg-vermillion text-white px-8 py-4 rounded text-base font-medium hover:bg-[#A8322A] transition-all hover:-translate-y-px hover:shadow-md">
+                进入 Skill 市场
+              </a>
+              <a href="#coaching" className="border border-border text-ink px-8 py-4 rounded text-base hover:border-ink transition-colors">
+                了解学习辅导
+              </a>
+            </div>
           </div>
-          <div className="text-vermillion text-xs tracking-[0.2em] uppercase mb-8 font-medium">
-            by mangoFolio
-          </div>
-          <h1 className="font-serif text-5xl md:text-7xl font-black mb-6 leading-tight tracking-wide">
-            锚定<span className="relative inline-block">最重要的事
-              <span className="absolute bottom-1 left-0 right-0 h-3 bg-vermillion/10 z-[-1]" />
-            </span><br />不被市场吹走
-          </h1>
-          <p className="text-ink-light text-xl font-light mb-12 max-w-lg mx-auto">
-            不是投顾，不给建议。是一个让你「越用越聪明」的投资大脑 —— 通过 AI 帮你建立自己的投研纪律。
-          </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <a href="/openapi" className="bg-vermillion text-white px-8 py-4 rounded text-base font-medium hover:bg-[#A8322A] transition-all hover:-translate-y-px hover:shadow-md">
-              进入 Skill 市场
-            </a>
-            <a href="#coaching" className="border border-border text-ink px-8 py-4 rounded text-base hover:border-ink transition-colors">
-              了解学习辅导
-            </a>
+
+          {/* Right: 自动演示手机 */}
+          <div className="flex-shrink-0 hidden lg:block">
+            <HeroDemo />
           </div>
         </div>
       </section>

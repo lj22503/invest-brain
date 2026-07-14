@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>InvestBrain Demo — 30秒产品交互原型</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --vermillion: #C43A31;
+  --vermillion-light: #D95A51;
+  --paper: #FAF7F2;
+  --paper-warm: #F5F0E8;
+  --ink: #2C2C2C;
+  --ink-light: #6B6B6B;
+  --ink-faint: #B0B0B0;
+  --surface: #FFFFFF;
+  --border: #E8E3DA;
+  --green: #2D8A56;
+  --amber: #B8860B;
+  --red: #C43A31;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans SC', -apple-system, sans-serif;
+  background: #E8E3DA;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.phone-frame {
+  width: 390px;
+  height: 844px;
+  background: var(--paper);
+  border-radius: 40px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 0 0 3px var(--ink);
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 48px 28px 36px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateY(12px);
+}
+
+.screen.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* ====== Screen 1: Input ====== */
+.screen-1 .brand {
+  margin-bottom: 40px;
+}
+
+.screen-1 .brand h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 26px;
+  color: var(--vermillion);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.screen-1 .brand .tagline {
+  font-size: 14px;
+  color: var(--ink-light);
+  margin-top: 8px;
+  line-height: 1.6;
+  font-family: 'Noto Serif SC', serif;
+}
+
+.screen-1 .input-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.screen-1 .input-label {
+  font-size: 13px;
+  color: var(--ink-light);
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.screen-1 textarea {
+  width: 100%;
+  height: 120px;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  padding: 16px;
+  font-size: 16px;
+  font-family: 'Noto Sans SC', sans-serif;
+  color: var(--ink);
+  resize: none;
+  outline: none;
+  line-height: 1.6;
+  transition: border-color 0.3s;
+}
+
+.screen-1 textarea:focus {
+  border-color: var(--vermillion);
+}
+
+.screen-1 .record-btn {
+  width: 100%;
+  height: 52px;
+  background: var(--vermillion);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Noto Sans SC', sans-serif;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.screen-1 .record-btn:hover {
+  background: var(--vermillion-light);
+}
+
+.screen-1 .record-btn:active {
+  transform: scale(0.97);
+}
+
+/* ====== Screen 2: Analyzing ====== */
+.screen-2 .status-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.screen-2 .spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--vermillion);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.screen-2 .analyzing-text {
+  font-size: 16px;
+  color: var(--ink);
+  font-weight: 500;
+  font-family: 'Noto Serif SC', serif;
+}
+
+.screen-2 .steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.screen-2 .step {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.screen-2 .step.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.screen-2 .step .step-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.screen-2 .step .step-header .check {
+  color: var(--green);
+  font-weight: 700;
+}
+
+.screen-2 .step .step-header .pending {
+  color: var(--amber);
+  font-weight: 700;
+}
+
+.screen-2 .step .step-detail {
+  font-size: 12px;
+  color: var(--ink-light);
+  padding-left: 24px;
+}
+
+/* ====== Screen 3: Results ====== */
+.screen-3 {
+  overflow-y: auto;
+  padding: 32px 20px 28px;
+}
+
+.screen-3 .result-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 20px;
+  color: var(--ink);
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.screen-3 .result-subtitle {
+  font-size: 14px;
+  color: var(--vermillion);
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.screen-3 .cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.screen-3 .card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  animation: cardIn 0.5s ease backwards;
+}
+
+.screen-3 .card:nth-child(1) { animation-delay: 0.1s; }
+.screen-3 .card:nth-child(2) { animation-delay: 0.25s; }
+.screen-3 .card:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.screen-3 .card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Noto Serif SC', serif;
+}
+
+.screen-3 .card-icon {
+  font-size: 18px;
+}
+
+/* Card 1: History */
+.screen-3 .card-history .card-header { color: var(--ink); }
+.screen-3 .card-history .warning-tag {
+  display: inline-block;
+  background: #FFF3E0;
+  color: #E65100;
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.screen-3 .card-history .history-item {
+  font-size: 13px;
+  color: var(--ink-light);
+  line-height: 1.7;
+  padding-left: 4px;
+  border-left: 3px solid var(--amber);
+  padding-left: 12px;
+  margin: 8px 0;
+}
+
+.screen-3 .card-history .similarity {
+  font-size: 13px;
+  background: #FFFDE7;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-top: 10px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.screen-3 .card-history .similarity .label {
+  font-size: 12px;
+  color: var(--amber);
+  font-weight: 600;
+}
+
+/* Card 2: Pattern */
+.screen-3 .card-pattern .card-header { color: var(--vermillion); }
+.screen-3 .card-pattern .bias-tag {
+  display: inline-block;
+  background: #FDEAEA;
+  color: var(--vermillion);
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.screen-3 .card-pattern .bias-text {
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.75;
+  font-family: 'Noto Serif SC', serif;
+}
+
+.screen-3 .card-pattern .freq {
+  font-size: 12px;
+  color: var(--vermillion);
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+/* Card 3: Masters */
+.screen-3 .card-masters .card-header { color: var(--ink); }
+.screen-3 .card-masters .master-quote {
+  margin-bottom: 14px;
+}
+
+.screen-3 .card-masters .master-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.screen-3 .card-masters .master-text {
+  font-size: 13px;
+  color: var(--ink-light);
+  line-height: 1.7;
+  font-family: 'Noto Serif SC', serif;
+  border-left: 3px solid var(--border);
+  padding-left: 12px;
+}
+
+/* CTA */
+.screen-3 .cta-btn {
+  width: 100%;
+  height: 52px;
+  background: var(--paper-warm);
+  color: var(--vermillion);
+  border: 2px solid var(--vermillion);
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Noto Sans SC', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.screen-3 .cta-btn:hover {
+  background: #FDEAEA;
+}
+
+.screen-3 .cta-btn:active {
+  transform: scale(0.97);
+}
+
+/* Restart link */
+.restart-link {
+  display: block;
+  text-align: center;
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--ink-faint);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* ====== Auto transition indicator ====== */
+.auto-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: var(--ink-faint);
+  animation: fadePulse 2s infinite;
+  pointer-events: none;
+}
+
+@keyframes fadePulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+</style>
+</head>
+<body>
+<div class="phone-frame" id="phone">
+
+  <!-- Screen 1: Input -->
+  <div class="screen screen-1 active" id="screen-1">
+    <div class="brand">
+      <h1>InvestBrain</h1>
+      <p class="tagline">不是替你做决定，<br>是帮你做更好的决定</p>
+    </div>
+    <div class="input-area">
+      <p class="input-label">你在想什么？</p>
+      <textarea id="thought-input">茅台跌到 1400 了，要不要买？</textarea>
+      <button class="record-btn" id="record-btn">记录这个想法</button>
+    </div>
+  </div>
+
+  <!-- Screen 2: Analyzing -->
+  <div class="screen screen-2" id="screen-2">
+    <div class="status-header">
+      <div class="spinner"></div>
+      <p class="analyzing-text">正在分析...</p>
+    </div>
+    <div class="steps">
+      <div class="step" id="step-1">
+        <div class="step-header">
+          <span class="check">✓</span> 检索历史行为记忆...
+        </div>
+        <div class="step-detail">找到 3 条相关记录</div>
+      </div>
+      <div class="step" id="step-2">
+        <div class="step-header">
+          <span class="check">✓</span> 检测行为偏差模式...
+        </div>
+        <div class="step-detail">匹配到「锚定偏差」</div>
+      </div>
+      <div class="step" id="step-3">
+        <div class="step-header">
+          <span class="pending">◌</span> 匹配大师思想...
+        </div>
+        <div class="step-detail">正在检索芒格/巴菲特观点</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen 3: Results -->
+  <div class="screen screen-3" id="screen-3">
+    <p class="result-title">茅台 · 当前价 1400</p>
+    <p class="result-subtitle">分析结果</p>
+    <div class="cards">
+      <!-- Card 1: History -->
+      <div class="card card-history">
+        <div class="card-header">
+          <span class="card-icon">📋</span> 你的历史
+        </div>
+        <div class="warning-tag">⚠️ 你上次在追高中亏损了 8%</div>
+        <div class="history-item">
+          · 2025.11 茅台 1850 买入<br>
+          · 3天后跌至 1700（-8%）<br>
+          · 触发原因：大盘杀跌
+        </div>
+        <div class="similarity">
+          <span class="label">🟡 这次和上次有 2 个相似点：</span><br>
+          · 都是从高点回落<br>
+          · 都是大盘下跌中<br><br>
+          <strong>上次的结果：亏损 8%</strong>
+        </div>
+      </div>
+
+      <!-- Card 2: Pattern -->
+      <div class="card card-pattern">
+        <div class="card-header">
+          <span class="card-icon">🧠</span> 你的行为模式
+        </div>
+        <div class="bias-tag">🔴 锚定偏差</div>
+        <p class="bias-text">
+          "你过度关注 1850 的买入价，现在 1400 看起来像'便宜了 450 块'。但价格低 ≠ 价值低。问问自己：如果不知道 1850 这个数字，1400 值不值得买？"
+        </p>
+        <p class="freq">最近 3 个月锚定偏差出现频率：高于平均 40%</p>
+      </div>
+
+      <!-- Card 3: Masters -->
+      <div class="card card-masters">
+        <div class="card-header">
+          <span class="card-icon">📖</span> 大师怎么说
+        </div>
+        <div class="master-quote">
+          <p class="master-name">芒格：</p>
+          <p class="master-text">
+            "反过来想。如果现在茅台不是 1400 而是 2000，你会买吗？如果不会——那你现在只是在'抄底'，不是在判断价值。"
+          </p>
+        </div>
+        <div class="master-quote">
+          <p class="master-name">巴菲特：</p>
+          <p class="master-text">
+            "价格是你支付的，价值是你得到的。先算价值，再看价格。"
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <button class="cta-btn" id="cool-down-btn">我先冷静一下</button>
+    <span class="restart-link" id="restart-link">重新演示</span>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  const screen1 = document.getElementById('screen-1');
+  const screen2 = document.getElementById('screen-2');
+  const screen3 = document.getElementById('screen-3');
+
+  function switchScreen(from, to) {
+    from.classList.remove('active');
+    to.classList.add('active');
+  }
+
+  // Screen 1 → Screen 2
+  document.getElementById('record-btn').addEventListener('click', function() {
+    switchScreen(screen1, screen2);
+    // Start step animations
+    setTimeout(function() {
+      document.getElementById('step-1').classList.add('visible');
+    }, 400);
+
+    setTimeout(function() {
+      document.getElementById('step-2').classList.add('visible');
+    }, 1400);
+
+    setTimeout(function() {
+      var step3 = document.getElementById('step-3');
+      step3.classList.add('visible');
+      // Update step-3 to completed state
+      setTimeout(function() {
+        var hdr = step3.querySelector('.step-header');
+        hdr.innerHTML = '<span class="check">✓</span> 匹配大师思想...';
+        var detail = step3.querySelector('.step-detail');
+        detail.textContent = '已匹配芒格/巴菲特相关观点';
+      }, 800);
+
+      // Auto-advance to screen 3
+      setTimeout(function() {
+        switchScreen(screen2, screen3);
+        // Reset scroll
+        screen3.scrollTop = 0;
+      }, 1200);
+    }, 2400);
+  });
+
+  // Restart
+  document.getElementById('restart-link').addEventListener('click', function() {
+    // Reset screen 2 steps
+    ['step-1', 'step-2', 'step-3'].forEach(function(id) {
+      document.getElementById(id).classList.remove('visible');
+    });
+    var step3 = document.getElementById('step-3');
+    step3.querySelector('.step-header').innerHTML = '<span class="pending">◌</span> 匹配大师思想...';
+    step3.querySelector('.step-detail').textContent = '正在检索芒格/巴菲特观点';
+
+    // Reset screen 1
+    document.getElementById('thought-input').value = '茅台跌到 1400 了，要不要买？';
+
+    switchScreen(screen3, screen1);
+  });
+
+  // CTA button
+  document.getElementById('cool-down-btn').addEventListener('click', function() {
+    this.textContent = '已记录 ✓';
+    this.style.background = '#E8F5E9';
+    this.style.color = '#2D8A56';
+    this.style.borderColor = '#2D8A56';
+    this.disabled = true;
+  });
+})();
+</script>
+</body>
+</html>
