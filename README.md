@@ -295,10 +295,34 @@ pytest tests/
 
 ---
 
-## 贡献
+## 🛠️ 推荐工具链
 
-欢迎提交 Issue / PR 改进工具、扩充大师语料、修复 Bug。详见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+> 以下工具推荐基于 [awesome-finai-tools-zn](https://github.com/lj22503/awesome-finai-tools-zn) 的 [SKILL.md](https://github.com/lj22503/awesome-finai-tools-zn/blob/main/SKILL.md) 场景→工具映射表生成，每类场景精选 1 个最佳工具。完整工具清单请访问仓库主页。
 
+| 推荐工具 | 功能 | 安装方式 |
+|---------|------|---------|
+| **ashare-mcp** | 生产级 A 股 MCP Server，30 个 tool（实时行情/K线/涨停池/龙虎榜/财报/板块资金） | `git clone https://github.com/CharmYue/ashare-mcp && cd ashare-mcp && uv sync` |
+| **opencli-eastmoney-quote** | 零配置 CLI，A 股/港股/美股实时行情秒出结果 | `npm install -g @jackwener/opencli` |
+| **opencli-xueqiu-search** | 雪球股票搜索 + 热门帖子舆情分析，中文/代码均可 | `npm install -g @jackwener/opencli` |
+| **Qlib** | 微软 AI 量化框架，自动因子挖掘 + 模型训练 + 回测评估 | `pip install pyqlib` |
+| **盈米基金 MCP** | 69 个标准化 MCP 工具 + 16 项技能组件，含组合回测/蒙特卡洛模拟 | 联系盈米 AI 开放平台获取 API Key |
+
+> 工具推荐逻辑基于 awesome-finai-tools-zn/data/institution-skills.json，每周自动更新。
+
+---
+
+## 🔗 工具链联动
+
+本仓库是 FinAI 工具生态的一部分，与其他仓库协作：
+
+| 仓库 | 定位 | 与本仓库的关系 |
+|------|------|---------------|
+| [awesome-finai-tools-zn](https://github.com/lj22503/awesome-finai-tools-zn) | 数据底座 | 提供工具清单+机构Skill数据 |
+| [invest-brain](https://github.com/lj22503/invest-brain) | 工具推荐引擎 | 基于场景自动推荐工具 |
+| [investment-buddy-pet](https://github.com/lj22503/investment-buddy-pet) | 人格化投顾 | 按投资人格匹配工具箱 |
+| [SoloAdvisor-Toolkit](https://github.com/lj22503/SoloAdvisor-Toolkit) | 投顾流程工具包 | KYC→配置→组合→报告 |
+| [knowledge-workflow](https://github.com/lj22503/knowledge-workflow) | 知识管理 | 收集→打标→存储→产出 |
+>
 ---
 
 **版本**: v0.1.0
