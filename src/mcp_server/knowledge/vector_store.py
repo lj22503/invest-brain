@@ -9,10 +9,10 @@ import chromadb
 from chromadb.config import Settings
 
 # Default persist directory for vectors
-DEFAULT_PERSIST_DIR = str(Path(__file__).resolve().parents[3] / "data" / "knowledge" / "vectors")
-_DATA_ROOT = Path(__file__).resolve().parents[3] / "data" / "knowledge" / "graph"
-_INDUSTRY_ROOT = Path(__file__).resolve().parents[3] / "data" / "knowledge" / "industry"
-_FRAMEWORK_ROOT = Path(__file__).resolve().parents[3] / "data" / "knowledge" / "frameworks"
+DEFAULT_PERSIST_DIR = str(Path(__file__).resolve().parents[3] / "data" / "vectors")
+_DATA_ROOT = Path(__file__).resolve().parents[3] / "data" / "graph"
+_INDUSTRY_ROOT = Path(__file__).resolve().parents[3] / "data" / "industry"
+_FRAMEWORK_ROOT = Path(__file__).resolve().parents[3] / "data" / "frameworks"
 
 
 class VectorStore:

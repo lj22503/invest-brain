@@ -17,7 +17,7 @@ class GraphClient:
             db_path: Base path for knowledge files (default: data/knowledge/graph/)
         """
         self.graph = nx.DiGraph()
-        self.db_path = Path(db_path) if db_path else Path("data/knowledge/graph")
+        self.db_path = Path(db_path) if db_path else Path("data/graph")
         self._load_from_json()
 
     def _load_from_json(self):
