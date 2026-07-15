@@ -16,7 +16,7 @@ from ..llm import llm_chat
 
 roundtable_tools = FastMCP("roundtable-tools")
 
-_GRAPH_ROOT = Path(__file__).resolve().parents[2] / "data" / "graph"
+_GRAPH_ROOT = Path(__file__).resolve().parents[3] / "data" / "graph"
 
 # ──────────────────────────────────────────────
 # 大师 MBTI 映射（基于公开传记/访谈推断）
@@ -152,14 +152,12 @@ def _build_judge_prompt(
 def _match_masters(topic: str, top_k: int = 5) -> list[dict]:
     """语义匹配最相关的大师."""
     vs = get_vector_store()
-    results = vs.search(topic, top_k=top_k)
+    results = vs.search_masters(topic, top_k=top_k)
 
     masters = []
     seen = set()
     for r in results:
         meta = r.get("metadata", {})
-        if meta.get("type") != "master":
-            continue
         mid = meta.get("id")
         if mid in seen:
             continue

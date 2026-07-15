@@ -195,6 +195,24 @@ class VectorStore:
         results.sort(key=lambda x: x["distance"])
         return results[:top_k]
 
+    def search_masters(self, query: str, top_k: int = 5) -> list[dict]:
+        """Semantic search only in the masters collection."""
+        count = self._collection_master.count()
+        if count == 0:
+            return []
+        results_raw = self._collection_master.query(
+            query_texts=[query], n_results=min(top_k, count)
+        )
+        results = []
+        for i in range(len(results_raw["ids"][0])):
+            results.append({
+                "id": results_raw["ids"][0][i],
+                "text": results_raw["documents"][0][i],
+                "metadata": results_raw["metadatas"][0][i],
+                "distance": results_raw["distances"][0][i],
+            })
+        return results
+
     def search_by_master(self, master_id: str, query: str, top_k: int = 3) -> list[dict]:
         """
         Semantic search filtered to a specific master.

@@ -13,9 +13,9 @@ from ..llm import get_deepseek_client
 rag_tools = FastMCP("rag-tools")
 
 # Knowledge base roots
-_GRAPH_ROOT = Path(__file__).resolve().parents[2] / "data" / "knowledge" / "graph"
-_INDUSTRY_ROOT = Path(__file__).resolve().parents[2] / "data" / "knowledge" / "industry"
-_FRAMEWORK_ROOT = Path(__file__).resolve().parents[2] / "data" / "knowledge" / "frameworks"
+_GRAPH_ROOT = Path(__file__).resolve().parents[3] / "data" / "graph"
+_INDUSTRY_ROOT = Path(__file__).resolve().parents[3] / "data" / "industry"
+_FRAMEWORK_ROOT = Path(__file__).resolve().parents[3] / "data" / "frameworks"
 
 
 def _search_file_content(file_path: Path, query: str, max_results: int = 3) -> list[dict]:
