@@ -9,6 +9,7 @@ from .tools.reminder_tools import reminder_tools
 from .tools.pattern_tools import pattern_tools
 from .tools.report_tools import report_tools
 from .tools.roundtable_tools import roundtable_tools
+from .tools.notifier_tools import notifier_tools
 from .datasources.akshare_datasource import akshare_tools
 from .datasources.tushare_datasource import tushare_tools
 from .price_checker import check_price_conditions
@@ -38,6 +39,7 @@ _tool_groups = [
     ("pattern", pattern_tools),
     ("report", report_tools),
     ("invest", roundtable_tools),
+    ("notify", notifier_tools),
     ("market", akshare_tools),
     ("tushare", tushare_tools),
 ]

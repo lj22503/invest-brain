@@ -56,6 +56,10 @@ When adding new features, update the relevant section in these files.
 3. Run tests if applicable
 4. Submit a PR with clear description
 
+## License
+
+This project is licensed under the GNU Affero General Public License v3.0 (AGPLv3). By contributing, you agree that your contributions will be licensed under the same terms. See [LICENSE](./LICENSE) for details.
+
 ## Reporting Issues
 
 Use GitHub Issues at https://github.com/lj22503/invest-brain/issues

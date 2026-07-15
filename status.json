@@ -1,0 +1,57 @@
+{
+  "project": "InvestBrain",
+  "updated": "2026-07-15",
+  "tasks": {
+    "B1_voice_input": {
+      "status": "skip",
+      "reason": "AI 对话天然支持语音→record_thought 管道，无需额外开发",
+      "hours": 0
+    },
+    "B2_master_roundtable": {
+      "status": "done",
+      "hours": 8,
+      "commits": ["12a1247", "cc2fcc1", "cd7e4d6"],
+      "deliverables": [
+        "skills/invest-roundtable/SKILL.md — Claude Skill 入口",
+        "src/mcp_server/tools/roundtable_tools.py — invest_roundtable MCP 工具",
+        "src/mcp_server/knowledge/vector_store.py — +search_masters() 方法"
+      ],
+      "verified": true,
+      "notes": "5位大师并行LLM + 主持人deepseek-reasoner综合，3轮交锋，已通过全链路测试"
+    },
+    "B3_multi_channel_notify": {
+      "status": "done",
+      "hours": 4,
+      "deliverables": [
+        "src/mcp_server/tools/notifier_tools.py — configure_notifier + get_notifier_config MCP 工具",
+        "src/mcp_server/notifier.py — +send_dingtalk/+send_bark, send_notification 升级为多通道并发",
+        "src/mcp_server/server.py — 注册 notify_ 前缀工具组"
+      ],
+      "verified": true,
+      "notes": "webhook.json 自动迁移旧格式→channels 结构。支持 feishu/dingtalk/bark 三通道。提醒触发时 channel=all 并发发送。"
+    },
+    "B4_vector_search": {
+      "status": "done",
+      "hours": 8,
+      "commit": "0882378",
+      "deliverables": [
+        "vector_store.py — memories collection + add_memory/search_memories",
+        "thought_tools.py — record_thought 自动向量化 + search_memories 语义升级"
+      ],
+      "verified": true
+    }
+  },
+  "issues_fixed": [
+    {
+      "id": "path_mismatch",
+      "desc": "vector_store/graph_client 指向 data/knowledge/*，实际数据在 data/*",
+      "commits": ["12a1247", "cd7e4d6"]
+    },
+    {
+      "id": "parents_depth",
+      "desc": "tools/ 目录下的 _ROOT 用 parents[2] 指向 src/ 而非项目根",
+      "commit": "cd7e4d6"
+    }
+  ],
+  "next": "B1-B4 全部完成"
+}
