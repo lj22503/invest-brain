@@ -9,6 +9,7 @@ from mcp.server.fastmcp import FastMCP
 from ..knowledge.graph_client import get_graph_client
 from ..knowledge.vector_store import get_vector_store
 from ..llm import get_deepseek_client
+from ..llm.local_model import get_local_model
 
 rag_tools = FastMCP("rag-tools")
 
@@ -176,20 +177,51 @@ def _llm_synthesize(question: str, context: list) -> str:
 
 
 def _fallback_synthesize(question: str, context: list) -> str:
-    """降级合成：简单拼接（LLM 不可用时）"""
+    """三级降级合成：ONNX 本地模型 → 简单拼接"""
     if not context:
         return "抱歉，知识库中暂无相关内容。"
 
-    answer_parts = []
+    # 构建上下文
+    context_parts = []
+    for i, ctx in enumerate(context[:5], 1):
+        name = ctx.get("name", ctx.get("id", ""))
+        view = ctx.get("view", ctx.get("definition", ""))
+        quote = ctx.get("quotes", [])
+        if quote:
+            view = f"{view} - {quote[0]}"
+        context_parts.append(f"{i}. {name}：{view}")
+
+    context_str = "\n\n".join(context_parts)
+
+    # Tier 1: 尝试本地 ONNX 模型
+    try:
+        local_model = get_local_model()
+        if local_model.is_available or local_model._ensure_loaded():
+            prompt = f"""基于以下大师思想库检索结果，用简洁、有洞见的中文回答用户的问题。
+
+问题：{question}
+
+参考内容：
+{context_str}
+
+回答："""
+            result = local_model.chat_simple(prompt, scene="rag_synthesis")
+            if result:
+                return result
+    except Exception:
+        pass
+
+    # Tier 2: 简单拼接（兜底）
+    simple_parts = []
     for i, ctx in enumerate(context[:3], 1):
         name = ctx.get("name", ctx.get("id", ""))
         view = ctx.get("view", ctx.get("definition", ""))
         quote = ctx.get("quotes", [])
         if quote:
             view = f"{view} - {quote[0]}"
-        answer_parts.append(f"{i}. {name}：{view}")
+        simple_parts.append(f"{i}. {name}：{view}")
 
-    return "根据大师思想库检索结果：\n\n" + "\n\n".join(answer_parts)
+    return "根据大师思想库检索结果：\n\n" + "\n\n".join(simple_parts)
 
 
 @rag_tools.tool()

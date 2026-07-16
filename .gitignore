@@ -20,3 +20,6 @@ Thumbs.db
 # Industry frameworks (private IP, served via vector store / RAG only)
 data/industry/*.md
 !data/industry/申万28个行业分类.json
+
+# Local ONNX models (large binary files, download separately)
+models/
