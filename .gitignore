@@ -23,3 +23,7 @@ data/industry/*.md
 
 # Local ONNX models (large binary files, download separately)
 models/
+
+# Task tracking (internal only, not for public repo)
+status.json
+docs/
