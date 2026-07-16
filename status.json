@@ -66,18 +66,5 @@
     "verified": false,
     "notes": "GitHub 推送暂失败（网络不通），本地已提交。向量库从 1 个→31 个文档，ask_investment 行业检索覆盖从 3→28 个行业。零新代码。"
   },
-  "C2_research_reports": {
-    "status": "done",
-    "hours": 3,
-    "commit": "3a2b81c",
-    "deliverables": [
-      "src/mcp_server/datasources/research_reports.py — 东方财富研报数据源（fetch/normalize/save/load）",
-      "src/mcp_server/knowledge/vector_store.py — collection research_reports + add_research_report/search_research",
-      "src/mcp_server/tools/rag_tools.py — rag_search_reports MCP工具 + ask_investment管线集成",
-      "data/research/reports_20260716.json — 首批50份研报"
-    ],
-    "verified": false,
-    "notes": "API: reportapi.eastmoney.com/report/list (免费免鉴权)。首次入库50份，向量搜索语义相关。ask_investment自动检索研报。"
-  },
-  "next": "C3/D1/D2（剩 3 个 P1 任务）"
+  "next": "C2/C3/D1/D2（剩 4 个 P1 任务）"
 }
