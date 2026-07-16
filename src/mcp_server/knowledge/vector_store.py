@@ -13,6 +13,7 @@ DEFAULT_PERSIST_DIR = str(Path(__file__).resolve().parents[3] / "data" / "vector
 _DATA_ROOT = Path(__file__).resolve().parents[3] / "data" / "graph"
 _INDUSTRY_ROOT = Path(__file__).resolve().parents[3] / "data" / "industry"
 _FRAMEWORK_ROOT = Path(__file__).resolve().parents[3] / "data" / "frameworks"
+_RESEARCH_ROOT = Path(__file__).resolve().parents[3] / "data" / "research"
 
 
 class VectorStore:
@@ -46,6 +47,9 @@ class VectorStore:
         )
         self._collection_memories = self._client.get_or_create_collection(
             name="memories", metadata={"description": "用户投资想法记忆"}
+        )
+        self._collection_research = self._client.get_or_create_collection(
+            name="research_reports", metadata={"description": "券商研报摘要"}
         )
 
     def _textify_master(self, master_id: str) -> tuple[str, dict]:
@@ -355,6 +359,77 @@ class VectorStore:
             metadatas=[meta],
         )
 
+    def add_research_report(self, report: dict):
+        """Add a research report to the research_reports collection.
+
+        Args:
+            report: Normalized report dict from research_reports module.
+                    Must have 'info_code', 'text', and optionally other fields.
+        """
+        info_code = report.get("info_code", "")
+        if not info_code:
+            info_code = f"report_{uuid.uuid4().hex[:8]}"
+
+        text = report.get("text", "")
+        if not text:
+            return
+
+        meta = {
+            "type": "research_report",
+            "info_code": info_code,
+            "title": report.get("title", ""),
+            "org_name": report.get("org_name", ""),
+            "stock_name": report.get("stock_name", ""),
+            "stock_code": report.get("stock_code", ""),
+            "industry_name": report.get("industry_name", ""),
+            "rating": report.get("rating", ""),
+            "rating_change": report.get("rating_change", ""),
+            "publish_date": report.get("publish_date", ""),
+        }
+
+        self._collection_research.upsert(
+            ids=[info_code],
+            documents=[text],
+            metadatas=[meta],
+        )
+
+    def search_research(
+        self, query: str, top_k: int = 5
+    ) -> list[dict]:
+        """Semantic search over research reports.
+
+        Args:
+            query: Search query.
+            top_k: Max results.
+
+        Returns:
+            List of dicts: {id, text, metadata, distance}
+        """
+        count = self._collection_research.count()
+        if count == 0:
+            return []
+        n = min(top_k, count)
+        results = self._collection_research.query(
+            query_texts=[query], n_results=n
+        )
+        out = []
+        for i in range(len(results["ids"][0])):
+            meta = results["metadatas"][0][i] or {}
+            out.append({
+                "id": results["ids"][0][i],
+                "text": results["documents"][0][i],
+                "metadata": meta,
+                "distance": results["distances"][0][i],
+                "type": "research_report",
+                "title": meta.get("title", ""),
+                "org_name": meta.get("org_name", ""),
+                "stock_name": meta.get("stock_name", ""),
+                "industry_name": meta.get("industry_name", ""),
+                "rating": meta.get("rating", ""),
+                "publish_date": meta.get("publish_date", ""),
+            })
+        return out
+
     def search_memories(self, query: str, top_k: int = 10) -> list[dict]:
         """
         Semantic search over user memories/thoughts.
@@ -409,6 +484,15 @@ class VectorStore:
             for f in _FRAMEWORK_ROOT.glob("*"):
                 if f.suffix in (".md", ".json", ".txt"):
                     self.add_framework_doc(f.name)
+
+        # Load research reports
+        if _RESEARCH_ROOT.exists():
+            import json as _json
+            for rp in _RESEARCH_ROOT.glob("reports_*.json"):
+                with open(rp, encoding="utf-8") as _f:
+                    batch = _json.load(_f)
+                for report in batch:
+                    self.add_research_report(report)
 
 
 # Singleton instance

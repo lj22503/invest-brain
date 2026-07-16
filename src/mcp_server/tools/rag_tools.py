@@ -246,6 +246,24 @@ def ask_investment(question: str) -> dict:
         if fr not in all_results:
             all_results.append(fr)
 
+    # Research report search (vector)
+    try:
+        research_results = vs.search_research(keywords, top_k=5)
+        for rr in research_results:
+            all_results.append({
+                "id": rr.get("id"),
+                "name": rr.get("title", rr.get("id")),
+                "type": "research_report",
+                "definition": rr.get("text", ""),
+                "org_name": rr.get("org_name", ""),
+                "stock_name": rr.get("stock_name", ""),
+                "industry_name": rr.get("industry_name", ""),
+                "rating": rr.get("rating", ""),
+                "publish_date": rr.get("publish_date", ""),
+            })
+    except Exception:
+        pass  # Research collection may be empty
+
     # LLM synthesis
     answer = _llm_synthesize(question, all_results)
 
@@ -421,3 +439,48 @@ def search_knowledge(query: str) -> list:
             })
 
     return concept_results + master_results + relation_results
+
+
+# ======================== 研报工具 ========================
+
+@rag_tools.tool()
+def rag_search_reports(
+    query: str,
+    top_k: int = 5,
+) -> dict:
+    """搜索券商研报——基于语义向量检索。
+
+    返回最近入库的券商研报摘要，包含机构、股票、行业、评级、盈利预测等信息。
+
+    Args:
+        query: 搜索关键词（如"宁德时代 业绩"、"保险 增长"、"半导体"）
+        top_k: 返回结果数量，默认5
+
+    Returns:
+        {
+            "query": str,
+            "count": int,
+            "results": [
+                {
+                    "info_code": str,
+                    "title": str,
+                    "org_name": str,
+                    "stock_name": str,
+                    "stock_code": str,
+                    "industry_name": str,
+                    "rating": str,
+                    "rating_change": str,
+                    "publish_date": str,
+                    "text": str,
+                    "distance": float,
+                }
+            ]
+        }
+    """
+    vs = get_vector_store()
+    results = vs.search_research(query, top_k=top_k)
+    return {
+        "query": query,
+        "count": len(results),
+        "results": results,
+    }

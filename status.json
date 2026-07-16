@@ -53,5 +53,18 @@
       "commit": "cd7e4d6"
     }
   ],
-  "next": "B1-B4 全部完成"
+  "C1_industry_frameworks": {
+    "status": "done",
+    "hours": 3,
+    "commit": "e2f5e16",
+    "deliverables": [
+      "data/industry/*.md — 27 个新行业框架 + 3 个已有 = 30 份（DeepSeek 批量生成）",
+      "data/vectors/chroma.sqlite3 — 30 份行业框架入库 collection 'industry'",
+      ".gitignore — 屏蔽 data/industry/*.md（保留申万28行业分类.json）",
+      "README.md — 行业知识说明改为向量库内检索"
+    ],
+    "verified": false,
+    "notes": "GitHub 推送暂失败（网络不通），本地已提交。向量库从 1 个→31 个文档，ask_investment 行业检索覆盖从 3→28 个行业。零新代码。"
+  },
+  "next": "C2/C3/D1/D2（剩 4 个 P1 任务）"
 }
