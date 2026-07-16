@@ -65,52 +65,6 @@ python api_server.py
 python server.py
 ```
 
-### 5分钟快速体验
-
-**第一步：记录一个投资想法**
-
-```python
-# 通过 MCP 工具调用
-thought_record_thought("茅台跌到1400了，要不要抄底？上次1600买的现在还套着")
-```
-
-AI 会自动解析你的想法，关联历史记忆，并生成结构化卡片。
-
-**第二步：问一个投资问题**
-
-```python
-rag_ask_investment("什么是真正的护城河？")
-```
-
-系统会检索 16 位投资大师的思想库，返回有引用的综合回答。
-
-**第三步：看看你的行为模式**
-
-```python
-memory_get_behavior_patterns()
-```
-
-自动检测追高、恐慌卖出、情绪化交易等 5 种行为偏差。
-
-> 💡 **Demo 演示**：[点击查看 3 屏交互原型](public/demo.html)（推荐录屏 GIF 展示效果更佳）
-
-### 配置 Claude Desktop
-
-在 `claude_desktop_config.json` 中添加：
-
-```json
-{
-  "mcpServers": {
-    "investbrain": {
-      "command": "python",
-      "args": ["path/to/investbrain/src/mcp_server/server.py"]
-    }
-  }
-}
-```
-
-重启 Claude Desktop 后，直接在对话中说"帮我分析一下我的投资行为"即可。
-
 ## 前端
 
 ```bash
