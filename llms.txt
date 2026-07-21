@@ -1,79 +1,89 @@
-# llms.txt — InvestBrain 投资第二大脑
+# llms.txt — InvestBrain
 
-## 网站/仓库简介
+## Project Overview
 
-InvestBrain 投资第二大脑是有经验投资者的纪律自主工具，解决"知行合一"问题。不是投顾，不给建议，而是"镜子" + "纪律锚点"。核心能力：想法记录、投资RAG（GraphRAG+向量检索）、记忆系统、提醒触发、行为模式挖掘。
+InvestBrain is a self-discipline tool for experienced investors. It acts as a "mirror + discipline anchor" — NOT a financial advisor. The product helps investors resist narrative-driven decisions through structured idea logging, RAG-based knowledge retrieval, behavior pattern mining, and rule-based reminders.
 
-## 核心页面
+Mission: 解决"知行合一"问题 (Bridge the gap between knowing and doing).
 
-- [README](https://github.com/lj22503/invest-brain) — 完整说明
-- [src/mcp_server/tools/](src/mcp_server/tools/) — 35个MCP工具
+## Core Pages
 
-## 是什么
+- [README](https://github.com/lj22503/invest-brain) — Full documentation (Chinese)
+- [README_EN](https://github.com/lj22503/invest-brain/blob/main/README_EN.md) — English documentation
+- [Homepage](https://invest-brain-mocha.vercel.app) — Live demo
 
-**一句话**：有经验投资者的纪律自主工具，解决"操作没纪律、事后后悔"的问题。
+## What it is
 
-**核心问题**：投资者被叙事带着走，操作没纪律，事后后悔
+**One-liner**: A "mirror + discipline anchor" that audits investor behavior and flags biases — not investment advice.
 
-**目标用户**：有投资经验的老客户，需要纪律锚点和行为审计
+**Core value**:
+- **想法记录** (Idea capture): User speaks, AI parses + links history + generates cards
+- **投资 RAG** (RAG over masters): GraphRAG + vector retrieval over Buffett / Munger / Dalio / Soros
+- **记忆系统** (Memory): User profile, decision history, behavior pattern mining
+- **提醒触发** (Triggers): Price / time / condition monitoring, 飞书 push support
+- **行为模式挖掘** (Behavior mining): Auto-detect loss aversion / herding / overconfidence
 
-**产品口号**：不是投顾，不给建议，而是"镜子" + "纪律锚点"
+**Target users**: 有经验的老客户 (Experienced investors who need discipline anchors and behavior audits)
 
-## 核心能力
+## Tech Stack
 
-| 功能 | 说明 |
-|------|------|
-| 想法记录 | 用户说一句话，AI解析 + 关联历史 + 生成卡片 |
-| 投资RAG | 大师思想检索问答（GraphRAG + 向量检索） |
-| 记忆系统 | 用户画像、历史决策、行为模式挖掘 |
-| 提醒触发 | 价格/时间/条件监控，支持飞书推送 |
-| 行为模式挖掘 | 自动发现投资者的偏差模式 |
+| Layer | Tech |
+|---|---|
+| LLM | DeepSeek API |
+| RAG | GraphRAG + 向量检索 |
+| Protocol | MCP Server (Model Context Protocol) |
+| Backend | Python + FastAPI |
+| Notifications | 飞书 (Feishu) push |
+| Deploy | Vercel |
 
-## MCP Tools（35个）
+## Installation
+
+```bash
+# 1. Install deps
+cd src/mcp_server
+pip install -r requirements.txt
+
+# 2. Configure env
+cp .env.example .env
+# Fill in DEEPSEEK_API_KEY
+
+# 3. Start REST API (LLM config)
+python api_server.py
+
+# 4. Start MCP Server (separate terminal)
+python server.py
+```
+
+## Core Capabilities
+
+| Feature | Description |
+|---|---|
+| 想法记录 | User says something, AI parses + links history + generates cards |
+| 投资 RAG | Big-master thought retrieval Q&A (GraphRAG + vector) |
+| 记忆系统 | User profile, decision history, behavior pattern mining |
+| 提醒触发 | Price/time/condition monitoring with 飞书 push |
+| 行为模式挖掘 | Auto-discover investor bias patterns |
+
+## 11 Recommended Topics
 
 ```
-# 想法记录
-thought_record_thought(text)
-thought_search_memories(query)
-thought_get_thought_cards(ticker)
-
-# 投资RAG
-rag_ask_investment(question)
-rag_get_master_view(master, topic)
-rag_search_knowledge(query)
-
-# 记忆系统
-memory_get_user_profile()
-memory_record_decision(data)
-memory_get_behavior_patterns()
-
-# 提醒
-reminder_set_reminder(condition)
-reminder_get_reminders()
-reminder_delete_reminder(id)
+ai-agent, ai-investing, claude-desktop, deepseek, investment,
+investment-rules, mcp-server, personal-knowledge-base, python,
+quantitative-analysis, self-discipline
 ```
 
-## 知识库
+## Quality Standards
 
-**16位投资大师**：巴菲特、芒格、段永平、霍华德·马克斯、李录、格雷厄姆、达莫达兰、阿克曼、凯西·伍德、迈克尔·伯里、帕伯莱、塔勒布、林奇、费雪、朱恩贾wala、德鲁肯米勒
+- NOT investment advice (产品定位)
+- Behavior audit focus
+- RAG-grounded answers (no hallucination)
+- Local data only (no cloud storage)
 
-**5个核心概念**：护城河、安全边际、能力圈、第二层思维、非对称风险
+## Search Keywords
 
-**行业知识**：申万28行业分类、白酒、银行、新能源电池
+investment discipline, self-discipline tool, behavior pattern mining, RAG, MCP server, 行为模式挖掘, 知行合一, 投资纪律, GraphRAG, bias detection, 飞书 push, DeepSeek, Python investment tool.
 
-## 数据源
-
-| 数据源 | 用途 | 状态 |
-|--------|------|------|
-| AKShare | 实时行情 | ✅ |
-| Tushare | 财务/历史数据 | ✅ |
-| Chroma | 向量索引 | ✅ |
-| SQLite | 本地记忆 | ✅ |
-
-## 搜索关键词
-
-投资第二大脑、知行合一、投资纪律、投资RAG、GraphRAG、大师思想检索、行为模式挖掘、投资记忆系统、持仓提醒、投资者偏差、护城河分析、安全边际、能力圈
-
-## 联系方式
+## Contact
 
 GitHub Issues: https://github.com/lj22503/invest-brain/issues
+Live demo: https://invest-brain-mocha.vercel.app

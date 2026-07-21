@@ -7,6 +7,20 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-compatible-green.svg)](https://modelcontextprotocol.io/)
 
+<p align="center">
+  <a href="#快速开始"><img src="https://img.shields.io/badge/MCP_Server_+_RAG-d6a52e?style=for-the-badge" alt="MCP Server + RAG"/></a>
+  <a href="README_EN.md"><img src="https://img.shields.io/badge/English-README-blue?style=for-the-badge" alt="English README"/></a>
+  <a href="llms.txt"><img src="https://img.shields.io/badge/llms.txt-AI_Ready-green?style=for-the-badge" alt="llms.txt"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-yellow?style=for-the-badge" alt="AGPL-3.0"/></a>
+  <a href="#核心能力"><img src="https://img.shields.io/badge/行为模式_挖掘-purple?style=for-the-badge" alt="行为模式挖掘"/></a>
+</p>
+
+<p align="center">
+  <strong>想法记录 × 投资 RAG × 记忆系统 × 提醒触发 × 行为模式挖掘</strong>
+</p>
+
+<!-- TODO: 添加 ≤10 秒的演示 GIF，提升 50% 转化率（见 GitHub 增长策略报告） -->
+
 ---
 
 ## 5 分钟快速体验
