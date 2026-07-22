@@ -21,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="zh-CN">
       <head>
+        <script defer src="https://cloud.umami.is/script.js" data-website-id="fa3ce74-eb17-412d-abd1-348e1228231c"></script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
