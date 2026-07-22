@@ -17,7 +17,7 @@
 1. **想法记录** — 用户说一句话，AI解析+关联历史+生成卡片
 2. **投资知识RAG** — 大师思想检索问答（GraphRAG + 向量检索）
 3. **记忆系统** — 用户画像、历史决策、行为模式挖掘
-4. **提醒触发** — 价格/时间/条件监控，支持飞书推送
+4. **提醒触发** — 价格/时间/条件监控，支持飞书/钉钉/Bark 多通道推送
 5. **行为模式挖掘** — 自动发现投资者的偏差模式
 
 ---
@@ -41,7 +41,7 @@ investbrain/
 │   │   ├── server.py      # 主入口
 │   │   ├── scheduler.py   # APScheduler 定时任务
 │   │   ├── price_checker.py  # 启动时价格检查
-│   │   ├── notifier.py    # 通知分发（飞书）
+│   │   ├── notifier.py    # 通知分发（多通道）
 │   │   ├── tools/         # MCP Tools
 │   │   │   ├── thought_tools.py   # 想法记录
 │   │   │   ├── rag_tools.py        # 投资 RAG
@@ -76,11 +76,11 @@ investbrain/
 │   └── patterns_cli.py    # CLI 工具
 ├── data/
 │   ├── knowledge/         # 知识库
-│   │   ├── graph/        # 知识图谱
-│   │   │   ├── masters/  # 16位大师 JSON
-│   │   │   ├── concepts/ # 5个概念 JSON
-│   │   │   └── relations/ # 关系 JSON
 │   │   └── vectors/      # 向量索引（Chroma）
+│   ├── graph/            # 知识图谱
+│   │   ├── masters/     # 16位大师 JSON
+│   │   ├── concepts/    # 5个概念 JSON
+│   │   └── relations/   # 关系 JSON
 │   ├── memory/           # 用户记忆
 │   │   ├── memory.db     # SQLite
 │   │   ├── decisions/    # 决策历史
@@ -89,8 +89,7 @@ investbrain/
 │   ├── cards/            # 想法卡片
 │   ├── reminders/        # 提醒条件
 │   └── config/           # 配置文件
-│       └── webhook.json  # 飞书 WebHook
-└── requirements.txt
+│       └── webhook.json  # 通知 WebHook
 ```
 
 ---
@@ -100,11 +99,11 @@ investbrain/
 **阶段**：Phase 6 完成，核心功能可用
 
 **已完成**：
-- ✅ MCP Server（35个工具）
+- ✅ MCP Server（40个工具）
 - ✅ DeepSeek LLM 集成
 - ✅ Tushare/AKShare 数据源
 - ✅ 行为模式挖掘 MVP
-- ✅ 飞书通知
+- ✅ 多通道通知
 
 **待完成**：
 - ⏳ ONNX 模型下载（向量检索）

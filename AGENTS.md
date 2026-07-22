@@ -14,18 +14,17 @@ InvestBrain is an **MCP Server + Skill package** for experienced investors. It a
 |------|---------|
 | `CLAUDE.md` | Agent entry point (Claude Code) |
 | `README.md` | Human-readable overview |
-| `SPEC.md` | Website spec + Agent-Friendly checklist |
 | `src/mcp_server/server.py` | MCP Server entry point |
 | `src/skills/investment_skill/skill.yaml` | Skill package definition |
-| `data/knowledge/graph/masters/` | 16 investment master JSON files |
-| `frontend/` | Next.js marketing site |
+| `data/graph/masters/` | 16 investment master JSON files |
+| `app/` | Next.js marketing site |
 
 ## Architecture
 
 ```
 investbrain/
 ├── src/
-│   ├── mcp_server/           # MCP Server — 35 tools
+│   ├── mcp_server/           # MCP Server — 40 tools
 │   │   ├── server.py          # Main entry point
 │   │   ├── tools/             # Tool implementations
 │   │   │   ├── thought_tools.py   # Idea recording
@@ -44,7 +43,7 @@ investbrain/
 │   │   └── investment_skill/  # Hermes Agent Skill package
 │   │       └── handlers/       # 6 handlers
 │   └── patterns_cli.py        # CLI tool
-├── frontend/                  # Next.js marketing site
+├── app/                  # Next.js marketing site
 ├── data/                      # Knowledge, memory, config
 └── docs/
     └── superpowers/plans/     # Development plans
@@ -82,7 +81,7 @@ investbrain/
 | `src/mcp_server/llm/llm_router.py` | LLM routing logic |
 | `src/mcp_server/knowledge/graph_client.py` | GraphRAG client |
 | `src/mcp_server/knowledge/vector_store.py` | Chroma vector store |
-| `data/knowledge/graph/masters/` | Investment master JSON knowledge |
+| `data/graph/masters/` | Investment master JSON knowledge |
 
 ## Agent-Friendly Files
 
@@ -93,8 +92,7 @@ This repo follows llms.txt standard and includes:
 | `llms.txt` | Plain text | AI crawler summary |
 | `CLAUDE.md` | Markdown | Agent entry point |
 | `AGENTS.md` | Markdown | This file — deep agent context |
-| `SPEC.md` | Markdown | Website spec |
-| `frontend/public/robots.txt` | Text | Crawler permissions |
+| `app/public/robots.txt` | Text | Crawler permissions |
 
 ## Design Principles
 

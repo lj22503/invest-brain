@@ -64,7 +64,7 @@ python server.py
 | 想法记录 | 用户说一句话，AI 解析 + 关联历史 + 生成卡片 |
 | 投资 RAG | 大师思想检索问答（16 位投资大师 × 5 个核心概念） |
 | 记忆系统 | 用户画像、历史决策、行为模式挖掘 |
-| 提醒触发 | 价格/时间/条件监控，支持飞书推送 |
+| 提醒触发 | 价格/时间/条件监控，支持飞书/钉钉/Bark 多通道推送 |
 | 行为模式挖掘 | 自动发现投资者的偏差模式 |
 
 ---
@@ -112,7 +112,7 @@ python server.py
 > **AI 返回**：
 > 提醒已建立：NVDA <= 950 USD 时触发"复盘评估"。
 > 触发后将自动拉取：当前价格、你对此票的历史决策卡片、相关大师语录。
-> 提醒已同步飞书机器人（如已配置）。
+> 提醒已同步通知通道（如已配置）。
 
 ---
 
@@ -142,7 +142,7 @@ python server.py
 }
 ```
 
-> 路径请按你 clone 的实际位置修改。配置完成后**重启 Claude Desktop**，会在工具栏出现"投资助手"图标（35 个工具）。
+> 路径请按你 clone 的实际位置修改。配置完成后**重启 Claude Desktop**，会在工具栏出现"投资助手"图标（40 个工具）。
 
 ---
 
@@ -166,7 +166,7 @@ python server.py
 ## 架构
 
 ```
-src/mcp_server/            # MCP Server（35 个工具）
+src/mcp_server/            # MCP Server（40 个工具）
 ├── server.py               # 主入口
 ├── tools/                  # 工具集
 │   ├── thought_tools.py    # 想法记录
@@ -176,7 +176,7 @@ src/mcp_server/            # MCP Server（35 个工具）
 │   ├── pattern_tools.py    # 行为模式
 │   ├── report_tools.py     # 周报/月报
 │   ├── roundtable_tools.py # 大师圆桌
-│   └── notifier_tools.py   # 飞书推送
+│   └── notifier_tools.py   # 多通道通知
 ├── datasources/            # 数据源
 │   ├── akshare_datasource.py
 │   └── tushare_datasource.py
@@ -192,9 +192,9 @@ src/mcp_server/            # MCP Server（35 个工具）
 └── api_server.py           # REST API (LLM 配置)
 
 data/
-├── knowledge/              # 知识库
-│   ├── graph/              # 16 位大师 + 概念
-│   └── vectors/            # 向量索引
+├── graph/                  # 知识图谱（16 位大师 + 概念）
+├── knowledge/
+│   └── vectors/            # 向量索引（Chroma）
 ├── memory/                 # 用户记忆
 ├── cards/                  # 想法卡片
 ├── reminders/              # 提醒条件
@@ -203,7 +203,7 @@ data/
 
 ---
 
-## MCP Tools（35 个）
+## MCP Tools（40 个）
 
 ```json
 // 想法记录（3）
@@ -211,10 +211,11 @@ data/
 "thought_search_memories(query)",
 "thought_get_thought_cards(ticker)",
 
-// 投资 RAG（3）
+// 投资 RAG（4）
 "rag_ask_investment(question)",
 "rag_get_master_view(master, topic)",
 "rag_search_knowledge(query)",
+"rag_search_reports(query, top_k)",
 
 // 记忆系统（3）
 "memory_get_user_profile()",
@@ -226,27 +227,44 @@ data/
 "reminder_get_reminders()",
 "reminder_delete_reminder(id)",
 
-// 行为模式（2）
-"pattern_detect_patterns()",
-"pattern_get_corrections()",
+// 行为模式（3）
+"pattern_run_pattern_detection()",
+"pattern_get_pattern_summary()",
+"pattern_get_pattern_report(id)",
 
-// 周报/月报（2）
-"report_generate_weekly()",
-"report_generate_monthly()",
+// 周报/月报（1）
+"report_run_scheduled_report(range)",
 
-// 大师圆桌（2）
+// 大师圆桌（1）
 "invest_roundtable(question)",
-"invest_ask_master(master, question)",
 
-// 飞书推送（2）
-"notify_send_feishu(message)",
-"notify_configure_feishu(webhook)",
+// 通知配置（2）
+"notify_configure_notifier(channel, webhook_url)",
+"notify_get_notifier_config()",
 
-// 行情数据（市场 + Tushare 共 10+）
-"market_get_quote(ticker)",
-"market_get_kline(ticker, period)",
-"tushare_get_financial(ticker)",
-...
+// 行情数据 — AKShare（5）
+"market_get_stock_quote(ticker)",
+"market_get_stock_history(ticker, period)",
+"market_get_index_components(index_code)",
+"market_get_valuation(ticker)",
+"market_get_market_sentiment()",
+
+// 行情数据 — Tushare（15）
+"tushare_get_daily_price(ts_code)",
+"tushare_get_weekly_price(ts_code)",
+"tushare_get_realtime_quote(ts_code)",
+"tushare_get_index_daily(index_code)",
+"tushare_get_financial_indicator(ts_code)",
+"tushare_get_income_statement(ts_code)",
+"tushare_get_balance_sheet(ts_code)",
+"tushare_get_cash_flow(ts_code)",
+"tushare_get_index_components(index_code)",
+"tushare_get_industry_classification(ts_code)",
+"tushare_get_valuation_multi(ts_code)",
+"tushare_get_market_top_movers()",
+"tushare_get_stock_pledge_status(ts_code)",
+"tushare_convert_ticker(ticker)",
+"tushare_check_token_status()"
 ```
 
 完整工具列表见 [src/mcp_server/tools/](./src/mcp_server/tools/)。
