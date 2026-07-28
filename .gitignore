@@ -27,3 +27,12 @@ models/
 # Task tracking (internal only, not for public repo)
 status.json
 docs/
+
+# MCP key / secret file (user-provided; never commit, never sample into docs)
+mcp-key.txt
+
+# MCP bundle binary (build artifact, rebuild via release script)
+*.mcpb
+
+# Historical audit residue
+.impeccable/

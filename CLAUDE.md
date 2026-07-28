@@ -35,7 +35,7 @@
 ## 项目结构
 
 ```
-investbrain/
+invest-brain/
 ├── src/
 │   ├── mcp_server/        # MCP Server 主入口
 │   │   ├── server.py      # 主入口
