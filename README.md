@@ -29,9 +29,9 @@
 # 1. 安装 MCP Server 依赖
 cd src/mcp_server && pip install -r requirements.txt
 
-# 2. 配置 DeepSeek API Key（开箱即用的中文投资 RAG 方案）
+# 2. 配置你自己的 LLM API Key（见下文「你的 Key，自己填」）
 cp .env.example .env
-# 编辑 .env，填入 DEEPSEEK_API_KEY=sk-xxx
+# 编辑 .env，把 DEEPSEEK_API_KEY 填成你从 DEEPSEEK 后台拿到的 key
 
 # 3. 启动 MCP Server
 python server.py
@@ -40,6 +40,36 @@ python server.py
 > **首次启动提示**：向量库（Chroma + ONNX Embedding）首次会下载约 80MB 模型文件。若希望跳过向量库、纯工具调用体验，可保持 `server.py` 中相关注释不变；如需完整 RAG 体验，下载后取消 `server.py` 内的注释行。
 
 启动后 Server 会以 stdio 方式接受 MCP 客户端调用。配置 Claude Desktop 见下方 [Claude Desktop 接入](#claude-desktop-接入)。
+
+---
+
+## 你的 Key，自己填
+
+**重要**：本仓库**不预置任何用户的 API key**。`data/config/llm.json` 中 `api_key` 默认为 null（不是真的 key 占位）；`.env.example` 只是模板；`webhook.json` 是空 schema。
+
+### 你需要从下面这些**官方后台**自己申请 / rotate：
+
+| 服务 | 用途 | 后台地址 |
+|---|---|---|
+| DeepSeek API | 主力 LLM（必需） | https://platform.deepseek.com → API Keys |
+| Tushare Pro | A 股财务/历史数据（可选） | https://tushare.pro/register |
+| DashScope | 阿里通义备选 LLM（可选） | https://dashscope.console.aliyun.com |
+| Against Finance | 另类数据（可选） | https://www.against.com |
+| 飞书机器人 | 通知（可选） | https://open.feishu.cn → 机器人 → Webhook |
+
+### 4 个 key 都写在哪里（都不会进 git）
+
+- **MCP 启动必须**：`DEEPSEEK_API_KEY` 环境变量（推荐 User 级系统环境变量，或 CLAUDE.md / `.env`）
+- 可选：`TUSHARE_TOKEN` / `DASHSCOPE_API_KEY` / `AGAINST_API_KEY`（环境变量）
+- 飞书 webhook：`data/config/webhook.json` 里的 `feishu` 字段（已被 `.gitignore` 保护）
+
+### 安全规则
+
+- 你的 key 是你的——**不要 share、不要 commit、不要发到任何对话里**
+- key 进 git 历史（如被 commit 过的老版本）即使后来 rotate 仍可能被人滥用 → **发现泄露立即去对应平台 rotate**
+- 仓库已有 `.gitignore` 保护 `data/config/*.json`（含 llm/webhook 配置）+ `data/memory/*.db`（用户记忆库，按 CLAUDE.md 决策"用户数据本地存储，不上传云端"），**不要 `!` 取消忽略**
+
+> 备注：仓库历史曾 commit 过密钥占位（commit `22e6c72`），如已 push 远端，老 key 在 clone 历史里仍可被读——**清历史成本高、通常接受 + rotate 即可**
 
 ---
 
@@ -358,3 +388,5 @@ pytest tests/
 **版本**: v0.1.0
 **创建时间**: 2026-06-24
 **许可**: AGPL v3
+
+<!-- mcp-name: com.mangofolio.investbrain -->

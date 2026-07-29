@@ -21,6 +21,12 @@ Thumbs.db
 data/industry/*.md
 !data/industry/申万28个行业分类.json
 
+# Runtime config with secrets (user-provided, set via env vars or local override)
+data/config/*.json
+
+# User memory database (private per CLAUDE.md decision: local-only, never upload)
+data/memory/*.db
+
 # Local ONNX models (large binary files, download separately)
 models/
 
@@ -33,6 +39,15 @@ mcp-key.txt
 
 # MCP bundle binary (build artifact, rebuild via release script)
 *.mcpb
+
+# MCP publisher CLI (29MB binary, re-download when needed)
+mcp-publisher.exe
+
+# MCP registry tokens (used by mcp-publisher to authenticate; never commit)
+.mcpregistry_*
+
+# MCP login flow one-time output (device code, expires after use)
+login_output.txt
 
 # Historical audit residue
 .impeccable/
