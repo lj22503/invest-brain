@@ -16,7 +16,7 @@ from .price_checker import check_price_conditions
 from .scheduler import start_scheduler
 
 # Initialize FastMCP server
-mcp = FastMCP("investment-assistant")
+mcp = FastMCP("InvestBrain", host="0.0.0.0", port=8080)
 
 # Vector store is lazy-loaded on first use to avoid ONNX download blocking startup
 # Uncomment the following lines after ONNX model is downloaded (~30 min at current speed)
@@ -50,7 +50,7 @@ for prefix, group in _tool_groups:
 
 def main():
     """Run the MCP server"""
-    mcp.run()
+    mcp.run(transport="sse")
 
 
 if __name__ == "__main__":

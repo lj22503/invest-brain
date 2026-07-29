@@ -1,0 +1,73 @@
+{
+    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+    "name": "io.github.lj22503/invest-brain",
+    "description": "A-share investment research: quotes, financials, behavior patterns, and trading journals.",
+    "license": "AGPL-3.0",
+    "repository": {
+        "url": "https://github.com/lj22503/invest-brain",
+        "source": "github"
+    },
+    "homepage": "https://brain.mangofolio.com",
+    "categories": [
+        "finance",
+        "stock",
+        "trading",
+        "investment",
+        "python",
+        "mcp",
+        "quant"
+    ],
+    "version": "0.1.1",
+    "packages": [
+        {
+            "registryType": "mcpb",
+            "identifier": "https://github.com/lj22503/invest-brain/releases/download/v0.1.1/invest-brain.mcpb",
+            "version": "0.1.1",
+            "transport": {
+                "type": "sse"
+            }
+        }
+    ],
+    "tools": [
+        {"name": "thought_record_thought", "description": "Record an investment thought; AI auto-parses ticker, price, sentiment, and master match"},
+        {"name": "thought_search_memories", "description": "Semantic search through historical thought journal entries"},
+        {"name": "thought_get_thought_cards", "description": "Get all thought cards for a given ticker"},
+        {"name": "rag_ask_investment", "description": "GraphRAG + vector retrieval + LLM synthesis for investment Q&A"},
+        {"name": "rag_get_master_view", "description": "Get a specific master's view on a given topic"},
+        {"name": "rag_search_knowledge", "description": "Search the investment knowledge base (concepts, masters, relationships)"},
+        {"name": "rag_search_reports", "description": "Semantic search brokerage research reports"},
+        {"name": "memory_get_user_profile", "description": "Get user investment profile (risk tolerance, circle of competence, principles)"},
+        {"name": "memory_record_decision", "description": "Record an investment decision; auto-triggers behavior pattern detection"},
+        {"name": "memory_get_behavior_patterns", "description": "Get list of identified behavior patterns"},
+        {"name": "reminder_set_reminder", "description": "Set price/time/PE conditional reminders"},
+        {"name": "reminder_get_reminders", "description": "Get all active reminders"},
+        {"name": "reminder_delete_reminder", "description": "Delete a reminder by ID"},
+        {"name": "pattern_run_pattern_detection", "description": "Run full behavior pattern detection (FOMO, early exit, emotional, principle violation)"},
+        {"name": "pattern_get_pattern_summary", "description": "Get cumulative pattern statistics with proactive alert suggestions"},
+        {"name": "pattern_get_pattern_report", "description": "Generate weekly/monthly behavior pattern report (Markdown)"},
+        {"name": "report_run_scheduled_report", "description": "Generate this week/month behavior pattern report"},
+        {"name": "invest_roundtable", "description": "Multi-master parallel LLM roleplay + moderator synthesis debate"},
+        {"name": "notify_configure_notifier", "description": "Configure Feishu/DingTalk/Bark notification channels"},
+        {"name": "notify_get_notifier_config", "description": "View current notification configuration"},
+        {"name": "market_get_stock_quote", "description": "A-share real-time quote (Sina Finance)"},
+        {"name": "market_get_stock_history", "description": "A-share historical K-line data"},
+        {"name": "market_get_index_components", "description": "Index constituent stock info"},
+        {"name": "market_get_valuation", "description": "Ticker valuation metrics"},
+        {"name": "market_get_market_sentiment", "description": "Market sentiment indicator (Shanghai Composite proxy)"},
+        {"name": "tushare_get_daily_price", "description": "Daily price data from Tushare"},
+        {"name": "tushare_get_weekly_price", "description": "Weekly price data from Tushare"},
+        {"name": "tushare_get_realtime_quote", "description": "Real-time quote from Tushare"},
+        {"name": "tushare_get_index_daily", "description": "Index daily K-line from Tushare"},
+        {"name": "tushare_get_financial_indicator", "description": "Financial indicators (PE/PB/ROE/gross margin/net margin)"},
+        {"name": "tushare_get_income_statement", "description": "Income statement from Tushare"},
+        {"name": "tushare_get_balance_sheet", "description": "Balance sheet from Tushare"},
+        {"name": "tushare_get_cash_flow", "description": "Cash flow statement from Tushare"},
+        {"name": "tushare_get_index_components", "description": "Index constituent stocks and weights"},
+        {"name": "tushare_get_industry_classification", "description": "Shenwan industry classification"},
+        {"name": "tushare_get_valuation_multi", "description": "Multi-ticker PE/PB comparison"},
+        {"name": "tushare_get_market_top_movers", "description": "Daily top gainers and losers"},
+        {"name": "tushare_get_stock_pledge_status", "description": "Stock pledge status"},
+        {"name": "tushare_convert_ticker", "description": "Stock ticker format conversion"},
+        {"name": "tushare_check_token_status", "description": "Check Tushare token validity"}
+    ]
+}

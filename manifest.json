@@ -1,0 +1,48 @@
+{
+  "manifest_version": "0.2",
+  "name": "investbrain",
+  "version": "0.1.0",
+  "description": "AI-powered investment research MCP server for finance, stock, trading, and quantitative analysis. Fetch real-time stock quotes, analyze financial reports, detect trading behavior patterns, and manage trading journals. Supports A-share market data via Tushare.",
+  "author": {
+    "name": "lj22503"
+  },
+  "user_config": {
+    "TUSHARE_TOKEN": {
+      "type": "string",
+      "title": "Tushare Token",
+      "description": "Tushare API token for A-share Chinese market data (required for Tushare tools)",
+      "required": false,
+      "sensitive": true
+    },
+    "DASHSCOPE_API_KEY": {
+      "type": "string",
+      "title": "DashScope API Key",
+      "description": "Alibaba DashScope (Tongyi Qianwen) API key for LLM-powered investment analysis",
+      "required": false,
+      "sensitive": true
+    },
+    "AGAINST_API_KEY": {
+      "type": "string",
+      "title": "Against API Key",
+      "description": "Against Finance API key for alternative market data and sentiment analysis",
+      "required": false,
+      "sensitive": true
+    }
+  },
+  "server": {
+    "type": "python",
+    "entry_point": "src/mcp_server/server.py",
+    "mcp_config": {
+      "command": "python",
+      "args": [
+        "${__dirname}/src/mcp_server/server.py"
+      ],
+      "env": {
+        "TUSHARE_TOKEN": "${user_config.TUSHARE_TOKEN}",
+        "DASHSCOPE_API_KEY": "${user_config.DASHSCOPE_API_KEY}",
+        "AGAINST_API_KEY": "${user_config.AGAINST_API_KEY}"
+      }
+    }
+  },
+  "license": "AGPL-3.0"
+}
