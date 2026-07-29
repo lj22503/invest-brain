@@ -22,7 +22,7 @@ InvestBrain is an **MCP Server + Skill package** for experienced investors. It a
 ## Architecture
 
 ```
-investbrain/
+invest-brain/
 ├── src/
 │   ├── mcp_server/           # MCP Server — 40 tools
 │   │   ├── server.py          # Main entry point
@@ -36,7 +36,12 @@ investbrain/
 │   │   ├── knowledge/         # Knowledge base (GraphRAG + Vector)
 │   │   ├── memory/            # User memory (SQLite)
 │   │   ├── patterns/          # Behavior pattern detection
-│   │   ├── llm/               # LLM client (DeepSeek + providers)
+│   │   ├── llm/               # LLM client (multi-provider)
+│   │   ├── deepseek_client.py
+│   │   ├── llm_router.py
+│   │   ├── providers.py
+│   │   ├── local_model.py
+│   │   └── routes.py
 │   │   ├── api_server.py      # REST API for LLM config
 │   │   └── server.py          # MCP server entry
 │   ├── skills/

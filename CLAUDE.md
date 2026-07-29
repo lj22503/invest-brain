@@ -27,7 +27,7 @@
 - **框架**：MCP Server（FastMCP）
 - **知识库**：混合方案（知识图谱 + 向量检索）
 - **数据源**：AKShare（免费）+ Tushare
-- **LLM**：DeepSeek V4-Pro / Flash（按场景自动路由）
+- **LLM**：DeepSeek / OpenAI / Anthropic 多 provider 路由（默认 deepseek-chat + deepseek-reasoner 按场景自动选）
 - **数据库**：SQLite（记忆库、行为模式库）
 
 ---
@@ -61,7 +61,11 @@ invest-brain/
 │   │   │   ├── analyzer.py
 │   │   │   └── report.py
 │   │   └── llm/           # LLM 客户端
-│   │       └── deepseek_client.py
+│   │       ├── deepseek_client.py
+│   │       ├── llm_router.py
+│   │       ├── providers.py
+│   │       ├── local_model.py
+│   │       └── routes.py
 │   ├── skills/
 │   │   └── investment_skill/  # Skill 包
 │   │       ├── handlers/       # Skill Handlers
@@ -74,6 +78,7 @@ invest-brain/
 │   │       ├── skill.yaml
 │   │       └── pyproject.toml
 │   └── patterns_cli.py    # CLI 工具
+├── app/                  # Next.js 营销站（Vercel 部署）
 ├── data/
 │   ├── knowledge/         # 知识库
 │   │   └── vectors/      # 向量索引（Chroma）
@@ -90,6 +95,8 @@ invest-brain/
 │   ├── reminders/        # 提醒条件
 │   └── config/           # 配置文件
 │       └── webhook.json  # 通知 WebHook
+├── docs/                # 项目文档（被 .gitignore 全忽略，本地保留）
+└── .neat-freak/         # neat-freak 收尾报告
 ```
 
 ---
@@ -128,3 +135,4 @@ python server.py
 - 不做收费投顾
 - 用户数据本地存储，不上传云端
 - 工具定位是"镜子"和"纪律锚点"，不给建议
+- 不锁定单一 LLM 供应商（多 provider 路由）
