@@ -383,6 +383,28 @@ pytest tests/
 | [SoloAdvisor-Toolkit](https://github.com/lj22503/SoloAdvisor-Toolkit) | 投顾流程工具包 | KYC→配置→组合→报告 |
 | [knowledge-workflow](https://github.com/lj22503/knowledge-workflow) | 知识管理 | 收集→打标→存储→产出 |
 >
+
+## 🗺️ Roadmap
+
+> 改造需求详细文档：[docs/改造需求-roadmap.md](./docs/改造需求-roadmap.md)
+
+**P0 核心改造（个人知识库愿景）**：
+- 🔴 用户自定义 RAG 知识库（让用户自己的框架可被 RAG 引用）
+- 🔴 新闻/事件触发 reminder（央行购金、地缘冲突、美债冻结等）
+- 🔴 投资框架管理工具（结构化记录用户的框架规则与触发条件）
+
+**P1 数据源**：
+- 🟡 黄金现货 / 美元指数 / 美债收益率实时数据
+- 🟡 黄金 ETF（518880 / GLD）数据修复
+
+**P2 体验优化**：
+- 🟢 思考卡 NLU 抽取 bug（数字/英文名误识别）
+
+**最近进展（2026-07-29）**：
+- ✅ 黄金投资框架核心已写入思考卡（`thought_8`）
+- ✅ 基于真实数据的黄金推演已写入思考卡（`thought_9`）
+- ✅ 改造需求文档已建（`docs/改造需求-roadmap.md`）
+
 ---
 
 **版本**: v0.1.0

@@ -21,6 +21,9 @@ Thumbs.db
 data/industry/*.md
 !data/industry/申万28个行业分类.json
 
+# Chroma vector index (auto-regenerated on first run, ~80MB embedding download)
+data/vectors/
+
 # Runtime config with secrets (user-provided, set via env vars or local override)
 data/config/*.json
 
