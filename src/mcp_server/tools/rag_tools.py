@@ -151,7 +151,18 @@ def _llm_synthesize(question: str, context: list) -> str:
 
     context_str = "\n\n".join(context_texts)
 
-    prompt = f"""基于以下大师思想库检索结果，回答用户的问题。
+    # 从 context 中提取用户知识，单独成段
+    user_knowledge_items = [c for c in context[:7] if c.get("type") == "user_knowledge"]
+    user_knowledge_section = ""
+    if user_knowledge_items:
+        uk_parts = []
+        for i, uk in enumerate(user_knowledge_items[:5], 1):
+            uk_name = uk.get("name", uk.get("id", ""))
+            uk_def = uk.get("definition", "")
+            uk_parts.append(f"{i}. 【{uk_name}】{uk_def}")
+        user_knowledge_section = "\n## 用户知识库\n" + "\n".join(uk_parts)
+
+    prompt = f"""基于以下大师思想库检索结果，回答用户的问题。{user_knowledge_section}
 
 问题：{question}
 
@@ -295,6 +306,23 @@ def ask_investment(question: str) -> dict:
             })
     except Exception:
         pass  # Research collection may be empty
+
+    # 用户知识库检索（第 5 路）— 语义搜索用户自主管理的框架/笔记/洞察
+    user_knowledge_results = []
+    try:
+        user_results = vs.search_user_knowledge(keywords, top_k=5)
+        user_knowledge_results = user_results
+        for ur in user_results:
+            all_results.append({
+                "id": ur.get("id"),
+                "name": ur.get("title", ur.get("id")),
+                "type": "user_knowledge",
+                "definition": ur.get("snippet", ""),
+                "tags": ur.get("tags", []),
+                "source_type": ur.get("source_type", ""),
+            })
+    except Exception:
+        pass  # user_knowledge collection may be empty
 
     # LLM synthesis
     answer = _llm_synthesize(question, all_results)
