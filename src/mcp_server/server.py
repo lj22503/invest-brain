@@ -6,17 +6,19 @@ from .tools.thought_tools import thought_tools
 from .tools.rag_tools import rag_tools
 from .tools.memory_tools import memory_tools
 from .tools.reminder_tools import reminder_tools
+from .tools.coaching_tools import coaching_tools
 from .tools.pattern_tools import pattern_tools
 from .tools.report_tools import report_tools
 from .tools.roundtable_tools import roundtable_tools
 from .tools.notifier_tools import notifier_tools
+from .tools.user_knowledge_tools import user_knowledge_tools
 from .datasources.akshare_datasource import akshare_tools
 from .datasources.tushare_datasource import tushare_tools
 from .price_checker import check_price_conditions
 from .scheduler import start_scheduler
 
 # Initialize FastMCP server
-mcp = FastMCP("InvestBrain", host="0.0.0.0", port=8080)
+mcp = FastMCP("investment-assistant")
 
 # Vector store is lazy-loaded on first use to avoid ONNX download blocking startup
 # Uncomment the following lines after ONNX model is downloaded (~30 min at current speed)
@@ -32,6 +34,7 @@ start_scheduler()
 
 # Register all tools from each FastMCP group
 _tool_groups = [
+    ("coaching", coaching_tools),
     ("thought", thought_tools),
     ("rag", rag_tools),
     ("memory", memory_tools),
@@ -42,6 +45,7 @@ _tool_groups = [
     ("notify", notifier_tools),
     ("market", akshare_tools),
     ("tushare", tushare_tools),
+    ("user_knowledge", user_knowledge_tools),
 ]
 for prefix, group in _tool_groups:
     for tool in group._tool_manager.list_tools():
@@ -50,7 +54,7 @@ for prefix, group in _tool_groups:
 
 def main():
     """Run the MCP server"""
-    mcp.run(transport="sse")
+    mcp.run()
 
 
 if __name__ == "__main__":

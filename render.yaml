@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: invest-brain-mcp
+    runtime: docker
+    plan: free
+    healthCheckPath: /sse
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
