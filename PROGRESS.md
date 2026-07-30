@@ -64,3 +64,29 @@
 
 - 等用户决策 `mcp-key.txt` 处置
 - 等用户决策 `docs/` 子集是否纳入 git
+
+---
+
+## 2026-07-30
+
+### neat-freak 第二批：mcp-key.txt 本地副本处置
+
+- **删除** `mcp-key.txt` 本地副本（217B，含 ed25519 私钥 `private_hex`、公钥 `public_b64`、DNS TXT 记录 `txt_record`）
+- **验证**：全仓库 grep `mcp-key.txt` / `private_hex` / `txt_record` / `mcp_key` 四个关键字，**仅在 `.gitignore` 与本 PROGRESS/历史报告中出现**，无任何代码运行时引用。属安全删除。
+- **`.gitignore` 规则保留**（`mcp-key.txt` 第 41 行）—— 防止未来类似文件再次进入工作目录
+- `.gitignore` 此前已经在 07-28 commit `ffd76ac` 加好，本轮不重复
+
+### 本轮发现的其他工作区残留（不在本轮处置）
+
+| 文件 | 性质 |
+|------|------|
+| `M src/mcp_server/tools/coaching_tools.py` | 修改未提交 |
+| `?? err.txt` / `err2.txt` / `err3.txt` / `err4.txt` / `err_final.txt` | 调试错误捕获（5 个） |
+| `?? out4.txt` / `out_final.txt` | 调试输出捕获（2 个） |
+| **合计** | 1 处修改 + 7 个 untracked debug 文件 |
+
+→ 属 mcp server 开发调试残留，下次 neat-freak 或单独会话处置。
+
+---
+
+*neat-freak 第二轮收尾：mcp-key.txt 已删，工作区清理未在本轮范围。*
