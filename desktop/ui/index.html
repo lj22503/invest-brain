@@ -2,14 +2,30 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>InvestBrain</title>
+<title>InvestBrain - Plan 1 任务 4 验证</title>
 <style>
-  body { font-family: system-ui; padding: 32px; }
+  body { font-family: system-ui; padding: 32px; max-width: 720px; }
   h1 { color: #333; }
+  pre { background: #f6f8fa; padding: 12px; border-radius: 6px; }
+  .error { color: #d32f2f; }
 </style>
 </head>
 <body>
-<h1>InvestBrain - Plan 1 任务 3 验证</h1>
-<p>如果你看到这页，Tauri 主进程启动成功。</p>
+<h1>InvestBrain - Sidecar Health</h1>
+<button id="btn">调用 health_check</button>
+<pre id="out">尚未调用</pre>
+<script>
+  const { invoke } = window.__TAURI__.core;
+  document.getElementById('btn').addEventListener('click', async () => {
+    const out = document.getElementById('out');
+    out.textContent = '调用中...';
+    try {
+      const result = await invoke('health_check');
+      out.textContent = JSON.stringify(result, null, 2);
+    } catch (e) {
+      out.innerHTML = `<span class="error">✗ ${e}</span>`;
+    }
+  });
+</script>
 </body>
 </html>
