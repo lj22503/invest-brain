@@ -1,23 +1,15 @@
 //! InvestBrain Tauri 主进程入口。
 //!
-//! Plan 1 任务 4：暴露 health_check 命令，前端调用验证 sidecar 路径。
+//! Plan 1 任务 5：setup 阶段 spawn sidecar 子进程，写 SIDECAR_URL 给前端。
 
-use serde::Serialize;
+use std::process::{Child, Command, Stdio};
+use std::sync::Mutex;
+use tauri::Manager;
 
-#[derive(Serialize)]
-pub struct HealthResponse {
-    pub status: String,
-    pub version: String,
-    pub python_version: String,
-    pub sidecar_url: String,
-}
+struct SidecarHandle(Mutex<Option<Child>>);
 
-/// 调用 sidecar `/health` 端点。
-///
-/// Plan 1 阶段：sidecar URL 通过 `SIDECAR_URL` 环境变量传入（手动启服务）。
-/// 后续 Task 改 Tauri 启动时 spawn sidecar 并写入此 env。
 #[tauri::command]
-async fn health_check() -> Result<HealthResponse, String> {
+async fn health_check() -> Result<serde_json::Value, String> {
     let sidecar_url = std::env::var("SIDECAR_URL")
         .unwrap_or_else(|_| "http://127.0.0.1:8765".to_string());
     let url = format!("{}/health", sidecar_url);
@@ -36,17 +28,33 @@ async fn health_check() -> Result<HealthResponse, String> {
     let body: serde_json::Value = resp.json().await
         .map_err(|e| format!("invalid JSON: {}", e))?;
 
-    Ok(HealthResponse {
-        status: body["status"].as_str().unwrap_or("unknown").to_string(),
-        version: body["version"].as_str().unwrap_or("0.0.0").to_string(),
-        python_version: body["python_version"].as_str().unwrap_or("").to_string(),
-        sidecar_url,
-    })
+    Ok(body)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_shell::init())
+        .setup(|app| {
+            // Plan 1 dev 模式：从相对路径跑 python src/server.py
+            // release 时切到 packaged 二进制（Task 5+ 后续 Plan）
+            let sidecar_path = std::path::Path::new("../sidecar/src/server.py");
+
+            let child = Command::new("python")
+                .arg(sidecar_path)
+                .env("SIDECAR_PORT", "8765")
+                .stdout(Stdio::piped())
+                .stderr(Stdio::piped())
+                .spawn()
+                .expect("failed to spawn sidecar");
+
+            // 保存子进程 handle 到 State（release 用 app.shell().sidecar()）
+            app.manage(SidecarHandle(Mutex::new(Some(child))));
+
+            // 写环境变量给 reqwest 调用方
+            std::env::set_var("SIDECAR_URL", "http://127.0.0.1:8765");
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![health_check])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
