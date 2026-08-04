@@ -90,3 +90,40 @@
 ---
 
 *neat-freak 第二轮收尾：mcp-key.txt 已删，工作区清理未在本轮范围。*
+
+---
+
+## 2026-08-03
+
+### Plan 1 完成（Sidecar Bootstrap）
+
+**状态**：✅ 通过
+
+**范围**：Tauri 主进程 + Python sidecar 子进程 + IPC 通信
+
+**7 个 Task 全部完成**：
+
+| Task | commit | 内容 |
+|---|---|---|
+| 1 | `8a5e1b9` | Python sidecar 最小 health_check |
+| 2 | `4f205db` | PyInstaller 打包脚本 |
+| 3 | `a3819d5` | Tauri 主进程最小 Hello Window |
+| 4 | `a98372f` | Tauri IPC `health_check` 命令 |
+| 5 | `7325347` | Tauri auto-spawn sidecar |
+| 6 | `39434ba` | Playwright e2e 占位 |
+| 7 | (pending) | 整体验证 + ico blocker 修复 + 本条记录 |
+
+**端到端验证**：
+- Tauri 启动 → 自动 spawn Python sidecar → 8765 端口 listen → `/health` 返回 JSON
+- 子进程 parent PID 匹配 Tauri PID
+- Tauri 窗口显示 "InvestBrain - Sidecar Health" 验证页
+- sidecar 4 个 pytest 全 PASS
+- Playwright 1 placeholder skipped
+
+**关键决策**：
+- Tauri 桌面 App（不继续走 Web 端）
+- Python sidecar 走 subprocess + HTTP IPC（不用 stdio MCP 协议）
+- 首版不代码签名
+- ico blocker：commit 91 字节 .ico 保证 fresh clone 可编译
+
+**后续**：可进入 Plan 2 (in-app UI with Next.js) / Plan 3 (服务包更新) / Plan 4 (落地页改造) / Plan 5 (CI/CD + Windows 打包)
