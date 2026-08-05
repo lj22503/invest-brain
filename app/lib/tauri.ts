@@ -5,9 +5,17 @@ export function isTauri(): boolean {
   return '__TAURI_INTERNALS__' in window || '__TAURI__' in window;
 }
 
+interface TauriCore {
+  invoke: <T>(cmd: string, args?: Record<string, unknown>) => Promise<T>;
+}
+
+interface TauriGlobal {
+  core?: TauriCore;
+}
+
 export async function invoke<T = unknown>(cmd: string, args?: Record<string, unknown>): Promise<T> {
   if (isTauri()) {
-    const tauri = (window as any).__TAURI__ ?? (window as any).__TAURI_INTERNALS__;
+    const tauri = ((window as any).__TAURI__ ?? (window as any).__TAURI_INTERNALS__) as TauriGlobal | undefined;
     if (tauri?.core?.invoke) {
       return tauri.core.invoke<T>(cmd, args);
     }
