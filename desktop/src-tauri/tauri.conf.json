@@ -15,8 +15,7 @@
         "minWidth": 800,
         "minHeight": 600,
         "resizable": true,
-        "fullscreen": false,
-        "url": "app/index.html"
+        "fullscreen": false
       }
     ],
     "security": {
