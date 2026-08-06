@@ -281,3 +281,38 @@
 - macOS / Linux 同步打包
 - Tauri updater 自动更新
 - 服务包签名 / 自动 Chroma 重建 / 回滚（Plan 3 v1.1 留待）
+
+### 2026-08-06 — 本地首次 MSI 构建成功
+
+**状态**：✅ 本地 Windows 手动构建通过（未推 tag，未公开发布）
+
+**端到端流程实测**（按 RELEASE.md 跑了一遍）：
+
+| 步骤 | 产物 | 用时 |
+|---|---|---|
+| 1. 装 tauri-cli | `cargo-tauri.exe` v2.11.4 | 16m14s（首次装）|
+| 2. 编译 sidecar | `desktop/sidecar/dist/sidecar.exe` 7.8MB | 2s |
+| 3. 编译 UI | `desktop/ui/` 7 路由（含 `releases.json`）| ~10s |
+| 4. cargo tauri build | `investbrain.exe` 13.2MB | 7m50s |
+| 5. WiX 下载 + 验证 | 41MB ZIP（via gh-proxy 镜像，因 LJG 网络挡 GitHub 直连）| ~6m |
+| 6. MSI 打包 | `InvestBrain_0.1.0_x64_en-US.msi` **4.5MB** | 1m51s |
+
+**关键问题与解决**：
+- **rustup wrapper 报 "Missing manifest"**：直接用 `~/.rustup/toolchains/stable-x86_64-pc-windows-msvc/bin/cargo.exe` 绕过，export PATH 即可
+- **WiX 下载 GitHub 直连超时**：通过 `gh-proxy.com` 镜像下载 41MB，~120 KB/s 慢但可用
+- **`Couldn't find a .ico icon`**：`tauri.conf.json` 只引用 `icon.png`，MSI 需要 `.ico`（快捷方式图标）。加 `"icons/icon.ico"` 解决。Commit `b4b0df3`
+- **MSI 安装需 admin**：`ALLUSERS=1`（per-machine，Tauri 默认），用户双击会弹 UAC；脚本/Silent install 必须提权。脚本里设 `MSIINSTALLPERUSER=1` 无效（per-user install 必须 MSI 本身支持）
+
+**MSI 内容验证**：
+- admin extract 到 `D:\tmp\msi-extract\PFiles\InvestBrain\investbrain.exe` 12.9MB
+- 注册表会写到 HKLM `Uninstall\InvestBrain`
+- ARPPRODUCTICON = ProductIcon（图标准备）
+
+**用户试装路径**：
+- 双击 `.msi` → UAC 弹窗 → 点「是」→ 默认装到 `C:\Program Files\InvestBrain\`
+- 桌面上无快捷方式（MSI 默认不创建），从开始菜单「InvestBrain」启动
+- 启动后会自动 spawn Python sidecar（development mode）→ in-app UI 加载
+
+**下一步决策点**：
+- 试装后 → 推 tag `v0.1.0` → GitHub Actions 自动跑 release workflow → draft .msi 在 GitHub Releases
+- 或先小修 → 再决定是否推 tag
