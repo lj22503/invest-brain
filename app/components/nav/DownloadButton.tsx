@@ -1,14 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { detectOS, DOWNLOAD_ASSETS, DownloadAsset } from '@/lib/download-config';
+import { detectOS, fetchAssets, FALLBACK_ASSETS, DownloadAsset } from '@/lib/download-config';
 
 export function DownloadButton({ variant = 'primary' }: { variant?: 'primary' | 'ghost' }) {
   const [asset, setAsset] = useState<DownloadAsset | null>(null);
 
   useEffect(() => {
-    const os = detectOS();
-    setAsset(DOWNLOAD_ASSETS.find(a => a.os === os) ?? DOWNLOAD_ASSETS[0]);
+    fetchAssets().then(list => {
+      const os = detectOS();
+      setAsset(list.find(a => a.os === os) ?? FALLBACK_ASSETS[0]);
+    });
   }, []);
 
   if (!asset) return null;
