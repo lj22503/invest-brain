@@ -241,3 +241,43 @@
 - **`/try` 接真 LLM / 落地页 OG 优化 / i18n**：Plan 4 已识别为 v1.1 / v2.0 事项，留待后续。
 
 **后续**：Plan 5（CI/CD + Windows 打包）。
+
+### Plan 5 完成（CI/CD + Windows 打包）
+
+**状态**：✅ 通过
+
+**范围**：CI workflow / Release workflow / MSI 冒烟 / sidecar 启停 / 动态下载 / e2e / release runbook
+
+**7 个 Task 全部完成**：
+
+| Task | commit | 内容 |
+|---|---|---|
+| 1 | `c9b5514` | `.github/workflows/ci.yml`（python-test + ui-test + rust-check）|
+| 2 | `54f2889` | `.github/workflows/release.yml`（tag → windows-2022 → msi build + verify + draft release）|
+| 3 | `9d4c876` | `desktop/scripts/verify-msi.ps1`（msiexec 装 + 启 + 卸）|
+| 4 | (一 commit) | `desktop/scripts/local-smoke.sh` + `.ps1`（本地构建 + spawn + health check）|
+| 5 | `e3d267e` | `app/public/.well-known/releases.json` + `fetchAssets()` + DownloadButton 优先读动态 URL |
+| 6 | (一 commit) | `desktop/tests/conftest.py` + `e2e_tauri_health.py` + ci.yml 加 e2e-tauri job |
+| 7 | `c502c21` | `RELEASE.md` master release runbook |
+
+**端到端验证**：
+- `npm test` 19/19 PASS（含 fetchAssets 4 个新 case：fallback × 2 + parse 正确）
+- `npx tsc --noEmit` 0 errors
+- `cargo check` 通过（1 dead_code 沿用）
+
+**关键决策**：
+- **releases.json 路径**：放 `app/public/.well-known/`（Next.js 静态导出时复制到 root），fetch URL 用 `/.well-known/releases.json`
+- **fetchAssets 默认走 FALLBACK_ASSETS**：网络失败 / 4xx / JSON 解析失败都回退，DownloadButton 永不显示空
+- **e2e job 用 windows-2022 + local-smoke 后台**：Playwright 连 tauri-driver 4444，背景启 sidecar 后跑 pytest
+- **下载 URL 命名约定**：Tauri 自动产出 `InvestBrain_X.Y.Z_x64_en-US.msi`，releases.json 要在 release draft 后手动同步
+
+**用户能「看到」什么**：
+- **现在**：`cd app && npm run dev` → http://localhost:3000 看 `/`（营销落地页 + TopNav + Hero CTA）、`/try`（试聊 stub）、`/chat`（in-app UI，需 Tauri 加载）
+- **推 tag 后**：`git tag v0.1.0 && git push origin v0.1.0` → GitHub Actions 自动跑 release workflow → 约 15-20 分钟产出 `InvestBrain_0.1.0_x64_en-US.msi` → draft release 在 GitHub Releases
+- **手动收尾**：按 RELEASE.md 把 releases.json URL 同步到实际产物名 → publish release → brain.mangofolio.com 自动看到新版本
+
+**后续（v1.x 待办）**：
+- 代码签名（Apple Developer / Windows EV）→ 解 SmartScreen
+- macOS / Linux 同步打包
+- Tauri updater 自动更新
+- 服务包签名 / 自动 Chroma 重建 / 回滚（Plan 3 v1.1 留待）
