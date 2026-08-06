@@ -2,6 +2,8 @@
 //!
 //! Plan 1 任务 5：setup 阶段 spawn sidecar 子进程，写 SIDECAR_URL 给前端。
 
+mod packs;
+
 use std::process::{Child, Command, Stdio};
 use std::sync::Mutex;
 use tauri::Manager;
@@ -55,7 +57,11 @@ pub fn run() {
             std::env::set_var("SIDECAR_URL", "http://127.0.0.1:8765");
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![health_check])
+        .invoke_handler(tauri::generate_handler![
+            health_check,
+            packs::check_packs,
+            packs::update_pack,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
