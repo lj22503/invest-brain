@@ -208,3 +208,36 @@
 - **`react-hot-toast` 新增依赖**（v2.6.0）—— Plan 7 显式要求。
 
 **后续**：Plan 4（落地页改造）/ Plan 5（CI/CD + Windows 打包），以及 v1.1 留待事项（服务包签名 / 自动 Chroma 重建 / 回滚）。
+
+### Plan 4 完成（落地页改造）
+
+**状态**：✅ 通过（含路径重构 + Plan 3 简化修正）
+
+**范围**：TopNav / 智能下载 / Hero CTA / /try 试聊 / chat 路径重构 / Plan 3 端点改直连
+
+**7 个 Task + 1 个修正**：
+
+| Task | commit | 内容 |
+|---|---|---|
+| 1 | `f2b8992`-area | `app/lib/download-config.ts` + `detectOS()` + 4 tests |
+| 2 | `f2b8992` | `DownloadButton`（primary/ghost 双样式，按 OS 自动定位）|
+| 3 | `c12ff8c` | `TopNav`（sticky + Logo + 试聊 + 下载 CTA）|
+| 4 | `78f53c5` | chat UI 从 `/` 移到 `/chat`，营销落地页恢复在 `/`，Tauri `url: "chat"` |
+| 5 | `40b2334` | Hero CTA 区替换为「下载 + 先试聊」双按钮 |
+| 6 | `9a9b8c2` | `/try` 试聊 stub（不调 LLM，巴菲特/茅台占位回复）|
+| 7 | `62bcf78` | PROGRESS（Plan 3 部分） |
+| - | `11f2a0d` | Plan 3 简化：删 Vercel Function 端点，packs.rs 直连 Vercel Blob |
+
+**端到端验证**：
+- `npm test` 15/15 PASS（含 4 个新 OS 检测 + 3 个 packs-store）
+- `npx tsc --noEmit` 0 errors
+- `cargo build` 通过
+- `npm run build:app` 成功，导出 7 个路由：`/` `/chat` `/onboarding` `/packs` `/settings` `/try` `/_not-found`
+
+**关键决策（与 Plan 文档偏差）**：
+- **chat UI 路径重构（Plan 4 Task 4 隐含要求）**：Plan 4 假设 `/` 是营销落地页，但 Plan 2 把 chat UI collapse 到 `/`。本轮把 chat 挪到 `/chat`，营销落地页用 dead 状态的 `app/page.tsx` (438 行既有内容) 复活到 `/`。Tauri `windows[0].url` 改为 `"chat"`，加载 `desktop/ui/chat/index.html`。
+- **Plan 3 端点改直连**：Plan 4 build 时发现 `output: 'export'` 与 `force-dynamic` API 路由冲突。Plan 3 端点是 CORS proxy，但 Tauri 用 native reqwest（无 CORS 限制），proxy 不必要。删 `app/app/api/packs/`，改 `packs.rs` 用 `PACK_${id}_BLOB_URL` env var 直接打 Vercel Blob manifest。每个 pack 独立 manifest URL，upload-pack.sh 输出对应 env var 设置指引。
+- **OS 测试用 `Object.defineProperty`**：jsdom 的 `navigator` 是只读，不能直接赋值。test fixture 用 defineProperty 覆盖。
+- **`/try` 接真 LLM / 落地页 OG 优化 / i18n**：Plan 4 已识别为 v1.1 / v2.0 事项，留待后续。
+
+**后续**：Plan 5（CI/CD + Windows 打包）。
