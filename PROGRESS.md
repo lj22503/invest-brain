@@ -174,3 +174,37 @@
 - `page.tsx` handleSend 里 stale closure `conversations.find(...).messages`，接真 LLM 时修
 
 **后续**：Plan 3（服务包更新）/ Plan 4（落地页改造）/ Plan 5（CI/CD + Windows 打包）
+
+### Plan 3 完成（服务包更新机制）
+
+**状态**：✅ 通过
+
+**范围**：graph → packs 迁移 / Vercel 服务端 / Tauri 客户端 / UI / 上传脚本
+
+**7 个 Task 全部完成**：
+
+| Task | commit | 内容 |
+|---|---|---|
+| 1 | `283d1d2` | `data/graph/{masters,concepts}` → `data/packs/{master_views,industry_concepts}` + manifest.json + 修 vector_store.py dead path |
+| 2 | `3981a3c` | `/api/packs/manifest.json` Next.js Route Handler（多 pack 版本聚合） |
+| 3 | `974457e` | `/api/packs/[id]/[version]` 内容端点（带 .json 后缀剥离 + pack_id 白名单） |
+| 4 | `d30278f` | Tauri `packs.rs` PackManager + `check_packs` / `update_pack` 命令 |
+| 5 | `66ce4fb` | `packs-store.ts` zustand + 3 tests + `/packs` 管理页面（表格 + 检查/升级按钮） |
+| 6 | `12c6ed2` | `scripts/upload-pack.sh`（BLOB_READ_WRITE_TOKEN + vercel blob put） |
+| 7 | `40e4380` | `react-hot-toast` 接入 + `packs-updated` window 事件 → 侧栏 PacksBadge 刷新 |
+
+**端到端验证**：
+- `npm test` 8 tests PASS（含 3 个新增 packs-store）
+- `npx tsc --noEmit` 0 errors
+- `python -m pytest` 10 tests PASS（router 6 + sidecar 4）
+- `cargo build` 通过（2 个 dead_code 警告沿用 Plan 2 已记录的非阻塞遗留）
+- `bash -n scripts/upload-pack.sh` 语法 OK
+
+**关键决策（与 Plan 文档偏差）**：
+- **用 Next.js Route Handlers 而非 Vercel Functions .json.ts**：项目是 Next.js App Router，沿用其路由约定比混用两套路由体系更干净。URL 路径保持 `/api/packs/manifest.json` / `/api/packs/{id}/{version}.json`，Tauri 端无需改。
+- **`data/knowledge/graph/` 是 dead path**：vector_store.py 旧引用 `data/knowledge/graph/{masters,concepts}` 但实际数据一直在 `data/graph/{masters,concepts}`。迁移时一并修正。
+- **Tauri `packs.rs` 修了 Plan 文档的 bug**：原文 `tauri::Manager::path(&tauri::AppHandle::default())` 编译不过（`AppHandle` 不实现 `Default`）。改为命令接收 `app: tauri::AppHandle` 参数后用 `app.path().app_data_dir()`。
+- **`PackVersion` 结构体未使用 → 暂时保留**（dead_code 警告沿用 Plan 2 风格，下个 Plan 清理）。
+- **`react-hot-toast` 新增依赖**（v2.6.0）—— Plan 7 显式要求。
+
+**后续**：Plan 4（落地页改造）/ Plan 5（CI/CD + Windows 打包），以及 v1.1 留待事项（服务包签名 / 自动 Chroma 重建 / 回滚）。
