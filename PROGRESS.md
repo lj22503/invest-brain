@@ -127,3 +127,50 @@
 - ico blocker：commit 91 字节 .ico 保证 fresh clone 可编译
 
 **后续**：可进入 Plan 2 (in-app UI with Next.js) / Plan 3 (服务包更新) / Plan 4 (落地页改造) / Plan 5 (CI/CD + Windows 打包)
+
+## 2026-08-06
+
+### Plan 2 完成（In-app UI）
+
+**状态**：✅ 通过（含 2 个 next.js 怪癖 workaround）
+
+**范围**：Tauri 加载 Next.js 14 in-app UI（侧栏 + 聊天框 + 输入框 + LLM Key 配置 + 工具调用卡片 + onboarding 引导）
+
+**9 个 Task 全部完成**：
+
+| Task | commit | 内容 |
+|---|---|---|
+| 1 | `505c9d6` | `/app` 路由 scaffold |
+| 2 | `9d9df8a` | Tauri IPC + Provider + vitest |
+| 3 | `ced5cfa` | 侧栏骨架 + zustand |
+| 4 | `f12745d` | ChatView + InputBox 静态 |
+| 5 | `5b27f81` | ToolCallCard 折叠卡片 |
+| 6 | `e4b6a13` | LLM Key + onboarding |
+| 7 | `dcd95f9` | Sidebar IPC 调 sidecar /health |
+| 8 | `1fd4d88` | LLM mock + 接入 |
+| 9 | `fb2a64d` | next export → Tauri 静态加载 |
+
+**端到端验证**：
+- `npm test` 5 tests PASS（isTauri + callLLM × 2 + PacksBadge）
+- `npx tsc --noEmit` 0 errors
+- `npm run build:app` 成功，desktop/ui/ 有 in-app HTML + `_next/` 资源
+- `cargo build` 成功，tauri.conf.json url 字段验证合法
+
+**关键决策**：
+- 桌面 UI 框架：Next.js 14 App Router（保留现有 `app/page.tsx` 营销首页）
+- 状态管理：Zustand 5.0.14（含 persist middleware 存 LLM Key 到 localStorage）
+- 路由：`/app` 给 Tauri 加载，`/onboarding` 首启引导，`/settings` LLM 配置
+- LLM 调用暂 mock（Task 8），下一步接入真 LLM（Plan 3+）
+
+**Next.js 怪癖（已 workaround）**：
+- `app/app/*` 被 Next.js 当 route group 处理 → in-app URL collapse 到根
+- 后果：`/app/page.tsx` 实际变成 `/`（覆盖 `app/page.tsx` 营销首页）
+- Tauri 配置：移除 `windows[0].url` 字段，用默认加载 `index.html`
+
+**遗留非阻塞 note**：
+- `tokio = "full"` 太大（Plan 1 范围，Plan 3+ 收紧）
+- `SidecarHandle` dead_code warning（Plan 3+ 修）
+- `llm-key-store.ts` 用整个 store（无 selector），Task 7+ 拆成窄 selector
+- `page.tsx` handleSend 里 stale closure `conversations.find(...).messages`，接真 LLM 时修
+
+**后续**：Plan 3（服务包更新）/ Plan 4（落地页改造）/ Plan 5（CI/CD + Windows 打包）

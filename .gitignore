@@ -36,6 +36,12 @@ models/
 # Task tracking (internal only, not for public repo)
 status.json
 docs/
+.superpowers/
+
+# Next.js app build artifacts (regenerable, not for repo)
+app/.next/
+app/out/
+app/next-env.d.ts
 
 # MCP key / secret file (user-provided; never commit, never sample into docs)
 mcp-key.txt
