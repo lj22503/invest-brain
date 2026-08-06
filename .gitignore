@@ -43,6 +43,9 @@ app/.next/
 app/out/
 app/next-env.d.ts
 
+# Next.js export _next/ chunks (hashed, change every build — already committed once in fb2a64d but gitignore for future builds)
+desktop/ui/_next/
+
 # MCP key / secret file (user-provided; never commit, never sample into docs)
 mcp-key.txt
 
