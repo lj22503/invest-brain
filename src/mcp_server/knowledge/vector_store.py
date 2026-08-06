@@ -243,7 +243,7 @@ class VectorStore:
         )
 
         # Cross-reference with master's core principles
-        master_path = Path("data/knowledge/graph/masters") / f"{master_id}.json"
+        master_path = Path("data/packs/master_views") / f"{master_id}.json"
         with open(master_path, encoding="utf-8") as f:
             master_data = json.load(f)
         master_principles = set(master_data.get("core_principles", []))
@@ -251,7 +251,7 @@ class VectorStore:
         filtered = []
         for i in range(len(concept_results["ids"][0])):
             concept_id = concept_results["ids"][0][i]
-            concept_path = Path("data/knowledge/graph/concepts") / f"{concept_id}.json"
+            concept_path = Path("data/packs/industry_concepts") / f"{concept_id}.json"
             if concept_path.exists():
                 with open(concept_path, encoding="utf-8") as f:
                     concept_data = json.load(f)

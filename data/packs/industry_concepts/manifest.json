@@ -1,0 +1,13 @@
+{
+  "pack_id": "industry_concepts",
+  "version": "1.0.0",
+  "updated_at": "2026-08-06",
+  "description": "5 个核心投资概念 JSON",
+  "content_files": [
+    "asymmetric_risk.json",
+    "circle_of_compentence.json",
+    "margin_of_safety.json",
+    "moat.json",
+    "second_level_thinking.json"
+  ]
+}
