@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 import { usePacks, ALL_PACKS } from '@/lib/packs-store';
 
 const PACK_LABELS: Record<string, string> = {
@@ -9,7 +10,7 @@ const PACK_LABELS: Record<string, string> = {
 };
 
 export default function PacksPage() {
-  const { local, remote, updates, checking, updating, error, check, update } = usePacks();
+  const { local, remote, updates, checking, updating, check, update } = usePacks();
 
   useEffect(() => {
     check().catch(() => {
@@ -17,8 +18,20 @@ export default function PacksPage() {
     });
   }, [check]);
 
+  const onUpdate = async (id: string) => {
+    try {
+      await update(id);
+      toast.success(`已更新 ${id}，知识库将在重启后生效`);
+      window.dispatchEvent(new CustomEvent('packs-updated'));
+    } catch (e) {
+      toast.error(`更新失败: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  };
+
   return (
     <div className="p-8 max-w-3xl overflow-y-auto flex-1">
+      <Toaster position="top-right" />
+
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">知识包管理</h1>
         <button
@@ -29,10 +42,6 @@ export default function PacksPage() {
           {checking ? '检查中...' : '立即检查更新'}
         </button>
       </div>
-
-      {error && (
-        <div className="mb-4 text-sm text-red-600 bg-red-50 rounded p-2">{error}</div>
-      )}
 
       <table className="w-full text-sm">
         <thead className="text-left text-gray-600 border-b">
@@ -54,7 +63,7 @@ export default function PacksPage() {
                 <td>
                   {upd ? (
                     <button
-                      onClick={() => update(id).catch(() => {})}
+                      onClick={() => onUpdate(id)}
                       disabled={updating === id}
                       className="text-blue-500 hover:underline disabled:opacity-50"
                     >
@@ -69,6 +78,10 @@ export default function PacksPage() {
           })}
         </tbody>
       </table>
+
+      <p className="mt-6 text-xs text-gray-400">
+        更新后请重启 App 让 Chroma 索引重建生效（Plan 3 MVP 接受重启生效）。
+      </p>
     </div>
   );
 }

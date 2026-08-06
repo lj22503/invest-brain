@@ -7,10 +7,18 @@ export function PacksBadge() {
   const [health, setHealth] = useState<{ status: string; version: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const refresh = () => {
     callHealthCheck()
       .then(h => setHealth({ status: h.status, version: h.version }))
       .catch(e => setError(String(e)));
+  };
+
+  useEffect(() => {
+    refresh();
+    // 监听 packs 更新事件：packs 页 update 成功后通知侧栏刷新
+    const onUpdated = () => refresh();
+    window.addEventListener('packs-updated', onUpdated);
+    return () => window.removeEventListener('packs-updated', onUpdated);
   }, []);
 
   if (error) {
