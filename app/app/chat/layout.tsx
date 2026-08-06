@@ -1,4 +1,4 @@
-import '../globals.css';
+import '../../globals.css';
 import { Sidebar } from '@/components/sidebar/Sidebar';
 import { TauriProvider } from '@/components/providers/TauriProvider';
 import { OnboardingGuard } from '@/components/onboarding/OnboardingGuard';
