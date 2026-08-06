@@ -1,0 +1,21 @@
+{
+  "version": "0.1.0",
+  "generated_at": "2026-08-06",
+  "assets": [
+    {
+      "os": "windows",
+      "url": "https://github.com/lj22503/invest-brain/releases/download/v0.1.0/InvestBrain_0.1.0_x64_en-US.msi",
+      "size_hint": "约 100MB"
+    },
+    {
+      "os": "macos",
+      "url": "https://github.com/lj22503/invest-brain/releases/download/v0.1.0/InvestBrain_0.1.0_x64.dmg",
+      "size_hint": "约 80MB"
+    },
+    {
+      "os": "linux",
+      "url": "https://github.com/lj22503/invest-brain/releases/download/v0.1.0/InvestBrain_0.1.0_amd64.AppImage",
+      "size_hint": "约 90MB"
+    }
+  ]
+}

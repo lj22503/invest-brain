@@ -51,6 +51,10 @@ class VectorStore:
         self._collection_research = self._client.get_or_create_collection(
             name="research_reports", metadata={"description": "券商研报摘要"}
         )
+        # 用户知识库 collection — 存放用户自主管理的投资框架/笔记/洞察
+        self._collection_user_knowledge = self._client.get_or_create_collection(
+            name="user_knowledge", metadata={"description": "用户知识库"}
+        )
 
     def _textify_master(self, master_id: str) -> tuple[str, dict]:
         """Load a master JSON and extract text + metadata."""
@@ -239,7 +243,7 @@ class VectorStore:
         )
 
         # Cross-reference with master's core principles
-        master_path = Path("data/knowledge/graph/masters") / f"{master_id}.json"
+        master_path = Path("data/packs/master_views") / f"{master_id}.json"
         with open(master_path, encoding="utf-8") as f:
             master_data = json.load(f)
         master_principles = set(master_data.get("core_principles", []))
@@ -247,7 +251,7 @@ class VectorStore:
         filtered = []
         for i in range(len(concept_results["ids"][0])):
             concept_id = concept_results["ids"][0][i]
-            concept_path = Path("data/knowledge/graph/concepts") / f"{concept_id}.json"
+            concept_path = Path("data/packs/industry_concepts") / f"{concept_id}.json"
             if concept_path.exists():
                 with open(concept_path, encoding="utf-8") as f:
                     concept_data = json.load(f)
@@ -455,6 +459,176 @@ class VectorStore:
                 "distance": results["distances"][0][i],
             })
         return out
+
+    # ======================== 用户知识库 CRUD ========================
+
+    def add_user_knowledge(
+        self, id: str, title: str, content: str,
+        tags: list[str] = None, source_type: str = "insight"
+    ):
+        """写入用户知识到 user_knowledge collection。
+
+        Args:
+            id: 唯一 ID，如 uk_1722000000
+            title: 知识标题
+            content: 正文（用于 embedding）
+            tags: 标签列表，如 ["framework:gold", "strategy:tactical"]
+            source_type: 来源类型 framework / journal / reading_notes / insight
+        """
+        import datetime
+        now = datetime.datetime.now().isoformat()
+        meta = {
+            "id": id,
+            "title": title,
+            "tags": ",".join(tags) if tags else "",
+            "source_type": source_type,
+            "created_at": now,
+        }
+        self._collection_user_knowledge.upsert(
+            ids=[id],
+            documents=[content],
+            metadatas=[meta],
+        )
+
+    def update_user_knowledge(
+        self, id: str, content: str = None, title: str = None,
+        tags: list[str] = None
+    ):
+        """更新用户知识 — 先删除旧向量，再写入新向量。
+
+        Args:
+            id: 知识条目 ID
+            content: 新正文（可选）
+            title: 新标题（可选）
+            tags: 新标签列表（可选）
+
+        Returns:
+            dict: 更新后的 metadata
+        """
+        import datetime
+
+        # 先获取旧 metadata 作为基底
+        old_meta = {}
+        try:
+            existing = self._collection_user_knowledge.get(ids=[id])
+            if existing and existing.get("metadatas") and existing["metadatas"][0]:
+                old_meta = existing["metadatas"][0] or {}
+        except Exception:
+            pass
+
+        # 合并新旧字段
+        new_meta = {
+            "id": id,
+            "title": title if title is not None else old_meta.get("title", ""),
+            "tags": ",".join(tags) if tags is not None else old_meta.get("tags", ""),
+            "source_type": old_meta.get("source_type", "insight"),
+            "created_at": old_meta.get("created_at", datetime.datetime.now().isoformat()),
+            "updated_at": datetime.datetime.now().isoformat(),
+        }
+
+        new_content = content if content is not None else (
+            existing.get("documents", [[""]])[0][0]
+            if existing and existing.get("documents") and existing["documents"][0]
+            else ""
+        )
+
+        self._collection_user_knowledge.upsert(
+            ids=[id],
+            documents=[new_content],
+            metadatas=[new_meta],
+        )
+        return new_meta
+
+    def delete_user_knowledge(self, id: str):
+        """从 user_knowledge collection 中删除指定条目。
+
+        Args:
+            id: 知识条目 ID
+        """
+        self._collection_user_knowledge.delete(ids=[id])
+
+    def search_user_knowledge(self, query: str, top_k: int = 5) -> list[dict]:
+        """语义搜索用户知识库。
+
+        Args:
+            query: 搜索查询
+            top_k: 返回结果数量
+
+        Returns:
+            [{id, title, snippet, tags, score, source_type, created_at}, ...]
+        """
+        count = self._collection_user_knowledge.count()
+        if count == 0:
+            return []
+        n = min(top_k, count)
+        results = self._collection_user_knowledge.query(
+            query_texts=[query], n_results=n
+        )
+        out = []
+        for i in range(len(results["ids"][0])):
+            meta = results["metadatas"][0][i] or {}
+            doc = results["documents"][0][i] or ""
+            # 截取前 300 字符作为 snippet
+            snippet = doc[:300] + ("..." if len(doc) > 300 else "")
+            tags_raw = meta.get("tags", "")
+            tags = [t.strip() for t in tags_raw.split(",") if t.strip()] if tags_raw else []
+            out.append({
+                "id": meta.get("id", results["ids"][0][i]),
+                "title": meta.get("title", ""),
+                "snippet": snippet,
+                "tags": tags,
+                "score": 1.0 - results["distances"][0][i],
+                "source_type": meta.get("source_type", ""),
+                "created_at": meta.get("created_at", ""),
+            })
+        return out
+
+    def list_user_knowledge(
+        self, source_type: str = None, tag: str = None, limit: int = 50
+    ) -> list[dict]:
+        """列出用户知识条目，可按来源类型或标签过滤。
+
+        Args:
+            source_type: 按来源类型过滤（可选）
+            tag: 按标签过滤（可选，匹配 metadata.tags 子串）
+            limit: 返回条目上限
+
+        Returns:
+            [{id, title, tags, source_type, created_at}, ...]
+        """
+        count = self._collection_user_knowledge.count()
+        if count == 0:
+            return []
+
+        # 获取全量条目
+        all_items = self._collection_user_knowledge.get(limit=min(limit * 3, count))
+        if not all_items or not all_items.get("ids"):
+            return []
+
+        out = []
+        for i in range(len(all_items["ids"])):
+            meta = all_items["metadatas"][i] or {}
+            tags_raw = meta.get("tags", "")
+            tags = [t.strip() for t in tags_raw.split(",") if t.strip()] if tags_raw else []
+
+            # 按 source_type 过滤
+            if source_type and meta.get("source_type") != source_type:
+                continue
+            # 按 tag 过滤（子串匹配 tags 字段）
+            if tag and tag not in tags_raw:
+                continue
+
+            out.append({
+                "id": meta.get("id", all_items["ids"][i]),
+                "title": meta.get("title", ""),
+                "tags": tags,
+                "source_type": meta.get("source_type", ""),
+                "created_at": meta.get("created_at", ""),
+            })
+
+        return out[:limit]
+
+    # ======================== 索引重建 ========================
 
     def rebuild_index(self):
         """Rebuild the index from all existing sources."""

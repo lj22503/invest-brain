@@ -64,3 +64,255 @@
 
 - 等用户决策 `mcp-key.txt` 处置
 - 等用户决策 `docs/` 子集是否纳入 git
+
+---
+
+## 2026-07-30
+
+### neat-freak 第二批：mcp-key.txt 本地副本处置
+
+- **删除** `mcp-key.txt` 本地副本（217B，含 ed25519 私钥 `private_hex`、公钥 `public_b64`、DNS TXT 记录 `txt_record`）
+- **验证**：全仓库 grep `mcp-key.txt` / `private_hex` / `txt_record` / `mcp_key` 四个关键字，**仅在 `.gitignore` 与本 PROGRESS/历史报告中出现**，无任何代码运行时引用。属安全删除。
+- **`.gitignore` 规则保留**（`mcp-key.txt` 第 41 行）—— 防止未来类似文件再次进入工作目录
+- `.gitignore` 此前已经在 07-28 commit `ffd76ac` 加好，本轮不重复
+
+### 本轮发现的其他工作区残留（不在本轮处置）
+
+| 文件 | 性质 |
+|------|------|
+| `M src/mcp_server/tools/coaching_tools.py` | 修改未提交 |
+| `?? err.txt` / `err2.txt` / `err3.txt` / `err4.txt` / `err_final.txt` | 调试错误捕获（5 个） |
+| `?? out4.txt` / `out_final.txt` | 调试输出捕获（2 个） |
+| **合计** | 1 处修改 + 7 个 untracked debug 文件 |
+
+→ 属 mcp server 开发调试残留，下次 neat-freak 或单独会话处置。
+
+---
+
+*neat-freak 第二轮收尾：mcp-key.txt 已删，工作区清理未在本轮范围。*
+
+---
+
+## 2026-08-03
+
+### Plan 1 完成（Sidecar Bootstrap）
+
+**状态**：✅ 通过
+
+**范围**：Tauri 主进程 + Python sidecar 子进程 + IPC 通信
+
+**7 个 Task 全部完成**：
+
+| Task | commit | 内容 |
+|---|---|---|
+| 1 | `8a5e1b9` | Python sidecar 最小 health_check |
+| 2 | `4f205db` | PyInstaller 打包脚本 |
+| 3 | `a3819d5` | Tauri 主进程最小 Hello Window |
+| 4 | `a98372f` | Tauri IPC `health_check` 命令 |
+| 5 | `7325347` | Tauri auto-spawn sidecar |
+| 6 | `39434ba` | Playwright e2e 占位 |
+| 7 | (pending) | 整体验证 + ico blocker 修复 + 本条记录 |
+
+**端到端验证**：
+- Tauri 启动 → 自动 spawn Python sidecar → 8765 端口 listen → `/health` 返回 JSON
+- 子进程 parent PID 匹配 Tauri PID
+- Tauri 窗口显示 "InvestBrain - Sidecar Health" 验证页
+- sidecar 4 个 pytest 全 PASS
+- Playwright 1 placeholder skipped
+
+**关键决策**：
+- Tauri 桌面 App（不继续走 Web 端）
+- Python sidecar 走 subprocess + HTTP IPC（不用 stdio MCP 协议）
+- 首版不代码签名
+- ico blocker：commit 91 字节 .ico 保证 fresh clone 可编译
+
+**后续**：可进入 Plan 2 (in-app UI with Next.js) / Plan 3 (服务包更新) / Plan 4 (落地页改造) / Plan 5 (CI/CD + Windows 打包)
+
+## 2026-08-06
+
+### Plan 2 完成（In-app UI）
+
+**状态**：✅ 通过（含 2 个 next.js 怪癖 workaround）
+
+**范围**：Tauri 加载 Next.js 14 in-app UI（侧栏 + 聊天框 + 输入框 + LLM Key 配置 + 工具调用卡片 + onboarding 引导）
+
+**9 个 Task 全部完成**：
+
+| Task | commit | 内容 |
+|---|---|---|
+| 1 | `505c9d6` | `/app` 路由 scaffold |
+| 2 | `9d9df8a` | Tauri IPC + Provider + vitest |
+| 3 | `ced5cfa` | 侧栏骨架 + zustand |
+| 4 | `f12745d` | ChatView + InputBox 静态 |
+| 5 | `5b27f81` | ToolCallCard 折叠卡片 |
+| 6 | `e4b6a13` | LLM Key + onboarding |
+| 7 | `dcd95f9` | Sidebar IPC 调 sidecar /health |
+| 8 | `1fd4d88` | LLM mock + 接入 |
+| 9 | `fb2a64d` | next export → Tauri 静态加载 |
+
+**端到端验证**：
+- `npm test` 5 tests PASS（isTauri + callLLM × 2 + PacksBadge）
+- `npx tsc --noEmit` 0 errors
+- `npm run build:app` 成功，desktop/ui/ 有 in-app HTML + `_next/` 资源
+- `cargo build` 成功，tauri.conf.json url 字段验证合法
+
+**关键决策**：
+- 桌面 UI 框架：Next.js 14 App Router（保留现有 `app/page.tsx` 营销首页）
+- 状态管理：Zustand 5.0.14（含 persist middleware 存 LLM Key 到 localStorage）
+- 路由：`/app` 给 Tauri 加载，`/onboarding` 首启引导，`/settings` LLM 配置
+- LLM 调用暂 mock（Task 8），下一步接入真 LLM（Plan 3+）
+
+**Next.js 怪癖（已 workaround）**：
+- `app/app/*` 被 Next.js 当 route group 处理 → in-app URL collapse 到根
+- 后果：`/app/page.tsx` 实际变成 `/`（覆盖 `app/page.tsx` 营销首页）
+- Tauri 配置：移除 `windows[0].url` 字段，用默认加载 `index.html`
+
+**遗留非阻塞 note**：
+- `tokio = "full"` 太大（Plan 1 范围，Plan 3+ 收紧）
+- `SidecarHandle` dead_code warning（Plan 3+ 修）
+- `llm-key-store.ts` 用整个 store（无 selector），Task 7+ 拆成窄 selector
+- `page.tsx` handleSend 里 stale closure `conversations.find(...).messages`，接真 LLM 时修
+
+**后续**：Plan 3（服务包更新）/ Plan 4（落地页改造）/ Plan 5（CI/CD + Windows 打包）
+
+### Plan 3 完成（服务包更新机制）
+
+**状态**：✅ 通过
+
+**范围**：graph → packs 迁移 / Vercel 服务端 / Tauri 客户端 / UI / 上传脚本
+
+**7 个 Task 全部完成**：
+
+| Task | commit | 内容 |
+|---|---|---|
+| 1 | `283d1d2` | `data/graph/{masters,concepts}` → `data/packs/{master_views,industry_concepts}` + manifest.json + 修 vector_store.py dead path |
+| 2 | `3981a3c` | `/api/packs/manifest.json` Next.js Route Handler（多 pack 版本聚合） |
+| 3 | `974457e` | `/api/packs/[id]/[version]` 内容端点（带 .json 后缀剥离 + pack_id 白名单） |
+| 4 | `d30278f` | Tauri `packs.rs` PackManager + `check_packs` / `update_pack` 命令 |
+| 5 | `66ce4fb` | `packs-store.ts` zustand + 3 tests + `/packs` 管理页面（表格 + 检查/升级按钮） |
+| 6 | `12c6ed2` | `scripts/upload-pack.sh`（BLOB_READ_WRITE_TOKEN + vercel blob put） |
+| 7 | `40e4380` | `react-hot-toast` 接入 + `packs-updated` window 事件 → 侧栏 PacksBadge 刷新 |
+
+**端到端验证**：
+- `npm test` 8 tests PASS（含 3 个新增 packs-store）
+- `npx tsc --noEmit` 0 errors
+- `python -m pytest` 10 tests PASS（router 6 + sidecar 4）
+- `cargo build` 通过（2 个 dead_code 警告沿用 Plan 2 已记录的非阻塞遗留）
+- `bash -n scripts/upload-pack.sh` 语法 OK
+
+**关键决策（与 Plan 文档偏差）**：
+- **用 Next.js Route Handlers 而非 Vercel Functions .json.ts**：项目是 Next.js App Router，沿用其路由约定比混用两套路由体系更干净。URL 路径保持 `/api/packs/manifest.json` / `/api/packs/{id}/{version}.json`，Tauri 端无需改。
+- **`data/knowledge/graph/` 是 dead path**：vector_store.py 旧引用 `data/knowledge/graph/{masters,concepts}` 但实际数据一直在 `data/graph/{masters,concepts}`。迁移时一并修正。
+- **Tauri `packs.rs` 修了 Plan 文档的 bug**：原文 `tauri::Manager::path(&tauri::AppHandle::default())` 编译不过（`AppHandle` 不实现 `Default`）。改为命令接收 `app: tauri::AppHandle` 参数后用 `app.path().app_data_dir()`。
+- **`PackVersion` 结构体未使用 → 暂时保留**（dead_code 警告沿用 Plan 2 风格，下个 Plan 清理）。
+- **`react-hot-toast` 新增依赖**（v2.6.0）—— Plan 7 显式要求。
+
+**后续**：Plan 4（落地页改造）/ Plan 5（CI/CD + Windows 打包），以及 v1.1 留待事项（服务包签名 / 自动 Chroma 重建 / 回滚）。
+
+### Plan 4 完成（落地页改造）
+
+**状态**：✅ 通过（含路径重构 + Plan 3 简化修正）
+
+**范围**：TopNav / 智能下载 / Hero CTA / /try 试聊 / chat 路径重构 / Plan 3 端点改直连
+
+**7 个 Task + 1 个修正**：
+
+| Task | commit | 内容 |
+|---|---|---|
+| 1 | `f2b8992`-area | `app/lib/download-config.ts` + `detectOS()` + 4 tests |
+| 2 | `f2b8992` | `DownloadButton`（primary/ghost 双样式，按 OS 自动定位）|
+| 3 | `c12ff8c` | `TopNav`（sticky + Logo + 试聊 + 下载 CTA）|
+| 4 | `78f53c5` | chat UI 从 `/` 移到 `/chat`，营销落地页恢复在 `/`，Tauri `url: "chat"` |
+| 5 | `40b2334` | Hero CTA 区替换为「下载 + 先试聊」双按钮 |
+| 6 | `9a9b8c2` | `/try` 试聊 stub（不调 LLM，巴菲特/茅台占位回复）|
+| 7 | `62bcf78` | PROGRESS（Plan 3 部分） |
+| - | `11f2a0d` | Plan 3 简化：删 Vercel Function 端点，packs.rs 直连 Vercel Blob |
+
+**端到端验证**：
+- `npm test` 15/15 PASS（含 4 个新 OS 检测 + 3 个 packs-store）
+- `npx tsc --noEmit` 0 errors
+- `cargo build` 通过
+- `npm run build:app` 成功，导出 7 个路由：`/` `/chat` `/onboarding` `/packs` `/settings` `/try` `/_not-found`
+
+**关键决策（与 Plan 文档偏差）**：
+- **chat UI 路径重构（Plan 4 Task 4 隐含要求）**：Plan 4 假设 `/` 是营销落地页，但 Plan 2 把 chat UI collapse 到 `/`。本轮把 chat 挪到 `/chat`，营销落地页用 dead 状态的 `app/page.tsx` (438 行既有内容) 复活到 `/`。Tauri `windows[0].url` 改为 `"chat"`，加载 `desktop/ui/chat/index.html`。
+- **Plan 3 端点改直连**：Plan 4 build 时发现 `output: 'export'` 与 `force-dynamic` API 路由冲突。Plan 3 端点是 CORS proxy，但 Tauri 用 native reqwest（无 CORS 限制），proxy 不必要。删 `app/app/api/packs/`，改 `packs.rs` 用 `PACK_${id}_BLOB_URL` env var 直接打 Vercel Blob manifest。每个 pack 独立 manifest URL，upload-pack.sh 输出对应 env var 设置指引。
+- **OS 测试用 `Object.defineProperty`**：jsdom 的 `navigator` 是只读，不能直接赋值。test fixture 用 defineProperty 覆盖。
+- **`/try` 接真 LLM / 落地页 OG 优化 / i18n**：Plan 4 已识别为 v1.1 / v2.0 事项，留待后续。
+
+**后续**：Plan 5（CI/CD + Windows 打包）。
+
+### Plan 5 完成（CI/CD + Windows 打包）
+
+**状态**：✅ 通过
+
+**范围**：CI workflow / Release workflow / MSI 冒烟 / sidecar 启停 / 动态下载 / e2e / release runbook
+
+**7 个 Task 全部完成**：
+
+| Task | commit | 内容 |
+|---|---|---|
+| 1 | `c9b5514` | `.github/workflows/ci.yml`（python-test + ui-test + rust-check）|
+| 2 | `54f2889` | `.github/workflows/release.yml`（tag → windows-2022 → msi build + verify + draft release）|
+| 3 | `9d4c876` | `desktop/scripts/verify-msi.ps1`（msiexec 装 + 启 + 卸）|
+| 4 | (一 commit) | `desktop/scripts/local-smoke.sh` + `.ps1`（本地构建 + spawn + health check）|
+| 5 | `e3d267e` | `app/public/.well-known/releases.json` + `fetchAssets()` + DownloadButton 优先读动态 URL |
+| 6 | (一 commit) | `desktop/tests/conftest.py` + `e2e_tauri_health.py` + ci.yml 加 e2e-tauri job |
+| 7 | `c502c21` | `RELEASE.md` master release runbook |
+
+**端到端验证**：
+- `npm test` 19/19 PASS（含 fetchAssets 4 个新 case：fallback × 2 + parse 正确）
+- `npx tsc --noEmit` 0 errors
+- `cargo check` 通过（1 dead_code 沿用）
+
+**关键决策**：
+- **releases.json 路径**：放 `app/public/.well-known/`（Next.js 静态导出时复制到 root），fetch URL 用 `/.well-known/releases.json`
+- **fetchAssets 默认走 FALLBACK_ASSETS**：网络失败 / 4xx / JSON 解析失败都回退，DownloadButton 永不显示空
+- **e2e job 用 windows-2022 + local-smoke 后台**：Playwright 连 tauri-driver 4444，背景启 sidecar 后跑 pytest
+- **下载 URL 命名约定**：Tauri 自动产出 `InvestBrain_X.Y.Z_x64_en-US.msi`，releases.json 要在 release draft 后手动同步
+
+**用户能「看到」什么**：
+- **现在**：`cd app && npm run dev` → http://localhost:3000 看 `/`（营销落地页 + TopNav + Hero CTA）、`/try`（试聊 stub）、`/chat`（in-app UI，需 Tauri 加载）
+- **推 tag 后**：`git tag v0.1.0 && git push origin v0.1.0` → GitHub Actions 自动跑 release workflow → 约 15-20 分钟产出 `InvestBrain_0.1.0_x64_en-US.msi` → draft release 在 GitHub Releases
+- **手动收尾**：按 RELEASE.md 把 releases.json URL 同步到实际产物名 → publish release → brain.mangofolio.com 自动看到新版本
+
+**后续（v1.x 待办）**：
+- 代码签名（Apple Developer / Windows EV）→ 解 SmartScreen
+- macOS / Linux 同步打包
+- Tauri updater 自动更新
+- 服务包签名 / 自动 Chroma 重建 / 回滚（Plan 3 v1.1 留待）
+
+### 2026-08-06 — 本地首次 MSI 构建成功
+
+**状态**：✅ 本地 Windows 手动构建通过（未推 tag，未公开发布）
+
+**端到端流程实测**（按 RELEASE.md 跑了一遍）：
+
+| 步骤 | 产物 | 用时 |
+|---|---|---|
+| 1. 装 tauri-cli | `cargo-tauri.exe` v2.11.4 | 16m14s（首次装）|
+| 2. 编译 sidecar | `desktop/sidecar/dist/sidecar.exe` 7.8MB | 2s |
+| 3. 编译 UI | `desktop/ui/` 7 路由（含 `releases.json`）| ~10s |
+| 4. cargo tauri build | `investbrain.exe` 13.2MB | 7m50s |
+| 5. WiX 下载 + 验证 | 41MB ZIP（via gh-proxy 镜像，因 LJG 网络挡 GitHub 直连）| ~6m |
+| 6. MSI 打包 | `InvestBrain_0.1.0_x64_en-US.msi` **4.5MB** | 1m51s |
+
+**关键问题与解决**：
+- **rustup wrapper 报 "Missing manifest"**：直接用 `~/.rustup/toolchains/stable-x86_64-pc-windows-msvc/bin/cargo.exe` 绕过，export PATH 即可
+- **WiX 下载 GitHub 直连超时**：通过 `gh-proxy.com` 镜像下载 41MB，~120 KB/s 慢但可用
+- **`Couldn't find a .ico icon`**：`tauri.conf.json` 只引用 `icon.png`，MSI 需要 `.ico`（快捷方式图标）。加 `"icons/icon.ico"` 解决。Commit `b4b0df3`
+- **MSI 安装需 admin**：`ALLUSERS=1`（per-machine，Tauri 默认），用户双击会弹 UAC；脚本/Silent install 必须提权。脚本里设 `MSIINSTALLPERUSER=1` 无效（per-user install 必须 MSI 本身支持）
+
+**MSI 内容验证**：
+- admin extract 到 `D:\tmp\msi-extract\PFiles\InvestBrain\investbrain.exe` 12.9MB
+- 注册表会写到 HKLM `Uninstall\InvestBrain`
+- ARPPRODUCTICON = ProductIcon（图标准备）
+
+**用户试装路径**：
+- 双击 `.msi` → UAC 弹窗 → 点「是」→ 默认装到 `C:\Program Files\InvestBrain\`
+- 桌面上无快捷方式（MSI 默认不创建），从开始菜单「InvestBrain」启动
+- 启动后会自动 spawn Python sidecar（development mode）→ in-app UI 加载
+
+**下一步决策点**：
+- 试装后 → 推 tag `v0.1.0` → GitHub Actions 自动跑 release workflow → draft .msi 在 GitHub Releases
+- 或先小修 → 再决定是否推 tag

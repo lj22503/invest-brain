@@ -36,6 +36,21 @@ models/
 # Task tracking (internal only, not for public repo)
 status.json
 docs/
+.superpowers/
+
+# Next.js app build artifacts (regenerable, not for repo)
+app/.next/
+app/out/
+app/next-env.d.ts
+
+# Next.js export _next/ chunks (hashed, change every build — already committed once in fb2a64d but gitignore for future builds)
+desktop/ui/_next/
+
+# Next.js export .well-known/ copy (build artifact, source is app/public/.well-known/ which IS tracked)
+desktop/ui/.well-known/
+
+# TypeScript incremental build cache (auto-regenerated)
+tsconfig.tsbuildinfo
 
 # MCP key / secret file (user-provided; never commit, never sample into docs)
 mcp-key.txt

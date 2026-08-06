@@ -1,0 +1,2 @@
+# Plan 1 范围：零运行时依赖（仅用标准库）
+# 后续 Plan 引入 fastapi/uvicorn 等补在下方

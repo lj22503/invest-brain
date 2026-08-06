@@ -46,28 +46,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="bg-paper text-ink font-sans antialiased">
-        {/* Navigation */}
-        <nav className="fixed top-0 left-0 right-0 z-50 px-16 py-6 flex justify-between items-center bg-paper/95 backdrop-blur-sm border-b border-border">
-          <a href="/" className="font-serif text-xl font-bold tracking-tight">
-            Brain<span className="text-vermillion">.</span>
-          </a>
-          <ul className="flex gap-10 list-none text-sm text-ink-light">
-            <li><a href="/#features" className="hover:text-ink transition-colors">功能</a></li>
-            <li><a href="/#coaching" className="hover:text-ink transition-colors">学习辅导</a></li>
-            <li><a href="/#about" className="hover:text-ink transition-colors">关于</a></li>
-            <li><a href="/#faq" className="hover:text-ink transition-colors">FAQ</a></li>
-            <li><a href="/openapi" className="hover:text-ink transition-colors font-medium text-vermillion">Skill 市场</a></li>
-          </ul>
-          <a
-            href="/openapi"
-            className="bg-vermillion text-white text-sm px-6 py-2 rounded hover:bg-[#A8322A] transition-colors"
-          >
-            浏览 Skills
-          </a>
-        </nav>
-
-        {/* Main Content */}
-        <main className="pt-[72px]">{children}</main>
+        {/* Plan 4：营销 nav 移到各页面（TopNav），不再放 root 避免污染 /app in-app UI */}
+        <main>{children}</main>
 
         {/* Footer */}
         <footer className="px-16 py-12 border-t border-border flex justify-between items-center text-xs text-ink-faint">

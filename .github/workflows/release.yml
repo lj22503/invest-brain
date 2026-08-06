@@ -1,0 +1,94 @@
+name: Release Windows MSI
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-2022
+    defaults:
+      shell: pwsh
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: desktop/src-tauri -> target
+
+      - name: Install Python deps
+        working-directory: src/mcp_server
+        shell: bash
+        run: pip install -r requirements.txt pyinstaller==6.*
+
+      - name: Build sidecar
+        working-directory: desktop/sidecar
+        shell: bash
+        run: bash build_sidecar.sh
+
+      - name: Install UI deps
+        working-directory: app
+        shell: bash
+        run: npm ci
+
+      - name: Build UI static
+        working-directory: app
+        shell: bash
+        run: npm run build:app
+
+      - name: Install Tauri CLI
+        shell: bash
+        run: cargo install tauri-cli --version "^2.0" --locked
+
+      - name: Tauri build (Windows MSI)
+        working-directory: desktop/src-tauri
+        shell: bash
+        run: cargo tauri build --target x86_64-pc-windows-msvc --bundles msi
+
+      - name: Verify MSI exists
+        shell: pwsh
+        run: |
+          $msi = Get-ChildItem -Path desktop/src-tauri/target -Recurse -Filter "*.msi" | Select-Object -First 1
+          if (-not $msi) { throw "MSI not found" }
+          echo "MSI at: $($msi.FullName)"
+          echo "Size: $([math]::Round($msi.Length / 1MB, 2)) MB"
+
+      - name: Smoke test (install + launch + uninstall)
+        shell: pwsh
+        working-directory: desktop
+        run: ./scripts/verify-msi.ps1
+
+      - name: Upload .msi
+        uses: actions/upload-artifact@v4
+        with:
+          name: investbrain-msi
+          path: desktop/src-tauri/target/**/InvestBrain*.msi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            desktop/src-tauri/target/**/*.msi
+          generate_release_notes: true
+          draft: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

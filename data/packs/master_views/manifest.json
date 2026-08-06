@@ -1,0 +1,25 @@
+{
+  "pack_id": "master_views",
+  "version": "1.0.0",
+  "updated_at": "2026-08-06",
+  "description": "16 位投资大师语录索引",
+  "content_files": [
+    "aswath_damodaran.json",
+    "ben_graham.json",
+    "bill_ackman.json",
+    "buffett.json",
+    "cathie_wood.json",
+    "duanyongping.json",
+    "howard_marks.json",
+    "li_lu.json",
+    "michael_burry.json",
+    "mohnish_pabrai.json",
+    "munger.json",
+    "nassim_taleb.json",
+    "peter_lynch.json",
+    "phil_fisher.json",
+    "rakesh_jhunjhunwala.json",
+    "stanley_druckenmiller.json"
+  ],
+  "references_dir": "buffett-references/"
+}
