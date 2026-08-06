@@ -1,6 +1,8 @@
 'use client';
 import HeroDemo from '@/components/HeroDemo';
 import { TopNav } from '@/components/nav/TopNav';
+import { DownloadButton } from '@/components/nav/DownloadButton';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -32,12 +34,13 @@ export default function Home() {
               不是投顾，不给建议。是一个让你「越用越聪明」的投资大脑 —— 通过 AI 帮你建立自己的投研纪律。
             </p>
             <div className="flex gap-4 justify-center lg:justify-start flex-wrap">
-              <a href="/openapi" className="bg-vermillion text-white px-8 py-4 rounded text-base font-medium hover:bg-[#A8322A] transition-all hover:-translate-y-px hover:shadow-md">
-                进入 Skill 市场
-              </a>
-              <a href="#coaching" className="border border-border text-ink px-8 py-4 rounded text-base hover:border-ink transition-colors">
-                了解学习辅导
-              </a>
+              <DownloadButton variant="primary" />
+              <Link
+                href="/try"
+                className="border border-border text-ink px-8 py-4 rounded text-base hover:border-ink transition-colors inline-flex items-center"
+              >
+                💬 先试聊
+              </Link>
             </div>
           </div>
 
