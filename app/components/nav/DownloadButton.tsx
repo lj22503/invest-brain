@@ -21,8 +21,8 @@ export function DownloadButton({ variant = 'primary' }: { variant?: 'primary' | 
       href={asset.url}
       className={
         isPrimary
-          ? 'bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 inline-flex items-center gap-2'
-          : 'border border-blue-500 text-blue-500 px-4 py-2 rounded hover:bg-blue-50 inline-flex items-center gap-2'
+          ? 'bg-vermillion text-white px-8 py-4 rounded text-base font-medium hover:bg-[#A8322A] transition-all hover:-translate-y-px hover:shadow-md inline-flex items-center gap-2'
+          : 'border border-vermillion text-vermillion px-6 py-2 rounded text-sm hover:bg-vermillion/[0.04] transition-colors inline-flex items-center gap-2'
       }
       download
     >

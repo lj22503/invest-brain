@@ -29,15 +29,15 @@ export function TryChatStub() {
 
   return (
     <div className="max-w-2xl mx-auto py-12 px-6">
-      <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-800">
+      <div className="mb-4 p-3 bg-paper-warm border border-vermillion/20 rounded text-sm text-ink-light font-serif">
         ⚠ Demo 模式：不调真实 LLM，所有回复为占位字符串。
       </div>
 
-      <div className="bg-white rounded-lg shadow p-4 h-96 overflow-y-auto mb-4 border">
+      <div className="bg-white border border-border rounded-lg p-4 h-96 overflow-y-auto mb-4">
         {messages.map((m, i) => (
           <div key={i} className={`mb-3 flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-md rounded px-3 py-2 ${m.role === 'user' ? 'bg-blue-100' : 'bg-gray-100'}`}>
-              <p className="text-xs text-gray-500 mb-1">{m.role === 'user' ? '你' : 'Demo'}</p>
+            <div className={`max-w-md rounded px-3 py-2 ${m.role === 'user' ? 'bg-vermillion/10 border border-vermillion/20' : 'bg-paper-warm'}`}>
+              <p className="text-xs text-ink-faint mb-1">{m.role === 'user' ? '你' : 'Demo'}</p>
               <p className="whitespace-pre-wrap">{m.text}</p>
             </div>
           </div>
@@ -55,10 +55,13 @@ export function TryChatStub() {
             }
           }}
           placeholder="试着问点什么，比如 巴菲特 / 茅台"
-          className="flex-1 border rounded px-3 py-2 resize-none"
+          className="flex-1 border border-border rounded px-3 py-2 resize-none focus:outline-none focus:border-vermillion transition-colors"
           rows={2}
         />
-        <button onClick={send} className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600">
+        <button
+          onClick={send}
+          className="bg-vermillion text-white rounded px-4 py-2 hover:bg-[#A8322A] transition-colors"
+        >
           ⏎ 发送
         </button>
       </div>

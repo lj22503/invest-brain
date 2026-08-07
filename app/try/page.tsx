@@ -5,7 +5,9 @@ export default function TryPage() {
   return (
     <>
       <TopNav />
-      <TryChatStub />
+      <div className="pt-[72px]">
+        <TryChatStub />
+      </div>
     </>
   );
 }

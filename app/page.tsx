@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <>
     <TopNav />
-    <main className="min-h-screen">
+    <main className="min-h-screen pt-[72px]">
 
       {/* ========== Hero ========== */}
       <section className="min-h-[90vh] flex items-center px-6 md:px-12 lg:px-20 py-12 md:py-20 relative overflow-hidden">
