@@ -27,7 +27,6 @@ export function DownloadButton({ variant = 'primary' }: { variant?: 'primary' | 
       download
     >
       <span>⬇ 下载 {asset.label}</span>
-      <span className="text-xs opacity-75">{asset.sizeHint}</span>
     </a>
   );
 }
