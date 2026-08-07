@@ -14,23 +14,23 @@ export const FALLBACK_ASSETS: DownloadAsset[] = [
   {
     os: 'windows',
     label: 'Windows',
-    url: 'https://github.com/lj22503/invest-brain/releases/latest/download/InvestBrain-windows.msi',
-    filename: 'InvestBrain-windows.msi',
-    sizeHint: '约 100MB',
+    url: 'https://github.com/lj22503/invest-brain/releases/download/v0.1.0/InvestBrain_0.1.0_x64_en-US.msi',
+    filename: 'InvestBrain_0.1.0_x64_en-US.msi',
+    sizeHint: '约 4.5MB',
   },
   {
     os: 'macos',
     label: 'macOS',
-    url: 'https://github.com/lj22503/invest-brain/releases/latest/download/InvestBrain-mac.dmg',
-    filename: 'InvestBrain-mac.dmg',
-    sizeHint: '约 80MB',
+    url: 'https://github.com/lj22503/invest-brain/releases/tag/v0.1.0',
+    filename: 'macos-pending',
+    sizeHint: '待 v1.2',
   },
   {
     os: 'linux',
     label: 'Linux',
-    url: 'https://github.com/lj22503/invest-brain/releases/latest/download/InvestBrain-linux.AppImage',
-    filename: 'InvestBrain-linux.AppImage',
-    sizeHint: '约 90MB',
+    url: 'https://github.com/lj22503/invest-brain/releases/tag/v0.1.0',
+    filename: 'linux-pending',
+    sizeHint: '待 v1.2',
   },
 ];
 

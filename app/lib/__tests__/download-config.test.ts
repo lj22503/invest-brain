@@ -51,7 +51,7 @@ describe('DOWNLOAD_ASSETS', () => {
 
   it('uses github.com/lj22503 release URL', () => {
     for (const a of DOWNLOAD_ASSETS) {
-      expect(a.url).toMatch(/^https:\/\/github\.com\/lj22503\/invest-brain\/releases\/latest\/download\//);
+      expect(a.url).toMatch(/^https:\/\/github\.com\/lj22503\/invest-brain\/releases\//);
     }
   });
 
@@ -86,9 +86,9 @@ describe('fetchAssets', () => {
         version: '1.2.3',
         generated_at: '2026-08-06',
         assets: [
-          { os: 'windows', url: 'https://example.com/win.msi', size_hint: '100MB' },
-          { os: 'macos', url: 'https://example.com/mac.dmg', size_hint: '80MB' },
-          { os: 'linux', url: 'https://example.com/linux.AppImage', size_hint: '90MB' },
+          { os: 'windows', url: 'https://example.com/win.msi', size_hint: '4.5MB' },
+          { os: 'macos', url: 'https://example.com/mac.dmg', size_hint: 'pending' },
+          { os: 'linux', url: 'https://example.com/linux.AppImage', size_hint: 'pending' },
         ],
       }),
     });
@@ -97,6 +97,6 @@ describe('fetchAssets', () => {
     expect(list[0].os).toBe('windows');
     expect(list[0].label).toBe('Windows');
     expect(list[0].filename).toBe('win.msi');
-    expect(list[0].sizeHint).toBe('100MB');
+    expect(list[0].sizeHint).toBe('4.5MB');
   });
 });
