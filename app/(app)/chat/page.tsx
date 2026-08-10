@@ -54,7 +54,7 @@ export default function HomePage() {
 
   return (
     <>
-      <ChatView />
+      <ChatView onSend={handleSend} />
       <InputBox onSend={handleSend} />
     </>
   );

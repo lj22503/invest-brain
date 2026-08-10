@@ -17,14 +17,14 @@ export function Sidebar() {
       <div className="border-t p-3">
         <PacksBadge />
         <div className="mt-3 space-y-1 text-sm">
-          <a href="/app/masters" className="block px-2 py-1 rounded hover:bg-gray-200">
-            ◆ 大师
+          <a href="/packs" className="block px-2 py-1 rounded hover:bg-gray-200">
+            ◇ 知识包
           </a>
-          <a href="/app/frameworks" className="block px-2 py-1 rounded hover:bg-gray-200">
-            ◇ 框架
-          </a>
-          <a href="/app/settings" className="block px-2 py-1 rounded hover:bg-gray-200">
+          <a href="/settings" className="block px-2 py-1 rounded hover:bg-gray-200">
             ◇ 设置
+          </a>
+          <a href="/try" className="block px-2 py-1 rounded hover:bg-gray-200">
+            ◇ 试聊 Demo
           </a>
         </div>
       </div>
