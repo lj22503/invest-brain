@@ -1,0 +1,41 @@
+{
+  "as_of": "2026-08-07",
+  "note": "demo 预置行情快照，非实时数据",
+  "holdings": [
+    {
+      "ticker": "600519",
+      "name": "贵州茅台",
+      "price": 1380.0,
+      "change_pct": -1.2,
+      "pe": 24.5,
+      "pe_percentile": 18.0,
+      "pb": 7.1,
+      "pb_percentile": 12.0,
+      "valuation_note": "PE处于近5年18%分位，估值偏低位"
+    },
+    {
+      "ticker": "300750",
+      "name": "宁德时代",
+      "price": 278.0,
+      "change_pct": 2.4,
+      "pe": 32.0,
+      "pe_percentile": 78.0,
+      "pb": 5.6,
+      "pb_percentile": 65.0,
+      "valuation_note": "PE处于近5年78%分位，估值偏高"
+    },
+    {
+      "ticker": "600036",
+      "name": "招商银行",
+      "price": 32.8,
+      "change_pct": 0.3,
+      "pe": 6.2,
+      "pe_percentile": 22.0,
+      "pb": 0.9,
+      "pb_percentile": 15.0,
+      "valuation_note": "PB约0.9倍，股息率约5.2%，估值低位"
+    }
+  ],
+  "total_assets": 500000,
+  "position_summary": "总资产50万，持仓3只（茅台/宁德/招行），仓位约65%，现金约35%"
+}

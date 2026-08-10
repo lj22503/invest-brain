@@ -1,4 +1,4 @@
-import '../globals.css';
+// 全局样式由 app/layout.tsx（root layout）统一导入，此处不再重复 import '../globals.css'
 import { Sidebar } from '@/components/sidebar/Sidebar';
 import { TauriProvider } from '@/components/providers/TauriProvider';
 import { OnboardingGuard } from '@/components/onboarding/OnboardingGuard';

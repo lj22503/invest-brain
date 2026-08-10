@@ -13,7 +13,7 @@ except ImportError:
     CronTrigger = None
 
 from .memory.store import get_memory_store
-from .notifier import send_notification
+from .notifier import send_notification, _resolve_channel
 
 logger = logging.getLogger(__name__)
 
@@ -52,10 +52,16 @@ def _fire_time_reminder(reminder_id: str, condition: str):
     conn.commit()
     conn.close()
     logger.info(f"Time reminder fired: {reminder_id} ({condition})")
-    send_notification(
+    send_result = send_notification(
        f"⏰ 时间提醒触发\n提醒ID：{reminder_id}\n条件：{condition}",
-        channel="feishu"
+        channel=_resolve_channel()
     )
+    if "setup_guide" in send_result:
+        logger.warning(
+            f"Time reminder {reminder_id} fired but no channel enabled. "
+            f"Guide user: {send_result['setup_guide']['message']}"
+        )
+    return send_result
 
 
 def _parse_cron(cron_str: str) -> dict:

@@ -26,6 +26,9 @@
   "bundle": {
     "active": true,
     "targets": "msi",
+    "externalBin": [
+      "../sidecar/dist/sidecar"
+    ],
     "icon": [
       "icons/icon.png",
       "icons/icon.ico"

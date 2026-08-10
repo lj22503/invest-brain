@@ -11,8 +11,8 @@ export function OnboardingGuard({ children }: { children: React.ReactNode }) {
   const apiKey = useLLMKey(s => s.apiKey);
 
   useEffect(() => {
-    if (!provider && !apiKey && pathname !== '/app/onboarding') {
-      router.push('/app/onboarding');
+    if (!provider && !apiKey && pathname !== '/onboarding') {
+      router.push('/onboarding');
     }
   }, [provider, apiKey, pathname, router]);
 

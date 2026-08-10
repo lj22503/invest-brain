@@ -18,6 +18,14 @@ pub struct RemoteVersions {
     pub industry_concepts: String,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone, Default)]
+pub struct PackConfig {
+    #[serde(default)]
+    pub master_views: String,
+    #[serde(default)]
+    pub industry_concepts: String,
+}
+
 impl RemoteVersions {
     fn zero() -> Self {
         Self {
@@ -27,7 +35,7 @@ impl RemoteVersions {
     }
 }
 
-fn manifest_blob_url(pack_id: &str) -> Option<String> {
+fn env_blob_url(pack_id: &str) -> Option<String> {
     match pack_id {
         "master_views" => std::env::var("PACK_MASTER_VIEWS_BLOB_URL").ok(),
         "industry_concepts" => std::env::var("PACK_INDUSTRY_CONCEPTS_BLOB_URL").ok(),
@@ -48,11 +56,50 @@ impl PackManager {
         self.user_data_dir.join("data").join("packs")
     }
 
+    fn config_path(&self) -> PathBuf {
+        self.packs_dir().join("config.json")
+    }
+
+    /// 读用户配置（settings 页写入）。不存在时返回 None。
+    pub fn read_config(&self) -> Option<PackConfig> {
+        let path = self.config_path();
+        if !path.exists() {
+            return None;
+        }
+        std::fs::read_to_string(&path)
+            .ok()
+            .and_then(|s| serde_json::from_str(&s).ok())
+    }
+
+    pub fn write_config(&self, cfg: &PackConfig) -> Result<(), String> {
+        let path = self.config_path();
+        if let Some(parent) = path.parent() {
+            std::fs::create_dir_all(parent).map_err(|e| format!("mkdir fail: {}", e))?;
+        }
+        std::fs::write(&path, serde_json::to_string_pretty(cfg).unwrap())
+            .map_err(|e| format!("config write fail: {}", e))
+    }
+
+    /// 解析 pack 的 blob URL：优先用户配置文件，其次环境变量（部署兜底）。
+    fn blob_url(&self, pack_id: &str) -> Option<String> {
+        if let Some(cfg) = self.read_config() {
+            let val = match pack_id {
+                "master_views" => cfg.master_views,
+                "industry_concepts" => cfg.industry_concepts,
+                _ => String::new(),
+            };
+            if !val.trim().is_empty() {
+                return Some(val.trim().to_string());
+            }
+        }
+        env_blob_url(pack_id)
+    }
+
     /// 从每 pack 的 Vercel Blob manifest 直拉版本号。
     pub async fn fetch_remote_versions(&self) -> RemoteVersions {
         let mut out = RemoteVersions::zero();
         for id in PACK_IDS {
-            let Some(url) = manifest_blob_url(id) else { continue };
+            let Some(url) = self.blob_url(id) else { continue };
             match reqwest::get(&url).await {
                 Ok(resp) if resp.status().is_success() => {
                     if let Ok(m) = resp.json::<serde_json::Value>().await {
@@ -85,8 +132,9 @@ impl PackManager {
 
     /// 拉一个 pack 的内容并写入本地。
     pub async fn download_pack(&self, pack_id: &str) -> Result<PathBuf, String> {
-        let url = manifest_blob_url(pack_id)
-            .ok_or_else(|| format!("pack {} has no blob URL env var", pack_id))?;
+        let url = self
+            .blob_url(pack_id)
+            .ok_or_else(|| format!("pack {} has no blob URL (env var or config)", pack_id))?;
         let resp = reqwest::get(&url)
             .await
             .map_err(|e| format!("pack fetch fail: {}", e))?;
@@ -172,4 +220,42 @@ pub async fn update_pack(
     let mgr = PackManager::new(data_dir(&app));
     let path = mgr.download_pack(&pack_id).await?;
     Ok(path.to_string_lossy().to_string())
+}
+
+/// 读取服务包配置（用户配置文件 + 环境变量兜底），供 settings 页展示。
+#[tauri::command]
+pub async fn get_pack_config(app: tauri::AppHandle) -> Result<serde_json::Value, String> {
+    let mgr = PackManager::new(data_dir(&app));
+    let cfg = mgr.read_config().unwrap_or_default();
+    Ok(serde_json::json!({
+        "master_views": {
+            "configured": !cfg.master_views.trim().is_empty(),
+            "url": cfg.master_views,
+            "env_url": std::env::var("PACK_MASTER_VIEWS_BLOB_URL").ok().unwrap_or_default(),
+        },
+        "industry_concepts": {
+            "configured": !cfg.industry_concepts.trim().is_empty(),
+            "url": cfg.industry_concepts,
+            "env_url": std::env::var("PACK_INDUSTRY_CONCEPTS_BLOB_URL").ok().unwrap_or_default(),
+        },
+    }))
+}
+
+/// 保存服务包配置到 <app_data_dir>/data/packs/config.json。
+#[tauri::command]
+pub async fn set_pack_config(
+    app: tauri::AppHandle,
+    master_views: Option<String>,
+    industry_concepts: Option<String>,
+) -> Result<serde_json::Value, String> {
+    let mgr = PackManager::new(data_dir(&app));
+    let mut cfg = mgr.read_config().unwrap_or_default();
+    if let Some(v) = master_views {
+        cfg.master_views = v.trim().to_string();
+    }
+    if let Some(v) = industry_concepts {
+        cfg.industry_concepts = v.trim().to_string();
+    }
+    mgr.write_config(&cfg)?;
+    Ok(serde_json::json!({ "ok": true, "config": cfg }))
 }

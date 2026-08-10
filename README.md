@@ -73,6 +73,56 @@ python server.py
 
 ---
 
+## 快速开始：推送配置
+
+> 从零到收到第一条微信推送，约 3 分钟。无需阅读任何文档。
+
+### 方式一：一键脚本（推荐，Windows）
+
+在仓库根目录打开 PowerShell，运行：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/configure_pushplus.ps1
+```
+
+脚本会交互式引导你完成全部步骤：
+
+1. 显示 PushPlus 获取 token 的操作步骤
+2. 提示粘贴 token（脚本自动校验格式）
+3. 写入 `data/config/webhook.json` 并启用 `pushplus` 渠道
+4. 自动调用 `send_notification` 发送测试消息
+5. 打印成功/失败原因
+
+> 提示：如果没有先注册 PushPlus，请先微信扫码关注公众号 https://www.pushplus.plus → 个人中心 → 复制 token，再运行脚本。
+
+### 方式二：对话内配置（MCP 客户端内）
+
+直接在任意 MCP 客户端中让 AI 帮你配置：
+
+```
+1. 查看当前配置状态：notify_get_notifier_config()
+2. 配置 PushPlus 并发送测试：notify_configure_notifier(channel="pushplus", token="你的token", enabled=true, send_test=true)
+```
+
+未配置任何渠道时，`set_reminder` / `get_reminders` 返回的 `notification_status` 中会附带完整的渠道获取步骤与下一步工具名，按提示操作即可。
+
+### PushPlus token 获取步骤
+
+1. 微信扫码关注公众号：https://www.pushplus.plus
+2. 进入「个人中心」
+3. 复制页面上的 token
+4. 填入上述任一方式
+
+### 验证是否配置成功
+
+- 收到测试消息 → 配置成功
+- `notify_get_notifier_config()` 返回 `"enabled_channels": ["pushplus"]`
+- 未配置渠道时，提醒触发路径（`price_checker` / `scheduler`）返回中会携带 `setup_guide` 引导信息，而不会静默失败
+
+> 安全说明：`data/config/webhook.json` 已被 `.gitignore` 保护，token 不会进入 git；请勿把 token 发到任何对话或提交到仓库。
+
+---
+
 ## 它解决什么问题
 
 **核心问题**：投资者被叙事带着走，操作没纪律，事后后悔。

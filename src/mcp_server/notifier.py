@@ -1,4 +1,4 @@
-"""Notification dispatcher - sends alerts via configured channels (feishu/dingtalk/bark)."""
+"""Notification dispatcher - sends alerts via configured channels (feishu/dingtalk/bark/pushplus)."""
 
 import json
 import logging
@@ -22,9 +22,11 @@ DEFAULT_CONFIG = {
         "feishu": {"webhook_url": None, "enabled": False},
         "dingtalk": {"webhook_url": None, "enabled": False},
         "bark": {"webhook_url": None, "enabled": False},
+        "pushplus": {"token": None, "enabled": False, "template": "html"},
     }
 }
-VALID_CHANNELS = {"feishu", "dingtalk", "bark"}
+VALID_CHANNELS = {"feishu", "dingtalk", "bark", "pushplus"}
+PUSHPLUS_SEND_URL = "https://www.pushplus.plus/send"
 
 
 def _load_webhooks() -> dict:
@@ -202,6 +204,53 @@ def send_bark(message: str) -> bool:
         return False
 
 
+def send_pushplus(message: str, title: str = "Invest-Brain 提醒") -> bool:
+    """
+    Send a message via PushPlus (WeChat push).
+
+    PushPlus API: POST https://www.pushplus.plus/send
+    Args:
+        message: Message text content
+        title: Message title (shown in WeChat)
+
+    Returns:
+        True if sent successfully
+    """
+    webhooks = _load_webhooks()
+    ch_cfg = webhooks.get("channels", {}).get("pushplus", {})
+    token = ch_cfg.get("token")
+    if not token:
+        logger.warning("PushPlus token not configured")
+        return False
+    if not ch_cfg.get("enabled", False):
+        logger.info("PushPlus channel is disabled, skipping")
+        return False
+
+    template = ch_cfg.get("template", "html")
+    try:
+        payload = {
+            "token": token,
+            "title": title,
+            "content": message,
+            "template": template,
+        }
+        resp = requests.post(PUSHPLUS_SEND_URL, json=payload, timeout=10)
+        if resp.status_code == 200:
+            data = resp.json()
+            if data.get("code") == 200:
+                logger.info(f"PushPlus notification sent: {message[:50]}")
+                return True
+            else:
+                logger.error(f"PushPlus send failed: {resp.text}")
+                return False
+        else:
+            logger.error(f"PushPlus send failed: HTTP {resp.status_code} {resp.text}")
+            return False
+    except Exception as e:
+        logger.error(f"PushPlus notification error: {e}")
+        return False
+
+
 def send_notification(text: str, channel: str = "all") -> dict:
     """
     Send a notification via the specified channel(s).
@@ -223,7 +272,7 @@ def send_notification(text: str, channel: str = "all") -> dict:
         ]
         if not channels_to_send:
             logger.warning("No notification channels enabled")
-            return {"results": {}}
+            return {"results": {}, "setup_guide": SETUP_GUIDE}
 
         results = {}
         with ThreadPoolExecutor(max_workers=3) as pool:
@@ -248,14 +297,69 @@ def send_notification(text: str, channel: str = "all") -> dict:
 
     send_fn = _SEND_FUNCTIONS[channel]
     ok = send_fn(text)
-    return {"results": {channel: ok}}
+    result = {"results": {channel: ok}}
+    if not ok and not _is_enabled(channel):
+        result["setup_guide"] = SETUP_GUIDE
+    return result
 
 
 _SEND_FUNCTIONS = {
     "feishu": send_feishu,
     "dingtalk": send_dingtalk,
     "bark": send_bark,
+    "pushplus": send_pushplus,
 }
+
+
+SETUP_GUIDE = {
+    "message": "尚未配置可用的通知渠道，提醒触发时将无法收到推送。请按以下方式之一完成配置：",
+    "methods": [
+        "方式一（推荐，无需读文档）：运行 scripts/configure_pushplus.ps1，按提示微信扫码/粘贴 token 即可完成 PushPlus 微信推送配置",
+        "方式二（对话内配置）：调用 notify_configure_notifier 工具，例如 notify_configure_notifier(channel=\"pushplus\", token=\"你的token\", enabled=true)",
+        "方式三（手动编辑）：编辑 data/config/webhook.json，填入对应渠道凭证并设 enabled=true",
+    ],
+    "channels_guide": {
+        "pushplus": "微信推送。官网 https://www.pushplus.plus 微信扫码登录 → 个人中心 → 复制 token；需先关注 PushPlus 公众号才能收到推送",
+        "feishu": "飞书机器人 webhook。飞书群 → 群设置 → 群机器人 → 添加机器人 → 自定义机器人 → 复制 webhook 地址",
+        "dingtalk": "钉钉机器人 webhook。钉钉群 → 群设置 → 智能群助手 → 添加机器人 → 自定义 → 复制 webhook 地址",
+        "bark": "Bark 推送（仅 iOS）。App Store 安装 Bark → 打开 App → 复制首页显示的 URL",
+    },
+    "next_tool": "notify_configure_notifier",
+}
+
+
+def get_setup_guidance() -> dict:
+    """
+    Return setup guidance for notification channels.
+
+    Used by reminder tools and trigger paths to show users how to configure
+    a push channel when none is enabled, instead of failing silently.
+    """
+    return {
+        "configured": False,
+        **SETUP_GUIDE,
+    }
+
+
+def _resolve_channel(default: str = "feishu") -> str:
+    """
+    Resolve the preferred enabled notification channel from config.
+
+    Priority: pushplus > feishu > dingtalk > bark (first enabled wins).
+    Falls back to ``default`` when no channel is enabled.
+
+    Args:
+        default: Channel name to fall back to if none enabled
+
+    Returns:
+        str: Resolved channel name
+    """
+    webhooks = _load_webhooks()
+    channels_cfg = webhooks.get("channels", {})
+    for ch in ("pushplus", "feishu", "dingtalk", "bark"):
+        if channels_cfg.get(ch, {}).get("enabled", False):
+            return ch
+    return default
 
 
 def _write_to_file(message: str) -> bool:

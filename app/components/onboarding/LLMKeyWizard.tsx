@@ -12,7 +12,7 @@ export function LLMKeyWizard() {
   const onFinish = (provider: string, key: string) => {
     setKey(provider as any, key);
     setDone(true);
-    setTimeout(() => router.push('/app'), 1200);
+    setTimeout(() => router.push('/chat'), 1200);
   };
 
   if (done) {

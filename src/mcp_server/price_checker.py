@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Optional
 
 from .memory.store import get_memory_store
-from .notifier import send_notification
+from .notifier import send_notification, _resolve_channel
 from .datasources.akshare_datasource import get_stock_quote, get_valuation
 
 logger = logging.getLogger(__name__)
@@ -87,17 +87,21 @@ def check_price_conditions() -> list:
                 if fired:
                     name = quote.get("name", ticker)
                     _log_trigger(rem["id"], f"{ticker} 当前价 {current_price} {operator} {target_value}")
-                    send_notification(
+                    send_result = send_notification(
                         f"⏰ 价格提醒触发\n{name} 当前价格 {current_price}元，条件：{operator} {target_value}",
-                        channel="feishu"
+                        channel=_resolve_channel()
                     )
-                    triggered.append({
+                    item = {
                         "reminder_id": rem["id"],
                         "ticker": ticker,
                         "name": name,
                         "current_price": current_price,
                         "condition": condition,
-                    })
+                        "notification": send_result,
+                    }
+                    if "setup_guide" in send_result:
+                        item["notification_setup_guide"] = send_result["setup_guide"]
+                    triggered.append(item)
 
             elif rem["type"] == "pe_ratio":
                 val = get_valuation(ticker)
@@ -116,17 +120,21 @@ def check_price_conditions() -> list:
                 if fired:
                     name = val.get("name", ticker)
                     _log_trigger(rem["id"], f"{ticker} 当前PE {pe} {operator} {target_value}")
-                    send_notification(
+                    send_result = send_notification(
                         f"⏰ PE分位提醒触发\n{name} 当前PE {pe}，条件：{operator} {target_value}",
-                        channel="feishu"
+                        channel=_resolve_channel()
                     )
-                    triggered.append({
+                    item = {
                         "reminder_id": rem["id"],
                         "ticker": ticker,
                         "name": name,
                         "current_pe": pe,
                         "condition": condition,
-                    })
+                        "notification": send_result,
+                    }
+                    if "setup_guide" in send_result:
+                        item["notification_setup_guide"] = send_result["setup_guide"]
+                    triggered.append(item)
 
         except Exception as e:
             logger.error(f"Error checking reminder {rem['id']}: {e}")

@@ -22,6 +22,11 @@ CHANNEL_GUIDE = {
         "Bark 推送（仅 iOS）。获取方式："
         "App Store 安装 Bark → 打开 App → 复制首页显示的 URL"
     ),
+    "pushplus": (
+        "PushPlus 微信推送。获取方式："
+        "官网 https://www.pushplus.plus 微信扫码登录 → 个人中心 → 复制 token；"
+        "需先关注 PushPlus 公众号才能收到推送"
+    ),
 }
 
 
@@ -51,12 +56,16 @@ def _build_notification_status() -> dict:
         "configured": False,
         "message": (
             "尚未配置任何通知渠道，提醒触发时将无法收到推送。"
-            "请通过 notify_configure_notifier 工具配置至少一个渠道。"
+            "请配置至少一个渠道，推荐 PushPlus 微信推送："
+            "运行 scripts/configure_pushplus.ps1 按提示完成配置（无需读文档）。"
         ),
         "channels_guide": CHANNEL_GUIDE,
         "next_action": (
-            "调用 notify_configure_notifier，例如：\n"
-            '  notify_configure_notifier(channel="feishu", webhook_url="https://open.feishu.cn/...", enabled=true)'
+            "任选一种方式：\n"
+            "1. 运行 scripts/configure_pushplus.ps1（推荐，交互式引导配置 PushPlus 微信推送）\n"
+            "2. 调用 notify_configure_notifier 工具，例如：\n"
+            '   notify_configure_notifier(channel="pushplus", token="你的token", enabled=true, send_test=true)\n'
+            '   notify_configure_notifier(channel="feishu", webhook_url="https://open.feishu.cn/...", enabled=true)'
         ),
     }
 

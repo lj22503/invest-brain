@@ -29,6 +29,7 @@ data/config/*.json
 
 # User memory database (private per CLAUDE.md decision: local-only, never upload)
 data/memory/*.db
+data/memory/*.db.bak*
 
 # Local ONNX models (large binary files, download separately)
 models/
