@@ -12,6 +12,8 @@ from .tools.report_tools import report_tools
 from .tools.roundtable_tools import roundtable_tools
 from .tools.notifier_tools import notifier_tools
 from .tools.user_knowledge_tools import user_knowledge_tools
+from .tools.user_tools import user_tools
+from .tools.broker_tools import broker_tools
 from .datasources.akshare_datasource import akshare_tools
 from .datasources.tushare_datasource import tushare_tools
 from .price_checker import check_price_conditions
@@ -46,6 +48,8 @@ _tool_groups = [
     ("market", akshare_tools),
     ("tushare", tushare_tools),
     ("user_knowledge", user_knowledge_tools),
+    ("user", user_tools),
+    ("broker", broker_tools),
 ]
 for prefix, group in _tool_groups:
     for tool in group._tool_manager.list_tools():
