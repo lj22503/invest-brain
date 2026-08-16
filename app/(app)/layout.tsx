@@ -6,7 +6,7 @@ import { OnboardingGuard } from '@/components/onboarding/OnboardingGuard';
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <TauriProvider>
-      <div className="flex h-screen overflow-hidden bg-white text-gray-900">
+      <div className="flex h-screen overflow-hidden bg-paper text-ink">
         <Sidebar />
         <OnboardingGuard>
           <main className="flex-1 flex flex-col">{children}</main>

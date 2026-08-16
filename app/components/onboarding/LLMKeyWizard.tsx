@@ -24,10 +24,10 @@ export function LLMKeyWizard() {
   }
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-50">
+    <div className="flex items-center justify-center h-screen bg-paper">
       <div className="bg-white rounded-lg shadow p-8 max-w-md w-full">
         <h1 className="text-2xl font-bold mb-2">欢迎使用 InvestBrain</h1>
-        <p className="text-sm text-gray-600 mb-6">
+        <p className="text-sm text-ink-light mb-6">
           首次启动请设置 LLM Key。所有数据完全本地，不会被上传。
         </p>
         <LLMKeyFormInline onFinish={onFinish} />
@@ -61,7 +61,7 @@ function LLMKeyFormInline({ onFinish }: { onFinish: (p: string, k: string) => vo
       <button
         onClick={() => onFinish(provider, key)}
         disabled={!key.trim()}
-        className="w-full bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 disabled:opacity-50"
+        className="w-full bg-vermillion text-white rounded px-4 py-2 hover:bg-[#A8322A] disabled:opacity-50 transition-colors"
       >
         开始使用
       </button>

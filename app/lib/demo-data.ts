@@ -1,14 +1,23 @@
-'use client';
+// 共享演示铺底数据：试聊页与桌面端无 Key 演示模式共用。
+// 与 data/memory/memory.db、data/graph/masters、data/demo/market_snapshot.json 保持一致。
 
-import { useState } from 'react';
-
-interface Msg {
-  role: 'user' | 'demo';
-  text: string;
+export interface DemoUser {
+  name: string;
+  style: string;
+  principles: string[];
+  thoughts: string[];
+  decisions: { ticker: string; action: string; price: number; reason: string; date: string }[];
+  patterns: { type: string; count: number; severity: string; note: string }[];
+  masters: { buffett: string; munger: string; duanyongping: string };
+  snapshot: {
+    asOf: string;
+    total: number;
+    position: string;
+    holdings: { name: string; price: number; pe: number; pePct?: number; pb?: number; note: string }[];
+  };
 }
 
-// ===== Demo 铺底数据（与 data/memory/memory.db、data/graph/masters、data/demo/market_snapshot.json 一致）=====
-const DEMO_USER = {
+export const DEMO_USER: DemoUser = {
   name: '演示投资者',
   style: '稳健型',
   principles: [
@@ -53,8 +62,15 @@ const DEMO_USER = {
   },
 };
 
-// ===== 预置场景入口：点击即触发一段完整演示对话 =====
-const SCENARIOS: { key: string; title: string; desc: string; ask: string }[] = [
+// ===== 预置场景入口 =====
+export interface Scenario {
+  key: string;
+  title: string;
+  desc: string;
+  ask: string;
+}
+
+export const SCENARIOS: Scenario[] = [
   {
     key: 'chasing',
     title: '我最近又追高了吗',
@@ -81,7 +97,7 @@ const SCENARIOS: { key: string; title: string; desc: string; ask: string }[] = [
   },
 ];
 
-function renderScenario(key: string): string[] {
+export function renderScenario(key: string): string[] {
   switch (key) {
     case 'chasing':
       return [
@@ -116,114 +132,15 @@ function renderScenario(key: string): string[] {
   }
 }
 
-export function TryChatStub() {
-  const [messages, setMessages] = useState<Msg[]>([
-    { role: 'demo', text: '你好，这里是 **InvestBrain 试聊 Demo** 🧠\n\n我预置了一位演示投资者的完整记忆（8 条想法、3 笔决策、行为诊断、大师图谱、行情快照），点击下面的场景即可看到完整闭环。\n\n⚠️ 不调真实 LLM、不配 API Key、不存你的对话；体验完整功能请下载桌面客户端。' },
-  ]);
-  const [input, setInput] = useState('');
-  const [pending, setPending] = useState(false);
-
-  const runScenario = (key: string) => {
-    const sc = SCENARIOS.find(s => s.key === key);
-    if (!sc || pending) return;
-    setPending(true);
-    setMessages(m => [...m, { role: 'user', text: sc.ask }]);
-    const replies = renderScenario(key);
-    replies.forEach((r, i) => {
-      setTimeout(() => {
-        setMessages(m => [...m, { role: 'demo', text: r }]);
-        if (i === replies.length - 1) setPending(false);
-      }, 500 + i * 650);
-    });
-  };
-
-  const send = () => {
-    const t = input.trim();
-    if (!t || pending) return;
-    const hit = SCENARIOS.find(s => t.includes(s.title.slice(0, 4)) || t.includes(s.ask.slice(0, 6)));
-    const key = hit ? hit.key : 'portrait';
-    runScenario(key);
-    setInput('');
-  };
-
-  return (
-    <div className="h-[calc(100vh-72px)] max-w-2xl mx-auto flex flex-col py-6 px-6">
-      {/* 场景入口 */}
-      <div className="shrink-0 mb-4">
-        <p className="text-sm text-ink-light font-serif mb-2">点击场景，体验完整闭环：</p>
-        <div className="grid grid-cols-2 gap-3">
-          {SCENARIOS.map(sc => (
-            <button
-              key={sc.key}
-              onClick={() => runScenario(sc.key)}
-              disabled={pending}
-              className="text-left bg-white border border-border rounded-lg p-3 hover:border-vermillion/60 hover:shadow-sm transition-all disabled:opacity-50"
-            >
-              <p className="text-sm font-medium text-ink">{sc.title}</p>
-              <p className="text-xs text-ink-faint mt-1 font-serif">{sc.desc}</p>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="shrink-0 mb-4 p-3 bg-paper-warm border border-vermillion/20 rounded text-sm text-ink-light font-serif">
-        ⚠ Demo 模式：不调真实 LLM、无需 API Key，所有回复来自预置演示数据。
-      </div>
-
-      <div className="flex-1 min-h-0 bg-white border border-border rounded-lg p-4 overflow-y-auto mb-4">
-        {messages.map((m, i) => (
-          <div key={i} className={`mb-3 flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-md rounded px-3 py-2 whitespace-pre-wrap ${m.role === 'user' ? 'bg-vermillion/10 border border-vermillion/20' : 'bg-paper-warm'}`}>
-              <p className="text-xs text-ink-faint mb-1">{m.role === 'user' ? '你' : 'Demo'}</p>
-              <p className="text-sm leading-relaxed">{m.text}</p>
-            </div>
-          </div>
-        ))}
-        {pending && (
-          <div className="flex items-center gap-2 text-xs text-ink-faint pl-1">
-            <span className="w-3 h-3 border-2 border-vermillion/40 border-t-vermillion rounded-full animate-spin" />
-            Demo 正在检索你的记忆…
-          </div>
-        )}
-      </div>
-
-      <div className="flex gap-2">
-        <textarea
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={e => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              send();
-            }
-          }}
-          placeholder="或直接输入：我最近是不是又在追高？"
-          className="flex-1 border border-border rounded px-3 py-2 resize-none focus:outline-none focus:border-vermillion transition-colors"
-          rows={2}
-        />
-        <button
-          onClick={send}
-          className="bg-vermillion text-white rounded px-4 py-2 hover:bg-[#A8322A] transition-colors"
-        >
-          ⏎ 发送
-        </button>
-      </div>
-
-      {/* 底部引导下载客户端 */}
-      <div className="shrink-0 mt-4 p-4 bg-white border border-border rounded-lg flex items-center justify-between gap-4">
-        <div>
-          <p className="text-sm font-medium text-ink">想要完整版？</p>
-          <p className="text-xs text-ink-faint mt-1 font-serif">真实对话 · 你的专属记忆 · 行为审计与大师图谱，都在桌面客户端里。</p>
-        </div>
-        <a
-          href="https://brain.mangofolio.com"
-          target="_blank"
-          rel="noreferrer"
-          className="shrink-0 bg-vermillion text-white text-sm rounded px-4 py-2 hover:bg-[#A8322A] transition-colors"
-        >
-          下载客户端
-        </a>
-      </div>
-    </div>
+// 关键词 → 场景映射：无 Key 演示模式据此匹配用户输入
+export function matchScenario(userMsg: string): string {
+  const hit = SCENARIOS.find(
+    s => userMsg.includes(s.title.slice(0, 4)) || userMsg.includes(s.ask.slice(0, 6)),
   );
+  if (hit) return hit.key;
+  if (/追高|追涨|冲动|情绪化/.test(userMsg)) return 'chasing';
+  if (/茅台|买.*茅|茅.*买|1380|1400/.test(userMsg)) return 'maotai';
+  if (/宁德|新能源|追一点|创新高/.test(userMsg)) return 'ningde';
+  if (/画像|风格|原则|总结/.test(userMsg)) return 'portrait';
+  return 'portrait';
 }

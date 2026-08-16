@@ -12,6 +12,7 @@ const config: Config = {
         'ink-faint': '#B8B2A6',
         vermillion: '#C43A31',
         'vermillion-light': '#E8A090',
+        border: '#E8E3D8',
       },
       fontFamily: {
         serif: ['Noto Serif SC', 'serif'],

@@ -15,7 +15,15 @@ interface TauriGlobal {
 
 export async function invoke<T = unknown>(cmd: string, args?: Record<string, unknown>): Promise<T> {
   if (isTauri()) {
-    const tauri = ((window as any).__TAURI__ ?? (window as any).__TAURI_INTERNALS__) as TauriGlobal | undefined;
+    // Tauri v2 始终注入 __TAURI_INTERNALS__（{ invoke, transformCallback, ... }），
+    // 无需 withGlobalTauri 也无需 @tauri-apps/api 的全局命名空间。
+    const internals = (window as any).__TAURI_INTERNALS__;
+    if (internals?.invoke) {
+      const rawInvoke = internals.invoke as <T>(cmd: string, args?: Record<string, unknown>) => Promise<T>;
+      return rawInvoke<T>(cmd, args);
+    }
+    // 兼容 withGlobalTauri: true 的全局 __TAURI__.core.invoke 形态。
+    const tauri = (window as any).__TAURI__ as TauriGlobal | undefined;
     if (tauri?.core?.invoke) {
       return tauri.core.invoke<T>(cmd, args);
     }

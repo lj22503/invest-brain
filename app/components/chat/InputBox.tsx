@@ -13,7 +13,7 @@ export function InputBox({ onSend }: { onSend: (text: string) => void }) {
   };
 
   return (
-    <div className="border-t p-4 flex gap-2">
+    <div className="border-t border-border p-4 flex gap-2">
       <textarea
         value={text}
         onChange={e => setText(e.target.value)}
@@ -24,12 +24,12 @@ export function InputBox({ onSend }: { onSend: (text: string) => void }) {
           }
         }}
         placeholder="问点什么..."
-        className="flex-1 resize-none border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
+        className="flex-1 resize-none border border-border rounded px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-vermillion-light"
         rows={2}
       />
       <button
         onClick={submit}
-        className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600"
+        className="bg-vermillion text-white rounded px-4 py-2 hover:bg-[#A8322A] transition-colors"
       >
         ⏎ 发送
       </button>

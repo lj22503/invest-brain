@@ -62,7 +62,7 @@ export function PackConfigForm() {
     return (
       <div className="max-w-lg space-y-4">
         <h2 className="text-lg font-semibold">知识包源配置</h2>
-        <p className="text-sm text-gray-400">加载中...</p>
+        <p className="text-sm text-ink-faint">加载中...</p>
       </div>
     );
   }
@@ -70,7 +70,7 @@ export function PackConfigForm() {
   return (
     <div className="max-w-lg space-y-4">
       <h2 className="text-lg font-semibold">知识包源配置</h2>
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-ink-light">
         配置服务包的 BLOB URL（master_views / industry_concepts），保存到本地配置文件；留空则回退到环境变量。
       </p>
 
@@ -96,7 +96,7 @@ export function PackConfigForm() {
       <button
         onClick={submit}
         disabled={saving}
-        className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 disabled:opacity-50"
+        className="bg-vermillion text-white rounded px-4 py-2 hover:bg-[#A8322A] disabled:opacity-50 transition-colors"
       >
         {saving ? '保存中...' : '保存'}
       </button>
