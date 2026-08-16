@@ -1,4 +1,5 @@
 //! InvestBrain Tauri 主进程入口。
+//! [rebuild-tag 2026-08-14 强制重编译以嵌入最新前端资源]
 //!
 //! Plan 1 任务 5：setup 阶段 spawn sidecar 子进程，写 SIDECAR_URL 给前端。
 
@@ -49,9 +50,13 @@ pub fn run() {
             #[cfg(debug_assertions)]
             {
                 let sidecar_path = std::path::Path::new("../sidecar/src/server.py");
+                // dev：数据目录统一指向项目根 data（与主项目 llm_router / memory store 一致）
+                let dev_data_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+                    .join("..").join("..").join("data");
                 let child = Command::new("python")
                     .arg(sidecar_path)
                     .env("SIDECAR_PORT", "8765")
+                    .env("INVESTBRAIN_DATA_DIR", &dev_data_dir)
                     .stdout(Stdio::piped())
                     .stderr(Stdio::piped())
                     .spawn()
@@ -62,11 +67,16 @@ pub fn run() {
             #[cfg(not(debug_assertions))]
             {
                 use tauri_plugin_shell::ShellExt;
+                // release：数据目录落 %APPDATA%\InvestBrain\data（用户可见、规范位置）
+                let appdata = std::env::var("APPDATA").unwrap_or_else(|_| String::new());
+                let rel_data_dir = std::path::Path::new(&appdata)
+                    .join("InvestBrain").join("data");
                 let (mut rx, child) = app
                     .shell()
                     .sidecar("sidecar")
                     .expect("failed to resolve packaged sidecar binary")
                     .env("SIDECAR_PORT", "8765")
+                    .env("INVESTBRAIN_DATA_DIR", &rel_data_dir)
                     .spawn()
                     .expect("failed to spawn packaged sidecar (release)");
                 // 后台消费 sidecar 事件，避免 Receiver 阻塞进程句柄生命周期
