@@ -106,3 +106,28 @@ This repo follows llms.txt standard and includes:
 - User data stored locally, never uploaded
 - Tool is a "mirror" and "discipline anchor"
 - Multi-provider LLM support (not vendor-locked)
+
+
+---
+
+## 提交前自查 4 问（2026-08-12 项目线规范，谁提交谁查）
+
+> 任何 agent 在本仓库提交代码前，先过这 4 问（30 秒）：
+1. **我改的是哪个项目？**（commit message 写明项目名）
+2. **这个功能是不是已经存在？**（有没有重复实现——查一遍再写）
+3. **我有没有绕过统一入口？**（有统一路由/工具就走统一入口，不另开独立通道）
+4. **我改的是不是这个项目该改的？**（没串线——只动本项目文件）
+
+**违反任一 → 停下修正后再提交。**
+
+
+---
+
+## 对话收尾流程（2026-08-12 项目线规范②，每次对话工作完成后必走）
+
+> 完整规范：`D:\ObsidianVault\00-Meta\项目线-对话收尾流程.md`
+
+1. **更新项目文档**：PROGRESS.md（今日进度：做了什么/下一步/卡点）+ docs/PITFALLS.md（今日坑点：现象→根因→修复→预防）
+2. **neat-freak 六面审计**：代码/运行态/文档/规则/记忆/工作区一致性（五态：verified-current/changed-and-verified/pending/out-of-scope/not-applicable），消除多真相并存
+3. **同步 GitHub**：commit（conventional commits + 提交前自查 4 问）+ push
+4. **更新 Obsidian 02-Projects**：项目上下文.md / 项目经验.md（衔接③）

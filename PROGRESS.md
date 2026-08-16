@@ -316,3 +316,55 @@
 **下一步决策点**：
 - 试装后 → 推 tag `v0.1.0` → GitHub Actions 自动跑 release workflow → draft .msi 在 GitHub Releases
 - 或先小修 → 再决定是否推 tag
+---
+
+## 2026-08-10 ~ 08-11（Marvis 执行，Hermes 补记）
+
+> 由 Hermes 于 2026-08-12 补记（Marvis 未回填跟踪日志，从 git log 还原；commit 以 lj225 身份提交）
+
+### UI 线（Vercel 部署 + 桌面端对齐）
+
+- `7b3ce3f`（08-10 15:44）fix(ui)：试聊页输入框置底布局（TryChatStub flex-col），同步 desktop/ui 静态产物
+- `666a2dd`（08-11 02:06）fix(ui)：桌面端首启体验——OnboardingGuard 放行无 Key、新增 WelcomeHero 三场景引导、llm-router 演示模式、同步 desktop/ui 产物
+- 此前 8 个 commit（858023e→63a31f1）：Vercel 部署 UI（landing/chat/try/releases 下载页，vermillion 设计系统）
+
+### 新功能
+
+- `aad9acb`（08-11 13:04）feat(broker)：A股券商交割单 CSV 导入——编码自适应/表头归一化/券商识别/幂等去重，SQLite 入库（broker.db），5 个 MCP 工具，server.py 工具总数 64，21 用例通过，文档 docs/broker-csv-import.md
+
+### 待跟进（已由 08-16 Marvis 收尾轮解决，见下节）
+
+- [x] 本地工作区大量未提交改动——08-16 已整理提交（0196ef4 / 6a6ed60）
+- [x] 验证 UI 对齐是否完整——08-16 playwright 冒烟验证通过
+
+---
+
+## 2026-08-16（Marvis 执行回填收尾 · W33-invest-brain-0810）
+
+> 执行者：Marvis ｜ 2026-08-16 ｜ 验证痕迹：git log SHA（0196ef4/6a6ed60）、playwright 冒烟输出（8 静态页 vermillion 主题、bg-blue=0）、neat-freak 报告（见遗留）
+
+### 1. UI/用户旅程对齐（vermillion 主题全站统一）
+
+- app/ 全站组件统一 vermillion 设计系统：`(app)/layout`（bg-paper/text-ink）、Sidebar（paper-warm + active vermillion）、InputBox（发送按钮 vermillion）、MessageBubble（vermillion-light/30 气泡）、WelcomeHero、ToolCallCard、settings/LLMKeyForm/PackConfigForm、packs、archive、HistoryList、TryGuide、LLMKeyWizard 等，移除全部旧灰色/蓝色主题
+- 试聊页 `app/try` 迁移至 `app/(app)/try`，新增 TryGuide 引导页（点击场景带问题进入工作台对话），demo 场景数据抽离至 `lib/demo-data.ts`；`TryChatStub.tsx` 移除
+- 新增本地档案页 `app/(app)/archive`（想法/决策/行为体检/会话记录，数据目录展示 + 错误降级）
+- `next.config.js` 静态导出；`desktop/ui` 重建为扁平 html 产物（原 `*/index.html` 子目录结构移除），全部 8 页均为 vermillion 主题
+- **playwright 冒烟验证**（desktop/node_modules/playwright 对 `file://desktop/ui/*.html`）：index/chat/try/archive/packs/settings/onboarding/openapi 8 页全部加载成功，vermillion 计数 1~58、bg-blue 残留 0
+
+### 2. 未提交改动整理提交（push 至 GitHub master）
+
+- `0196ef4` feat(ui)：全站统一 vermillion 主题，对齐 desktop/ 与 app/ 用户旅程（含 desktop/ui 静态产物重建）
+- `6a6ed60` feat(desktop)：sidecar 扩展为真实 HTTP 服务（/api/meta、/api/llm/config、/api/archive 等，VERSION 0.2.0），更新图标与 wix 打包配置
+- 未纳入提交（保留在工作区，非本任务产物）：desktop 验收截图 png、sidecar 构建日志与旧版备份 server_20260811_*.py、app/desktop 各 build 日志、skills/investbrain-agent（MCP 技能目录，归属待定）、验收截图/ 目录
+
+### 3. 文档
+
+- PROGRESS.md 补记 7/29 后 Vercel UI 线（本段），8/10-11 记录由 Hermes 补记保留
+- AGENTS.md 为 8/12 项目线规范（提交前自查 4 问/对话收尾流程），保留未动
+
+### 待决遗留
+
+- [ ] **neat-freak 报告无法运行**：仓库无 neat-freak 可执行文件/脚本，全局无命令，npx 缺包；`.neat-freak/reports` 仅有 2026-07-24 旧报告。本轮以 playwright 冒烟 + 提交前自查（AGENTS.md 4 问）代替代码质量门禁
+- [ ] `skills/investbrain-agent/` 未跟踪（datasources.yaml/manifest.json/SKILL.md），归属与是否入库待定
+- [ ] 工作区仍有 desktop 验收截图、构建日志等未提交杂项，如需入库请另行指示
+- [ ] desktop/ui 的 `_next/` 与 `out/` 已加入 .gitignore，构建产物不入库
