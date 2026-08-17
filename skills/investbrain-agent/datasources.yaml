@@ -1,0 +1,67 @@
+# InvestBrain 数据接入声明（WorkBuddy SkillHub 模式）
+# 原则：数据获取用对应平台 skill，本包不内置数据获取逻辑，只声明依赖与兜底。
+# 版本：0.1.0（设计原型，未发布）
+
+version: "0.1.0"
+
+# ── 1. 平台数据源 skill 依赖（首选，由平台按需注入） ──────────────────────
+platform_skills:
+  - id: eastmoney-quote        # 平台行情 skill（A股/基金估值）
+    provides: [quote_a, fund_est]
+    auth: none
+    fallback: builtin:akshare
+  - id: tushare-finance        # 平台 Tushare skill（财务/历史）
+    provides: [financial, hist]
+    auth: TUSHARE_TOKEN
+    fallback: builtin:tushare
+  - id: yfinance-global        # 美股/港股/全球指数/新闻
+    provides: [quote_global, news]
+    auth: none
+    fallback: external:mcp-yfinance
+  - id: search-news            # 新闻舆情聚合（可选，如 SearXNG）
+    provides: [news]
+    auth: none
+    optional: true
+
+# ── 2. 内置轻量数据源（兜底，随 MCP server 分发） ─────────────────────────
+builtin:
+  - id: akshare
+    module: src.mcp_server.datasources.akshare_datasource
+    provides: [quote_a, macro, fund]
+    requires_env: null
+  - id: tushare
+    module: src.mcp_server.datasources.tushare_datasource
+    provides: [financial, hist]
+    requires_env: TUSHARE_TOKEN
+
+# ── 3. 外部 MCP 增强（可选，M9 调研候选，接入前需决策） ───────────────────
+external_mcp:
+  - id: akshare-mcp
+    source: https://smithery.ai/server/@chatfire-mcp/akshare-mcp
+    provides: [quote_a, macro, fund]
+    status: candidate
+  - id: mcp-yfinance
+    source: https://smithery.ai/server/@normulyze/mcp-yfinance
+    provides: [quote_global, news]
+    status: candidate
+
+# ── 4. 统一 schema（handlers 只感知此结构，不感知来源差异） ───────────────
+schemas:
+  quote_a:
+    fields: [symbol, name, price, change_pct, pe, pb, volume, ts]
+    source: eastmoney-quote | akshare | akshare-mcp
+  quote_global:
+    fields: [symbol, name, price, change_pct, ts]
+    source: yfinance-global | mcp-yfinance
+  financial:
+    fields: [symbol, period, revenue, net_profit, roe, source]
+    source: tushare-finance | tushare
+  fund_est:
+    fields: [code, name, est_nav, est_pct, ts]
+    source: eastmoney-quote
+  news:
+    fields: [title, url, ts, sentiment, source]
+    source: yfinance-global | search-news
+  macro:
+    fields: [indicator, value, unit, ts, source]
+    source: akshare | akshare-mcp

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Invest Brain · App 图标方案对比</title>
+<style>
+  :root {
+    --paper: #FAF7F2;
+    --ink: #2C2C2C;
+    --red: #C43A31;
+    --gold: #C9A96E;
+    --sand: #E8E3DA;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Georgia', 'Noto Serif SC', 'SimSun', serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 60px 32px;
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  .header h1 {
+    font-size: 36px;
+    color: var(--red);
+    letter-spacing: 4px;
+    margin-bottom: 12px;
+  }
+  .header .sub {
+    font-size: 14px;
+    color: #888;
+    letter-spacing: 2px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    max-width: 1280px;
+    margin: 0 auto 48px;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid var(--sand);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(196,58,49,0.12);
+  }
+  .icon-large {
+    width: 280px;
+    height: 280px;
+    margin: 0 auto 20px;
+    display: block;
+    border-radius: 56px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .card h3 {
+    font-size: 20px;
+    color: var(--red);
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+  }
+  .card .tagline {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+  }
+  .card .desc {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #555;
+    text-align: left;
+    padding: 0 8px;
+  }
+  .small-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px dashed var(--sand);
+  }
+  .small-row .small-label {
+    font-size: 12px;
+    color: #999;
+    text-align: center;
+  }
+  .icon-small {
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  }
+  .sizes {
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .footer {
+    text-align: center;
+    margin-top: 60px;
+    padding-top: 32px;
+    border-top: 1px solid var(--sand);
+    color: #aaa;
+    font-size: 13px;
+  }
+  .legend {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    margin: 20px 0 40px;
+    font-size: 13px;
+    color: #888;
+  }
+  .legend span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🧠 Invest Brain · App 图标方案</h1>
+  <p class="sub">3 个方向 · 同品牌色系 · 矢量可缩放</p>
+  <div class="legend">
+    <span><span class="dot" style="background:#C43A31"></span> 朱砂红（品牌主色）</span>
+    <span><span class="dot" style="background:#C9A96E"></span> 金箔（点缀）</span>
+    <span><span class="dot" style="background:#FAF7F2;border:1px solid #ccc"></span> 暖纸底（背景）</span>
+  </div>
+</div>
+
+<div class="grid">
+
+  <div class="card">
+    <img src="concept-a-brain-candlestick.svg" alt="Concept A" class="icon-large"/>
+    <h3>A · 智脑图谱</h3>
+    <p class="tagline">大脑 × K 线 · 智能投资</p>
+    <p class="desc">
+      大脑外形内部嵌入 K 线蜡烛（左降右升），中央脑沟分开左右半球，顶部金箔小点点睛"灵感闪光"。
+      <br><br>
+      <strong>核心隐喻</strong>：投资思维的两面——理性（K 线结构）与判断（左右对称）。
+      <br><br>
+      <strong>适合场景</strong>：强金融属性，强调"量化/分析"。
+    </p>
+    <div class="small-row">
+      <div class="sizes">
+        <div>
+          <img src="concept-a-brain-candlestick.svg" width="64" height="64" class="icon-small"/>
+          <div class="small-label">64px</div>
+        </div>
+        <div>
+          <img src="concept-a-brain-candlestick.svg" width="32" height="32" class="icon-small" style="border-radius:6px"/>
+          <div class="small-label">32px</div>
+        </div>
+        <div>
+          <img src="concept-a-brain-candlestick.svg" width="16" height="16" class="icon-small" style="border-radius:3px"/>
+          <div class="small-label">16px</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="concept-b-notebook-growth.svg" alt="Concept B" class="icon-large"/>
+    <h3>B · 投资笔记</h3>
+    <p class="tagline">笔记 × 增长 · 记录复利</p>
+    <p class="desc">
+      翻开的两页笔记本：左页是文字横线笔记，右页是 K 线图与上升趋势线，左上角"🅑"小标识强化品牌。
+      <br><br>
+      <strong>核心隐喻</strong>：投资笔记让思路"长出来"，记录带来复利。
+      <br><br>
+      <strong>适合场景</strong>：突出"笔记/复盘"功能，适合内容型产品。
+    </p>
+    <div class="small-row">
+      <div class="sizes">
+        <div>
+          <img src="concept-b-notebook-growth.svg" width="64" height="64" class="icon-small"/>
+          <div class="small-label">64px</div>
+        </div>
+        <div>
+          <img src="concept-b-notebook-growth.svg" width="32" height="32" class="icon-small" style="border-radius:6px"/>
+          <div class="small-label">32px</div>
+        </div>
+        <div>
+          <img src="concept-b-notebook-growth.svg" width="16" height="16" class="icon-small" style="border-radius:3px"/>
+          <div class="small-label">16px</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="concept-c-neural-network.svg" alt="Concept C" class="icon-large"/>
+    <h3>C · 神经元金箔</h3>
+    <p class="tagline">网络 × 上升路径 · AI 决策</p>
+    <p class="desc">
+      9 个神经网络节点构成大脑轮廓，中心节点是核心算力，金色高亮路径穿过中心呈现上升趋势，箭头指向右上。
+      <br><br>
+      <strong>核心隐喻</strong>：多源信息汇聚 → 智能分析 → 投资判断。
+      <br><br>
+      <strong>适合场景</strong>：强调 AI/智能属性，适合科技感产品。
+    </p>
+    <div class="small-row">
+      <div class="sizes">
+        <div>
+          <img src="concept-c-neural-network.svg" width="64" height="64" class="icon-small"/>
+          <div class="small-label">64px</div>
+        </div>
+        <div>
+          <img src="concept-c-neural-network.svg" width="32" height="32" class="icon-small" style="border-radius:6px"/>
+          <div class="small-label">32px</div>
+        </div>
+        <div>
+          <img src="concept-c-neural-network.svg" width="16" height="16" class="icon-small" style="border-radius:3px"/>
+          <div class="small-label">16px</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  InvestBrain · Desktop Icon Concept Preview · 矢量 SVG · 可缩放至任意尺寸
+</div>
+
+</body>
+</html>

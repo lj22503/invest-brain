@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <clipPath id="bg-clip">
+      <rect width="1024" height="1024" rx="220" ry="220"/>
+    </clipPath>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FAF7F2"/>
+      <stop offset="100%" stop-color="#F2EBDD"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#C43A31" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#C43A31" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <g clip-path="url(#bg-clip)">
+    <rect width="1024" height="1024" fill="url(#bg-grad)"/>
+
+    <!-- 中心光晕 -->
+    <circle cx="512" cy="512" r="350" fill="url(#glow)"/>
+
+    <!-- 装饰角点 -->
+    <circle cx="140" cy="180" r="6" fill="#C43A31" opacity="0.22"/>
+    <circle cx="884" cy="200" r="5" fill="#C9A96E" opacity="0.40"/>
+    <circle cx="160" cy="850" r="7" fill="#C9A96E" opacity="0.35"/>
+    <circle cx="870" cy="870" r="6" fill="#C43A31" opacity="0.20"/>
+
+    <!-- 神经网络节点位置（9个节点，构成大脑轮廓） -->
+    <!-- 左半球节点 -->
+    <g fill="#C43A31">
+      <!-- 上排 -->
+      <circle cx="370" cy="300" r="22"/>
+      <circle cx="290" cy="430" r="22"/>
+      <!-- 中排 -->
+      <circle cx="260" cy="560" r="22"/>
+      <!-- 下排 -->
+      <circle cx="320" cy="690" r="22"/>
+      <circle cx="420" cy="770" r="22"/>
+    </g>
+
+    <!-- 右半球节点（金色 = 上升路径节点） -->
+    <g fill="#C9A96E">
+      <!-- 上排 -->
+      <circle cx="654" cy="300" r="22"/>
+      <!-- 中排 -->
+      <circle cx="734" cy="430" r="22"/>
+      <circle cx="764" cy="560" r="22"/>
+      <!-- 下排 -->
+      <circle cx="704" cy="690" r="22"/>
+      <circle cx="604" cy="770" r="22"/>
+    </g>
+
+    <!-- 中心节点（最大 = 大脑核心） -->
+    <circle cx="512" cy="500" r="32" fill="#C43A31"/>
+    <circle cx="512" cy="500" r="18" fill="#FAF7F2"/>
+    <circle cx="512" cy="500" r="10" fill="#C43A31"/>
+
+    <!-- 连接线（神经网络） -->
+    <g stroke="#C43A31" stroke-width="3" opacity="0.35" fill="none">
+      <!-- 左半球内部连接 -->
+      <line x1="370" y1="300" x2="290" y2="430"/>
+      <line x1="290" y1="430" x2="260" y2="560"/>
+      <line x1="260" y1="560" x2="320" y2="690"/>
+      <line x1="320" y1="690" x2="420" y2="770"/>
+      <line x1="370" y1="300" x2="420" y2="770"/>
+      <line x1="290" y1="430" x2="420" y2="770"/>
+    </g>
+
+    <!-- 右半球内部连接（金色） -->
+    <g stroke="#C9A96E" stroke-width="3" opacity="0.45" fill="none">
+      <line x1="654" y1="300" x2="734" y2="430"/>
+      <line x1="734" y1="430" x2="764" y2="560"/>
+      <line x1="764" y1="560" x2="704" y2="690"/>
+      <line x1="704" y1="690" x2="604" y2="770"/>
+      <line x1="654" y1="300" x2="604" y2="770"/>
+    </g>
+
+    <!-- 跨半球连接到中心 -->
+    <g stroke="#C43A31" stroke-width="3" opacity="0.30" fill="none">
+      <line x1="370" y1="300" x2="512" y2="500"/>
+      <line x1="290" y1="430" x2="512" y2="500"/>
+      <line x1="260" y1="560" x2="512" y2="500"/>
+      <line x1="320" y1="690" x2="512" y2="500"/>
+      <line x1="420" y1="770" x2="512" y2="500"/>
+      <line x1="654" y1="300" x2="512" y2="500"/>
+      <line x1="734" y1="430" x2="512" y2="500"/>
+      <line x1="764" y1="560" x2="512" y2="500"/>
+      <line x1="704" y1="690" x2="512" y2="500"/>
+      <line x1="604" y1="770" x2="512" y2="500"/>
+    </g>
+
+    <!-- 高亮趋势路径（金色发光，左下到右上） -->
+    <polyline points="420,770 512,500 654,300"
+              stroke="#C9A96E" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+
+    <!-- 趋势路径终点箭头 -->
+    <path d="M 654 300 L 685 285 L 668 312 Z" fill="#C9A96E"/>
+
+    <!-- 高亮节点光圈 -->
+    <circle cx="420" cy="770" r="34" fill="none" stroke="#C9A96E" stroke-width="3" opacity="0.55"/>
+    <circle cx="654" cy="300" r="34" fill="none" stroke="#C9A96E" stroke-width="3" opacity="0.55"/>
+  </g>
+</svg>

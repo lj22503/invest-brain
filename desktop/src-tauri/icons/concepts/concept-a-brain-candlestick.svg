@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- 圆角背景 -->
+  <defs>
+    <clipPath id="bg-clip">
+      <rect width="1024" height="1024" rx="220" ry="220"/>
+    </clipPath>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FAF7F2"/>
+      <stop offset="100%" stop-color="#F2EBDD"/>
+    </linearGradient>
+  </defs>
+
+  <g clip-path="url(#bg-clip)">
+    <!-- 背景 -->
+    <rect width="1024" height="1024" fill="url(#bg-grad)"/>
+
+    <!-- 装饰：左侧小圆点 -->
+    <circle cx="180" cy="200" r="8" fill="#C43A31" opacity="0.18"/>
+    <circle cx="120" cy="320" r="5" fill="#C43A31" opacity="0.14"/>
+    <circle cx="220" cy="780" r="6" fill="#C43A31" opacity="0.16"/>
+    <circle cx="850" cy="180" r="7" fill="#C9A96E" opacity="0.32"/>
+    <circle cx="900" cy="850" r="6" fill="#C9A96E" opacity="0.28"/>
+
+    <!-- 大脑外轮廓（左半球+右半球合在一起） -->
+    <path d="M 512 230
+             C 360 230, 250 330, 250 480
+             C 250 540, 270 590, 295 630
+             C 280 660, 275 700, 290 740
+             C 305 785, 350 810, 410 805
+             C 425 825, 460 835, 512 835
+             C 564 835, 599 825, 614 805
+             C 674 810, 719 785, 734 740
+             C 749 700, 744 660, 729 630
+             C 754 590, 774 540, 774 480
+             C 774 330, 664 230, 512 230 Z"
+          fill="#C43A31"/>
+
+    <!-- 中央脑沟（白色分隔） -->
+    <path d="M 512 240 Q 508 350, 512 460 Q 516 570, 512 680 Q 508 770, 512 825"
+          stroke="#FAF7F2" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.92"/>
+
+    <!-- 左半球内部：下降趋势线（K线图样式） -->
+    <g stroke="#FAF7F2" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.95">
+      <!-- 蜡烛1（左下到右上） -->
+      <line x1="340" y1="700" x2="340" y2="620"/>
+      <rect x="328" y="640" width="24" height="44" fill="#FAF7F2" stroke="none"/>
+
+      <!-- 蜡烛2 -->
+      <line x1="395" y1="650" x2="395" y2="540"/>
+      <rect x="383" y="560" width="24" height="60" fill="#FAF7F2" stroke="none"/>
+
+      <!-- 蜡烛3 -->
+      <line x1="450" y1="620" x2="450" y2="470"/>
+      <rect x="438" y="490" width="24" height="76" fill="#FAF7F2" stroke="none"/>
+    </g>
+
+    <!-- 右半球内部：上升趋势线（K线图样式） -->
+    <g stroke="#FAF7F2" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.95">
+      <!-- 蜡烛1 -->
+      <line x1="574" y1="500" x2="574" y2="370"/>
+      <rect x="562" y="390" width="24" height="80" fill="#FAF7F2" stroke="none"/>
+
+      <!-- 蜡烛2 -->
+      <line x1="629" y1="540" x2="629" y2="380"/>
+      <rect x="617" y="400" width="24" height="100" fill="#FAF7F2" stroke="none"/>
+
+      <!-- 蜡烛3 -->
+      <line x1="684" y1="590" x2="684" y2="400"/>
+      <rect x="672" y="420" width="24" height="120" fill="#FAF7F2" stroke="none"/>
+    </g>
+
+    <!-- 脑顶金箔小点（智能闪光） -->
+    <circle cx="430" cy="300" r="10" fill="#C9A96E"/>
+    <circle cx="594" cy="300" r="10" fill="#C9A96E"/>
+    <circle cx="512" cy="270" r="14" fill="#C9A96E"/>
+  </g>
+</svg>

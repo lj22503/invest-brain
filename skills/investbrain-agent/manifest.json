@@ -1,0 +1,29 @@
+{
+  "manifest_version": "0.2",
+  "name": "investbrain-agent",
+  "version": "0.2.0",
+  "description": "投资第二大脑（InvestBrain）Skill Agent 包：想法记录/投资RAG/记忆系统/提醒触发/行为模式挖掘/大师圆桌。数据接入遵循平台数据源 skill 模式，不内置数据获取逻辑。",
+  "entry": {
+    "type": "skill",
+    "skill_file": "SKILL.md",
+    "datasources": "datasources.yaml"
+  },
+  "sub_skills": [
+    "invest-roundtable"
+  ],
+  "capabilities": [
+    "idea-recorder",
+    "knowledge-rag",
+    "memory-keeper",
+    "reminder-scheduler",
+    "master-analyst",
+    "learning-coaching"
+  ],
+  "auth_required": [
+    "TUSHARE_TOKEN",
+    "DASHSCOPE_API_KEY",
+    "AGAINST_API_KEY"
+  ],
+  "license": "AGPL-3.0",
+  "data_local_only": true
+}

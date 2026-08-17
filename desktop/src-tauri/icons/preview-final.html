@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InvestBrain · App Icon (Concept C · 神经元金箔)</title>
+<style>
+  :root{ --paper:#FAF7F2; --ink:#1d1b18; --red:#C43A31; --gold:#C9A96E; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;
+       background:#e9e6df;color:var(--ink);padding:40px 24px}
+  .wrap{max-width:980px;margin:0 auto}
+  h1{font-size:22px;margin:0 0 4px}
+  .sub{color:#6b655c;font-size:13px;margin-bottom:28px}
+  .card{background:#fff;border-radius:16px;padding:26px;margin-bottom:22px;box-shadow:0 2px 14px rgba(0,0,0,.06)}
+  .card h2{font-size:15px;margin:0 0 18px;color:#3a352f;letter-spacing:.3px}
+  .row{display:flex;flex-wrap:wrap;gap:26px;align-items:flex-end}
+  .item{display:flex;flex-direction:column;align-items:center;gap:8px}
+  .item span{font-size:11px;color:#8a8378}
+  .size-box{display:flex;align-items:center;justify-content:center;background:
+     linear-gradient(135deg,#f7f4ee,#efe9dc);border-radius:14px}
+  .on-dark{background:#1f1d1a}
+  .vwrap{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}
+  .vwrap img{max-width:220px;height:auto;border:1px solid #ece7dc;border-radius:12px}
+  /* Windows taskbar mock */
+  .taskbar{background:#1b1a18;border-radius:10px;padding:8px 10px;display:flex;align-items:center;gap:10px;width:max-content}
+  .tb-icon{width:40px;height:40px;border-radius:8px}
+  .tb-label{color:#e8e4dc;font-size:13px}
+  .start{width:18px;height:18px;border:2px solid #e8e4dc;border-radius:3px;transform:rotate(45deg)}
+  /* macOS dock mock */
+  .dock{background:rgba(40,38,35,.55);backdrop-filter:blur(6px);border-radius:18px;padding:8px 14px;display:flex;gap:14px;align-items:flex-end}
+  .dock img{width:56px;height:56px;border-radius:13px;box-shadow:0 4px 10px rgba(0,0,0,.35)}
+  .meta{font-size:12px;color:#6b655c;line-height:1.7}
+  .meta code{background:#f1ede4;padding:1px 6px;border-radius:5px;color:#9a5a3a}
+  .badge{display:inline-block;background:var(--red);color:#fff;font-size:11px;padding:2px 9px;border-radius:20px;margin-left:8px;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>InvestBrain · 桌面端 App 图标 <span class="badge">Concept C · 神经元金箔</span></h1>
+  <div class="sub">矢量源：icon-master.svg ｜ 已生成全套 PNG + 多分辨率 icon.ico，替换 Tauri 桌面端图标</div>
+
+  <div class="card">
+    <h2>多尺寸实拍（浅底）</h2>
+    <div class="row" id="light"></div>
+  </div>
+
+  <div class="card">
+    <h2>小尺寸可读性（深底）</h2>
+    <div class="row on-dark" id="dark" style="padding:18px;border-radius:12px"></div>
+    <div class="meta" style="margin-top:14px">16 / 24 / 32px 为任务栏与开始菜单实际显示尺寸，朱砂红节点 + 金箔趋势线在小尺寸下仍可辨。</div>
+  </div>
+
+  <div class="card">
+    <h2>矢量源（无限缩放）</h2>
+    <div class="vwrap">
+      <img src="icon-master.svg" alt="vector source">
+      <div class="meta">
+        设计语言：暖纸底 <code>#FAF7F2→#F2EBDD</code> · 朱砂红 <code>#C43A31</code> · 金箔 <code>#C9A96E</code><br><br>
+        · 9 节点神经网络构成大脑轮廓<br>
+        · 左半球朱砂红 = 多源信息 / 理性分析<br>
+        · 右半球金箔 = 智能判断 / 上升路径<br>
+        · 中心核 = 投资大脑核心<br>
+        · 金箔高亮折线 = 自下而上的收益曲线<br><br>
+        隐喻：多源信息 → 智能分析 → 投资判断
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>真实使用场景模拟</h2>
+    <div style="margin-bottom:22px">
+      <div class="meta" style="margin-bottom:8px">Windows 任务栏</div>
+      <div class="taskbar">
+        <div class="start"></div>
+        <img class="tb-icon" src="icon.png" alt="">
+        <span class="tb-label">InvestBrain</span>
+      </div>
+    </div>
+    <div>
+      <div class="meta" style="margin-bottom:8px">macOS Dock（仅作视觉参考）</div>
+      <div class="dock"><img src="icon.png" alt=""></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>交付文件清单</h2>
+    <div class="meta">
+      <code>icon.png</code> — 1024×1024 主图（已替换原 512 版）<br>
+      <code>icon.ico</code> — 7 档分辨率 16/24/32/48/64/128/256（32bpp）<br>
+      <code>32x32.png</code> · <code>128x128.png</code> · <code>128x128@2x.png</code> — Tauri 标准伴生图<br>
+      <code>icon-master.svg</code> — 矢量生产主图（全方形铺底，系统自行圆角）<br>
+      <code>concepts/</code> — 三套方案 SVG + 对比预览页（保留备查）
+    </div>
+  </div>
+</div>
+<script>
+  const sizes=[16,24,32,48,64,128,256,512,1024];
+  const light=document.getElementById('light');
+  const dark=document.getElementById('dark');
+  sizes.forEach(s=>{
+    const box=document.createElement('div'); box.className='item';
+    const frame=document.createElement('div'); frame.className='size-box';
+    frame.style.width=s+'px'; frame.style.height=s+'px'; frame.style.padding=(s>=64?Math.round(s*0.08):0)+'px';
+    const img=document.createElement('img'); img.src='icon.png'; img.width=s; img.height=s;
+    frame.appendChild(img);
+    const lab=document.createElement('span'); lab.textContent=s+'px';
+    box.appendChild(frame); box.appendChild(lab);
+    light.appendChild(box);
+    if([16,24,32,48].includes(s)){ const c=box.cloneNode(true); dark.appendChild(c); }
+  });
+</script>
+</body>
+</html>

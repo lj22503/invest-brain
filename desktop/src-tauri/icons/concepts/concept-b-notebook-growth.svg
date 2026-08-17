@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <clipPath id="bg-clip">
+      <rect width="1024" height="1024" rx="220" ry="220"/>
+    </clipPath>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FAF7F2"/>
+      <stop offset="100%" stop-color="#F2EBDD"/>
+    </linearGradient>
+    <linearGradient id="page-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFEF9"/>
+      <stop offset="100%" stop-color="#F5EFE2"/>
+    </linearGradient>
+  </defs>
+
+  <g clip-path="url(#bg-clip)">
+    <rect width="1024" height="1024" fill="url(#bg-grad)"/>
+
+    <!-- 装饰小点 -->
+    <circle cx="130" cy="220" r="7" fill="#C43A31" opacity="0.20"/>
+    <circle cx="900" cy="260" r="6" fill="#C9A96E" opacity="0.35"/>
+    <circle cx="180" cy="780" r="8" fill="#C43A31" opacity="0.18"/>
+    <circle cx="870" cy="800" r="5" fill="#C9A96E" opacity="0.30"/>
+
+    <!-- 笔记本左页 -->
+    <path d="M 175 360
+             L 175 760
+             L 512 760
+             L 512 360
+             L 380 320
+             Q 280 320, 175 360 Z"
+          fill="url(#page-grad)" stroke="#C43A31" stroke-width="6" stroke-linejoin="round"/>
+
+    <!-- 笔记本右页 -->
+    <path d="M 512 360
+             L 512 760
+             L 849 760
+             L 849 360
+             Q 744 320, 644 320
+             L 512 360 Z"
+          fill="url(#page-grad)" stroke="#C43A31" stroke-width="6" stroke-linejoin="round"/>
+
+    <!-- 中线（书脊阴影） -->
+    <line x1="512" y1="360" x2="512" y2="760" stroke="#C43A31" stroke-width="4" opacity="0.35"/>
+
+    <!-- ���页：横线笔记 -->
+    <g stroke="#C43A31" stroke-width="3" opacity="0.35" stroke-linecap="round">
+      <line x1="225" y1="450" x2="465" y2="450"/>
+      <line x1="225" y1="490" x2="440" y2="490"/>
+      <line x1="225" y1="530" x2="455" y2="530"/>
+      <line x1="225" y1="570" x2="430" y2="570"/>
+      <line x1="225" y1="610" x2="465" y2="610"/>
+      <line x1="225" y1="650" x2="410" y2="650"/>
+      <line x1="225" y1="690" x2="450" y2="690"/>
+    </g>
+
+    <!-- 右页：K 线图 + 趋势线 -->
+    <!-- K 线蜡烛 -->
+    <g>
+      <!-- 蜡烛1（红涨） -->
+      <line x1="565" y1="680" x2="565" y2="620" stroke="#C43A31" stroke-width="3"/>
+      <rect x="558" y="630" width="14" height="40" fill="#C43A31"/>
+
+      <!-- 蜡烛2（红涨） -->
+      <line x1="610" y1="660" x2="610" y2="580" stroke="#C43A31" stroke-width="3"/>
+      <rect x="603" y="595" width="14" height="50" fill="#C43A31"/>
+
+      <!-- 蜡烛3（红涨） -->
+      <line x1="655" y1="640" x2="655" y2="540" stroke="#C43A31" stroke-width="3"/>
+      <rect x="648" y="555" width="14" height="65" fill="#C43A31"/>
+
+      <!-- 蜡烛4（红涨） -->
+      <line x1="700" y1="610" x2="700" y2="490" stroke="#C43A31" stroke-width="3"/>
+      <rect x="693" y="510" width="14" height="80" fill="#C43A31"/>
+
+      <!-- 蜡烛5（大涨） -->
+      <line x1="745" y1="600" x2="745" y2="440" stroke="#C43A31" stroke-width="3"/>
+      <rect x="738" y="465" width="14" height="110" fill="#C43A31"/>
+
+      <!-- 蜡烛6（大涨） -->
+      <line x1="790" y1="580" x2="790" y2="400" stroke="#C43A31" stroke-width="3"/>
+      <rect x="783" y="430" width="14" height="120" fill="#C43A31"/>
+    </g>
+
+    <!-- 趋势线（白色覆盖 K 线上方） -->
+    <polyline points="565,650 610,620 655,580 700,530 745,475 790,420"
+              stroke="#FFFEF9" stroke-width="5" fill="none" stroke-linejoin="round" opacity="0.85"/>
+
+    <!-- 趋势箭头 -->
+    <path d="M 790 420 L 815 405 L 800 430 Z" fill="#FFFEF9"/>
+
+    <!-- 顶部小圆点：起点 -->
+    <circle cx="565" cy="650" r="6" fill="#C9A96E"/>
+
+    <!-- 脑符号（左上角小图标） -->
+    <g transform="translate(280, 380)" opacity="0.9">
+      <circle cx="0" cy="0" r="18" fill="#C43A31"/>
+      <text x="0" y="6" text-anchor="middle" fill="#FAF7F2" font-size="20" font-weight="bold" font-family="serif">B</text>
+    </g>
+  </g>
+</svg>

@@ -44,6 +44,9 @@ app/.next/
 app/out/
 app/next-env.d.ts
 
+# Root Next.js export output (regenerable; desktop/ui is synced copy for Tauri)
+out/
+
 # Next.js export _next/ chunks (hashed, change every build — already committed once in fb2a64d but gitignore for future builds)
 desktop/ui/_next/
 
