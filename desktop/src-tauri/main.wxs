@@ -18,7 +18,7 @@
             UpgradeCode="22f514d8-64a1-519b-9439-e7400ac82675"
             Language="!(loc.TauriLanguage)"
             Manufacturer="investbrain"
-            Version="0.1.1">
+            Version="0.1.2">
 
         <Package Id="*"
                  Keywords="Installer"

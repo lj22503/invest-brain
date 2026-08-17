@@ -31,6 +31,26 @@ export interface ChatResult {
   demo?: boolean;
   provider?: string;
   detail?: string;
+  context?: {
+    loaded: boolean;
+    principles: number;
+    patterns: number;
+    thoughts: number;
+    decisions: number;
+  };
+  ingested?: {
+    patterns: string[];
+    thoughts: number;
+    decisions: number;
+  };
+}
+
+export interface BrainContext {
+  loaded: boolean;
+  principles: Array<{ id: number; content: string }>;
+  patterns: Array<{ pattern_type: string; cnt: number }>;
+  thoughts: Array<Record<string, unknown>>;
+  decisions: Array<Record<string, unknown>>;
 }
 
 const SIDECAR_BASE = 'http://127.0.0.1:8765';
@@ -65,6 +85,10 @@ export async function saveLLMConfig(config: {
 
 export async function getArchive(): Promise<ArchiveSection> {
   return sidecarFetch('/api/archive');
+}
+
+export async function getContext(): Promise<BrainContext> {
+  return sidecarFetch('/api/context');
 }
 
 export async function callLLMRemote(history: { role: string; content: string }[], userMsg: string): Promise<ChatResult> {

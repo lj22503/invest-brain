@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ChatView } from '@/components/chat/ChatView';
 import { InputBox } from '@/components/chat/InputBox';
+import { BrainContextBar } from '@/components/chat/BrainContextBar';
 import { useChatStore, Message } from '@/lib/chat-store';
 import { callLLM } from '@/lib/llm-router';
 
@@ -13,6 +14,7 @@ export default function HomePage() {
   const addConversation = useChatStore(s => s.addConversation);
   const appendMessage = useChatStore(s => s.appendMessage);
   const handleSendRef = useRef<(text: string) => void>(() => {});
+  const [brainKey, setBrainKey] = useState(0);
 
   const handleSend = async (text: string) => {
     const conversationId = activeId ?? `conv-${Date.now()}`;
@@ -43,6 +45,7 @@ export default function HomePage() {
         createdAt: new Date().toISOString(),
       };
       appendMessage(conversationId, aiMsg);
+      setBrainKey(k => k + 1); // 对话后刷新大脑状态（可能刚入档了新内容）
     } catch (e) {
       // 兜底：不应出现裸 TypeError，降级为可读提示
       const errMsg: Message = {
@@ -68,6 +71,7 @@ export default function HomePage() {
 
   return (
     <>
+      <BrainContextBar refreshKey={brainKey} />
       <ChatView onSend={handleSend} />
       <InputBox onSend={handleSend} />
     </>
