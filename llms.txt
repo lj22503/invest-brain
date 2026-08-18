@@ -1,89 +1,92 @@
-# llms.txt — InvestBrain
+# llms.txt — InvestBrain (投资第二大脑)
 
-## Project Overview
+## 网站/仓库简介
 
-InvestBrain is a self-discipline tool for experienced investors. It acts as a "mirror + discipline anchor" — NOT a financial advisor. The product helps investors resist narrative-driven decisions through structured idea logging, RAG-based knowledge retrieval, behavior pattern mining, and rule-based reminders.
+InvestBrain 是一款面向有经验投资者的"投资第二大脑"——本地优先的个人投资记忆与行为审计工具。它通过想法记录、大师 RAG 问答、行为模式挖掘与价格/时间提醒，帮助投资者抵抗追高、恐慌抛售等叙事驱动决策，缩小"知道"与"做到"之间的差距（知行合一）。非投资建议，不荐股、不承诺收益。
 
-Mission: 解决"知行合一"问题 (Bridge the gap between knowing and doing).
+## 核心页面
 
-## Core Pages
+- [README（完整中文文档）](https://github.com/lj22503/invest-brain) — 快速体验、核心能力、示例对话、架构
+- [README_EN（English）](https://github.com/lj22503/invest-brain/blob/main/README_EN.md) — English quick start
+- [Homepage / 线上演示](https://invest-brain-mocha.vercel.app) — Vercel 部署的试聊页
+- [docs/](docs/) — 领域文档（知识库、数据源等）
+- [skills/](skills/) — 可复用技能
 
-- [README](https://github.com/lj22503/invest-brain) — Full documentation (Chinese)
-- [README_EN](https://github.com/lj22503/invest-brain/blob/main/README_EN.md) — English documentation
-- [Homepage](https://invest-brain-mocha.vercel.app) — Live demo
+## 是什么
 
-## What it is
+**一句话**：一个"镜子 + 纪律锚"，审计自己的投资行为并纠正认知偏差——不是投资顾问。
 
-**One-liner**: A "mirror + discipline anchor" that audits investor behavior and flags biases — not investment advice.
+**核心主张**：
+- **想法记录**：说出想法，AI 解析并关联历史，生成卡片
+- **大师 RAG**：巴菲特 / 芒格 / 段永平 / 达利欧 / 索罗斯等 16 位大师语料的本地向量检索问答
+- **行为模式挖掘**：自动识别追高、情绪化交易、损失厌恶、羊群效应、过度自信等模式
+- **本地记忆**：用户画像、决策历史、行为模式全部落在本地 SQLite，数据自主可控
+- **提醒触发**：价格 / 时间 / 条件监控，支持 PushPlus（微信）、飞书 / 钉钉 / Bark 多通道
+- **桌面客户端（Windows）**：Tauri 壳 + 本地 sidecar，数据存于 `%APPDATA%\InvestBrain\data`
 
-**Core value**:
-- **想法记录** (Idea capture): User speaks, AI parses + links history + generates cards
-- **投资 RAG** (RAG over masters): GraphRAG + vector retrieval over Buffett / Munger / Dalio / Soros
-- **记忆系统** (Memory): User profile, decision history, behavior pattern mining
-- **提醒触发** (Triggers): Price / time / condition monitoring, 飞书 push support
-- **行为模式挖掘** (Behavior mining): Auto-detect loss aversion / herding / overconfidence
+**适用**：有经验、需要纪律锚与行为审计的投资者；想用本地 RAG 复盘自己决策过程的个人。
 
-**Target users**: 有经验的老客户 (Experienced investors who need discipline anchors and behavior audits)
+## 内容体系
 
-## Tech Stack
+### 核心能力
 
-| Layer | Tech |
+| 能力 | 说明 |
 |---|---|
-| LLM | DeepSeek API |
-| RAG | GraphRAG + 向量检索 |
-| Protocol | MCP Server (Model Context Protocol) |
-| Backend | Python + FastAPI |
-| Notifications | 飞书 (Feishu) push |
-| Deploy | Vercel |
+| 想法 / 决策记录 | 用户说话 → AI 解析 + 关联历史 + 生成卡片 |
+| 大师 RAG 问答 | GraphRAG + 向量检索，答案锚定大师原文，不幻觉 |
+| 行为模式挖掘 | 自动识别追高 / 情绪化等行为模式并沉淀画像 |
+| 提醒触发 | 价格 / 时间 / 条件监控，PushPlus / 飞书多通道 |
+| 周报 / 月报 | 自动生成投资复盘（路线图规划中） |
 
-## Installation
+### 技术栈
+
+| 层 | 技术 |
+|---|---|
+| LLM | DeepSeek API（Key 本地保存，桌面端经 sidecar 代理） |
+| RAG | Chroma 向量库 + ONNX 本地 embeddings |
+| 协议 | MCP Server（Model Context Protocol，39 个工具） |
+| 后端 | Python + FastAPI（sidecar HTTP，127.0.0.1:8765） |
+| 前端 / 桌面 | Next.js（export）+ Tauri 2 |
+| 数据源 | AKShare（A 股行情）、PushPlus（微信推送） |
+| 部署 | Vercel（试聊页）、Windows MSI（桌面端） |
+
+## 安装
 
 ```bash
-# 1. Install deps
+# 1. 安装依赖
 cd src/mcp_server
 pip install -r requirements.txt
 
-# 2. Configure env
+# 2. 配置你自己的 LLM Key
 cp .env.example .env
-# Fill in DEEPSEEK_API_KEY
+# 编辑 .env，填入 DEEPSEEK_API_KEY
 
-# 3. Start REST API (LLM config)
-python api_server.py
-
-# 4. Start MCP Server (separate terminal)
+# 3. 启动 MCP Server（stdio，供 Claude Desktop 等客户端接入）
 python server.py
 ```
 
-## Core Capabilities
+> 首次运行会下载约 80MB 的 embedding 模型文件（Chroma + ONNX）。桌面端用户直接安装 MSI 即可，无需手动起服务。
 
-| Feature | Description |
-|---|---|
-| 想法记录 | User says something, AI parses + links history + generates cards |
-| 投资 RAG | Big-master thought retrieval Q&A (GraphRAG + vector) |
-| 记忆系统 | User profile, decision history, behavior pattern mining |
-| 提醒触发 | Price/time/condition monitoring with 飞书 push |
-| 行为模式挖掘 | Auto-discover investor bias patterns |
+## 核心方法论
 
-## 11 Recommended Topics
+- 先记录，后复盘：想法先入档，模式由系统挖掘
+- 答案锚定大师原文：RAG 有出处，不编造
+- 数据本地优先：Key 与记忆均不上云
+- 提醒是纪律锚：价格 / 时间触发，把"知道"推向"做到"
+- 行为审计而非荐股：定位是镜子，不是顾问
 
-```
-ai-agent, ai-investing, claude-desktop, deepseek, investment,
-investment-rules, mcp-server, personal-knowledge-base, python,
-quantitative-analysis, self-discipline
-```
+## 质量保证
 
-## Quality Standards
+- 产品定位：非投资建议，不荐股、不承诺收益
+- RAG 回答锚定原文，降低幻觉
+- Key 与数据均本地保存（`.gitignore` 保护，不入库）
+- 工具清单与 server.json 注册一致（39 个）
 
-- NOT investment advice (产品定位)
-- Behavior audit focus
-- RAG-grounded answers (no hallucination)
-- Local data only (no cloud storage)
+## 搜索关键词
 
-## Search Keywords
+投资第二大脑, invest-brain, investment second brain, 投资纪律, 知行合一, 行为模式挖掘, 追高, 情绪化交易, 大师 RAG, 巴菲特 芒格 段永平, mcp-server, investment memory, ai investing, personal knowledge base, self-discipline investing, claude desktop mcp, deepseek, local rag, 本地记忆, 投资复盘, 决策记录
 
-investment discipline, self-discipline tool, behavior pattern mining, RAG, MCP server, 行为模式挖掘, 知行合一, 投资纪律, GraphRAG, bias detection, 飞书 push, DeepSeek, Python investment tool.
-
-## Contact
+## 联系方式
 
 GitHub Issues: https://github.com/lj22503/invest-brain/issues
-Live demo: https://invest-brain-mocha.vercel.app
+线上演示: https://invest-brain-mocha.vercel.app

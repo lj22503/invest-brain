@@ -56,6 +56,12 @@ desktop/ui/.well-known/
 # TypeScript incremental build cache (auto-regenerated)
 tsconfig.tsbuildinfo
 
+# Backup files (keep local only)
+*.bak
+
+# One-off landing page preview (regenerate via app export)
+brain-landing-preview.html
+
 # MCP key / secret file (user-provided; never commit, never sample into docs)
 mcp-key.txt
 

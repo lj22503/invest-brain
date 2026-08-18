@@ -6,12 +6,11 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![MCP](https://img.shields.io/badge/MCP-compatible-green.svg)](https://modelcontextprotocol.io/)
+[![Desktop](https://img.shields.io/badge/Windows_Desktop-0.1.2-blue?style=flat-square)]()
 
 <p align="center">
-  <a href="#快速开始"><img src="https://img.shields.io/badge/MCP_Server_+_RAG-d6a52e?style=for-the-badge" alt="MCP Server + RAG"/></a>
   <a href="README_EN.md"><img src="https://img.shields.io/badge/English-README-blue?style=for-the-badge" alt="English README"/></a>
   <a href="llms.txt"><img src="https://img.shields.io/badge/llms.txt-AI_Ready-green?style=for-the-badge" alt="llms.txt"/></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-AGPL--3.0-yellow?style=for-the-badge" alt="AGPL-3.0"/></a>
   <a href="#核心能力"><img src="https://img.shields.io/badge/行为模式_挖掘-purple?style=for-the-badge" alt="行为模式挖掘"/></a>
 </p>
 
@@ -23,7 +22,17 @@
 
 ## 5 分钟快速体验
 
-一条命令 clone 仓库后，三步完成启动：
+两种使用方式：**桌面客户端（推荐）** 或 **MCP Server**。
+
+### 方式 A：桌面客户端（Windows，推荐）
+
+1. 下载并安装 `InvestBrain_0.1.2_x64_en-US.msi`（见 [Releases](https://github.com/lj22503/invest-brain/releases)）
+2. 打开桌面应用，即见「大脑已加载」状态条与试聊引导
+3. 想对话时在设置页填入自己的 LLM Key，即可走真实对话链路
+
+> 桌面端数据存储在 `%APPDATA%\InvestBrain\data`，设置页可直接查看数据位置。
+
+### 方式 B：MCP Server（任意 MCP 客户端）
 
 ```bash
 # 1. 安装 MCP Server 依赖
@@ -85,15 +94,7 @@ python server.py
 powershell -ExecutionPolicy Bypass -File scripts/configure_pushplus.ps1
 ```
 
-脚本会交互式引导你完成全部步骤：
-
-1. 显示 PushPlus 获取 token 的操作步骤
-2. 提示粘贴 token（脚本自动校验格式）
-3. 写入 `data/config/webhook.json` 并启用 `pushplus` 渠道
-4. 自动调用 `send_notification` 发送测试消息
-5. 打印成功/失败原因
-
-> 提示：如果没有先注册 PushPlus，请先微信扫码关注公众号 https://www.pushplus.plus → 个人中心 → 复制 token，再运行脚本。
+脚本会交互式引导你完成全部步骤：显示 PushPlus 获取 token 的操作步骤 → 粘贴 token（自动校验格式）→ 写入 `data/config/webhook.json` 并启用 `pushplus` 渠道 → 自动调用 `send_notification` 发送测试消息 → 打印成功/失败原因。
 
 ### 方式二：对话内配置（MCP 客户端内）
 
@@ -104,20 +105,13 @@ powershell -ExecutionPolicy Bypass -File scripts/configure_pushplus.ps1
 2. 配置 PushPlus 并发送测试：notify_configure_notifier(channel="pushplus", token="你的token", enabled=true, send_test=true)
 ```
 
-未配置任何渠道时，`set_reminder` / `get_reminders` 返回的 `notification_status` 中会附带完整的渠道获取步骤与下一步工具名，按提示操作即可。
-
 ### PushPlus token 获取步骤
 
 1. 微信扫码关注公众号：https://www.pushplus.plus
-2. 进入「个人中心」
-3. 复制页面上的 token
-4. 填入上述任一方式
+2. 进入「个人中心」→ 复制页面上的 token
+3. 填入上述任一方式
 
-### 验证是否配置成功
-
-- 收到测试消息 → 配置成功
-- `notify_get_notifier_config()` 返回 `"enabled_channels": ["pushplus"]`
-- 未配置渠道时，提醒触发路径（`price_checker` / `scheduler`）返回中会携带 `setup_guide` 引导信息，而不会静默失败
+**验证成功**：收到测试消息，或 `notify_get_notifier_config()` 返回 `"enabled_channels": ["pushplus"]`。未配置渠道时，提醒触发路径（`price_checker` / `scheduler`）返回中会携带 `setup_guide` 引导信息，而不会静默失败。
 
 > 安全说明：`data/config/webhook.json` 已被 `.gitignore` 保护，token 不会进入 git；请勿把 token 发到任何对话或提交到仓库。
 
@@ -204,7 +198,7 @@ powershell -ExecutionPolicy Bypass -File scripts/configure_pushplus.ps1
 - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
 - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
 
-**配置内容**：
+**配置内容**（路径按你 clone 的实际位置修改）：
 
 ```json
 {
@@ -212,7 +206,7 @@ powershell -ExecutionPolicy Bypass -File scripts/configure_pushplus.ps1
     "investbrain": {
       "command": "python",
       "args": [
-        "D:/claudework/investbrain/src/mcp_server/server.py"
+        "D:/claudework/invest-brain/src/mcp_server/server.py"
       ],
       "env": {
         "DEEPSEEK_API_KEY": "sk-your-key-here"
@@ -222,7 +216,7 @@ powershell -ExecutionPolicy Bypass -File scripts/configure_pushplus.ps1
 }
 ```
 
-> 路径请按你 clone 的实际位置修改。配置完成后**重启 Claude Desktop**，会在工具栏出现"投资助手"图标（40 个工具）。
+> 配置完成后**重启 Claude Desktop**，会在工具栏出现"投资助手"图标（39 个工具，与 `server.json` 注册的工具清单一致）。
 
 ---
 
@@ -246,7 +240,7 @@ powershell -ExecutionPolicy Bypass -File scripts/configure_pushplus.ps1
 ## 架构
 
 ```
-src/mcp_server/            # MCP Server（40 个工具）
+src/mcp_server/            # MCP Server（39 个工具）
 ├── server.py               # 主入口
 ├── tools/                  # 工具集
 │   ├── thought_tools.py    # 想法记录
@@ -457,7 +451,7 @@ pytest tests/
 
 ---
 
-**版本**: v0.1.0
+**版本**: v0.1.2
 **创建时间**: 2026-06-24
 **许可**: AGPL v3
 
