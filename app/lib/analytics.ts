@@ -1,12 +1,15 @@
 // 轻量埋点：匿名事件上报，不采集用户输入原文与任何个人身份信息。
-// Web 端 / Tauri 桌面端共用 SDK；Tauri 端 fallback console.warn（等用户量起来再接桌面远端通道）。
+// Web 端 / Tauri 桌面端共用 SDK；invest-brain 是 Tauri 桌面端的 Web build（next export），所以**没有服务端 API route**。
+// 当前 dev 模式：console.info + localStorage 暂存（容量 1000 条，FIFO）。后端 endpoint 配置后可恢复 sendBeacon / fetch。
 // 公共属性（OPA 事实标准）：
 //   cta            按钮/卡片标识
 //   ref            归因上下文（'home' | 'nav' | 'card' | ...）
 //   page_referrer  来源页面路径（同源）
 //   utm_*          UTM 参数透传
 
-const ENV_ENDPOINT = process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT; // 留空则 console 模式
+const ENV_ENDPOINT = process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT; // 留空则 localStorage 暂存模式
+const STORAGE_KEY = 'invest_brain_events';
+const MAX_EVENTS = 1000;
 
 export type TrackPayload = Record<string, string | number | boolean | undefined>;
 
@@ -40,9 +43,25 @@ function readCommon(): Record<string, string> {
 
 function detectTauri(): boolean {
   if (typeof window === 'undefined') return false;
-  // Tauri v1/v2 都会注入 __TAURI__ / __TAURI_INTERNALS__ 标记
   return Boolean((window as unknown as { __TAURI__?: unknown }).__TAURI__) ||
     Boolean((window as unknown as { __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__);
+}
+
+function loadEvents(): unknown[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveEvents(events: unknown[]) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(events.slice(-MAX_EVENTS)));
+  } catch {
+    /* localStorage 满则静默失败 */
+  }
 }
 
 export async function track(event: string, payload: TrackPayload = {}): Promise<void> {
@@ -69,7 +88,10 @@ export async function track(event: string, payload: TrackPayload = {}): Promise<
       });
       return;
     }
-    // 后端未配置：dev 模式 console 提示，避免静默
+    // 无后端：localStorage 暂存 + console 提示（dev 用 / Tauri 桌面 offline 友好）
+    const events = loadEvents();
+    events.push(body);
+    saveEvents(events);
     // eslint-disable-next-line no-console
     console.info('[track]', event, body);
   } catch {
