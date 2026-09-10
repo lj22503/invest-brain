@@ -2,10 +2,12 @@
 import { Sidebar } from '@/components/sidebar/Sidebar';
 import { TauriProvider } from '@/components/providers/TauriProvider';
 import { OnboardingGuard } from '@/components/onboarding/OnboardingGuard';
+import Analytics from '@/components/providers/Analytics';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <TauriProvider>
+      <Analytics />
       <div className="flex h-screen overflow-hidden bg-paper text-ink">
         <Sidebar />
         <OnboardingGuard>

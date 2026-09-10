@@ -1,5 +1,33 @@
 # PROGRESS — invest-brain
 
+## 2026-09-10 · 埋点基础 SDK（B 方案起步）
+
+### 背景
+按 OPC OS 事实标准核对，invest-brain **全项目无任何埋点**（无 tracker.js / analytics.ts / 任何事件流）。
+桌面/Web 双端架构，桌面端暂未对外发布，先按 B 方案补 Web 端 SDK + 后端占位。
+
+### 改动
+1. `app/lib/analytics.ts`（新增）— 轻量 SDK
+   - 自动检测运行时：Web vs Tauri（`__TAURI__` / `__TAURI_INTERNALS__` 标记）
+   - 公共属性：page_referrer（同源）+ utm_source/medium/campaign/term/content 透传
+   - 后端 endpoint 未配置时走 console.info dev 模式（避免静默失败）
+   - EVT 常量：page_view / nav_click / home_cta / chat_send / chat_score / chat_archive / settings_change / pack_open
+2. `app/components/providers/Analytics.tsx`（新增）— 路由级 page_view
+3. `app/(app)/layout.tsx` — 集成 Analytics 组件
+4. `app/components/sidebar/Sidebar.tsx` — 5 项主导航点击上报 nav_click（chat/archive/packs/settings/try）
+5. `app/api/events/route.ts`（新增）— 后端占位 endpoint
+   - 兼容 iAsk /api/events 接口形态（SAFE_PAYLOAD_KEYS + entry 简化结构）
+   - 当前 dev 模式 console.info；接 Redis/PostHog 时替换这里
+
+### 不做（避免过度设计）
+- Chat / 评分 / 归档 / 设置 / 知识包详细事件：组件层调用留待二期（产品形态已稳定后）
+- Tauri 桌面端远端通道：等桌面发版后单独接（detectTauri() 已就位）
+- Vercel Analytics 自动 pageview：Web 端可能与 Vercel Analytics 重叠，未来按需选其一
+
+### 验证
+- `./node_modules/.bin/tsc --noEmit`：无错误
+- 接口形态与 iAsk /api/events 兼容，便于将来统一后端
+
 ## 2026-07-29
 
 ### neat-freak 第二批优化（发版准备）

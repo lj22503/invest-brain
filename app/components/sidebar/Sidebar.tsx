@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { HistoryList } from './HistoryList';
 import { PacksBadge } from './PacksBadge';
+import { track, EVT } from '@/lib/analytics';
 
 const NAV_ITEMS = [
   { href: '/chat', label: '◇ 对话' },
@@ -34,6 +35,7 @@ export function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => void track(EVT.navClick, { cta: item.href.slice(1), ref: 'nav' })}
                 className={`block px-2 py-1 rounded transition-colors ${active ? 'bg-vermillion-light/40 text-vermillion' : 'hover:bg-paper-warm text-ink-light'}`}
               >
                 {item.label}
