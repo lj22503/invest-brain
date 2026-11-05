@@ -53,9 +53,8 @@ jobs:
         run: npm ci
 
       - name: Build UI static
-        working-directory: app
         shell: bash
-        run: npm run build && node ../scripts/sync-ui.cjs
+        run: npm run build:app
 
       - name: Install Tauri CLI
         shell: bash
