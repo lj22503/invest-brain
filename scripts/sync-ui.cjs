@@ -3,9 +3,11 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const root = process.cwd();
-const from = path.join(root, "out");
-const to = path.join(root, "desktop", "ui");
+// `out/` is produced in the directory next build runs in (repo root or app/),
+// while the Tauri frontend dir is always <repo>/desktop/ui.
+const repoRoot = path.resolve(__dirname, "..");
+const from = path.resolve(process.cwd(), "out");
+const to = path.join(repoRoot, "desktop", "ui");
 
 if (!fs.existsSync(from)) throw new Error("out/ missing: run `next build` first");
 fs.rmSync(to, { recursive: true, force: true });

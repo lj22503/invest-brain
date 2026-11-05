@@ -46,17 +46,16 @@ jobs:
       - name: Build sidecar
         working-directory: desktop/sidecar
         shell: bash
-        run: bash build_sidecar.sh
+        run: bash build_sidecar.sh x86_64-pc-windows-msvc
 
       - name: Install UI deps
-        working-directory: app
         shell: bash
         run: npm ci
 
       - name: Build UI static
         working-directory: app
         shell: bash
-        run: npm run build:app
+        run: npm run build && node ../scripts/sync-ui.cjs
 
       - name: Install Tauri CLI
         shell: bash
