@@ -12,7 +12,8 @@ jobs:
   build-windows:
     runs-on: windows-2022
     defaults:
-      shell: pwsh
+      run:
+        shell: pwsh
 
     steps:
       - uses: actions/checkout@v4
