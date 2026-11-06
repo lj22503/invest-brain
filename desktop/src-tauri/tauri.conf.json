@@ -32,11 +32,6 @@
     "icon": [
       "icons/icon.png",
       "icons/icon.ico"
-    ],
-    "windows": {
-      "wix": {
-        "template": "main.wxs"
-      }
-    }
+    ]
   }
 }
