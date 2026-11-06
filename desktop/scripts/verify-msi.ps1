@@ -1,10 +1,12 @@
-# desktop/scripts/verify-msi.ps1
+﻿# desktop/scripts/verify-msi.ps1
 # Smoke test: 安装 MSI → 启动 exe → 等待窗口 → 卸载 → 报告
 # 退出码：0 = pass / 非零 = fail
 
 $ErrorActionPreference = "Stop"
 
-$msi = Get-ChildItem -Path desktop/src-tauri/target -Recurse -Filter "*.msi" | Select-Object -First 1
+$repoRoot = Split-Path -Parent $PSScriptRoot
+$targetDir = Join-Path $repoRoot 'src-tauri/target'
+$msi = Get-ChildItem -Path $targetDir -Recurse -Filter "*.msi" | Select-Object -First 1
 if (-not $msi) {
     Write-Error "MSI not found"
     exit 1
